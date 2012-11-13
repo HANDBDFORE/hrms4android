@@ -8,7 +8,7 @@ import com.hand.hrms4android.network.util.HDHashMap;
 import com.hand.hrms4android.network.util.ResponseCheckUtils;
 import com.hand.hrms4android.network.util.WebUtils;
 
-public class DefaultB5MClient implements HDClient {
+public class DefaultHDClient implements HDClient {
 
 	private Boolean needCheckRequest = true;
 
@@ -35,13 +35,13 @@ public class DefaultB5MClient implements HDClient {
 	private static final String APP_SECRET = "654321";
 	private HDHeader header;
 
-	public DefaultB5MClient(String serverUrl, String appKey, String appSecret) {
+	public DefaultHDClient(String serverUrl, String appKey, String appSecret) {
 		this.appKey = appKey;
 		this.appSecret = appSecret;
 		this.serverUrl = serverUrl;
 	}
 
-	public DefaultB5MClient() {
+	public DefaultHDClient() {
 		this(APP_SERVER, APP_KEY, APP_SECRET);
 		header = HDHeader.getInstance();
 	}
