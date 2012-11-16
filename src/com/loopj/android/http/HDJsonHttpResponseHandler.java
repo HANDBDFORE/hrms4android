@@ -27,7 +27,24 @@ import android.os.Message;
 public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 
 	private static final int WHAT_BASE = 10086;
-	
+
+	/**
+	 * 调用方根据需要传入对象
+	 */
+	protected Object info;
+
+	public HDJsonHttpResponseHandler() {
+		this(null);
+	}
+
+	/**
+	 * @param info
+	 *            根据调用方需要，传入需要的对象，随后可以在onSuccess或者其他任何位置拿到此对象
+	 */
+	public HDJsonHttpResponseHandler(Object info) {
+		this.info = info;
+	}
+
 	/**
 	 * 解析数据成功
 	 */

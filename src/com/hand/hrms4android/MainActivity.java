@@ -18,7 +18,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-
 		RequestParams params = new RequestParams();
 		params.put("user_name", "2994");
 		params.put("user_password", "handhand");
@@ -43,6 +42,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onSuccess(int statusCode, List<Map<String, String>> dataset) {
 				Log.i("tag", dataset.toString());
+
 			}
 
 		});
