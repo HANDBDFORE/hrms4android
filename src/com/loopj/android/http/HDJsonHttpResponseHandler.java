@@ -143,7 +143,7 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 	 * 从服务器得到的结果，将dataset转换为json对象，有可能是JsonObject或者是JsonArray
 	 * 
 	 * @param responseBody
-	 * @return
+	 * @return 组装好的数据
 	 * @throws JSONException
 	 */
 	protected List<Map<String, String>> parseResponse(String responseBody) throws JSONException {
@@ -178,6 +178,13 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 		return dataset;
 	}
 
+	/**
+	 * 将json串转换为map
+	 * 
+	 * @param jsonObject
+	 * @return
+	 * @throws JSONException
+	 */
 	private Map<String, String> convertJsonToMap(JSONObject jsonObject) throws JSONException {
 		Map<String, String> record = new HashMap<String, String>();
 
@@ -185,12 +192,18 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 		for (@SuppressWarnings("unchecked")
 		Iterator<String> iter = jsonObject.keys(); iter.hasNext();) {
 			String key = iter.next();
-			System.out.println(jsonObject.get(key).toString());
 			record.put(key, jsonObject.get(key).toString());
 		}
 		return record;
 	}
 
+	/**
+	 * 将jsonArray转换为类似dataset的结构
+	 * 
+	 * @param jsonArray
+	 * @return
+	 * @throws JSONException
+	 */
 	private List<Map<String, String>> convertJsonArrayToArray(JSONArray jsonArray)
 			throws JSONException {
 		List<Map<String, String>> dataset = new LinkedList<Map<String, String>>();
