@@ -151,7 +151,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
     }
 
     // Interface to AsyncHttpRequest
-    protected void sendResponseMessage(HttpResponse response) {
+    void sendResponseMessage(HttpResponse response) {
         StatusLine status = response.getStatusLine();
         Header[] contentTypeHeaders = response.getHeaders("Content-Type");
         byte[] responseBody = null;

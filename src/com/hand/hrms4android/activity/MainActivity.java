@@ -1,5 +1,8 @@
-package com.hand.hrms4android;
+package com.hand.hrms4android.activity;
 
+import com.hand.hrms4android.R;
+import com.hand.hrms4android.R.id;
+import com.hand.hrms4android.R.layout;
 import com.hand.hrms4android.persistence.DataManage;
 import com.hand.hrms4android.persistence.DatabaseManager;
 import com.hand.hrms4android.persistence.QueryCallback;
@@ -9,7 +12,6 @@ import android.widget.TextView;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 public class MainActivity extends Activity {
 
@@ -23,14 +25,6 @@ public class MainActivity extends Activity {
 		bindAllViews();
 
 		DataManage manager = DatabaseManager.getInstance();
-
-		// SQLiteDatabase db = manager.
-		// db.beginTransaction();
-		// db.execSQL(
-		// "insert into todo_column (todo_column_key,todo_column_value_id) values ('hello',1);",
-		// new Object[] {});
-		// db.setTransactionSuccessful();
-		// db.endTransaction();
 
 		ContentValues values = new ContentValues();
 		values.put("todo_column_key", "hello");
