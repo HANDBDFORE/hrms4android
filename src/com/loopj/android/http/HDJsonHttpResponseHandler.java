@@ -161,18 +161,15 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 
 		// 生成result对象
 		JSONObject resultObject = new JSONObject(responseBody);
-		// 取record数据
-		Object recordObject = resultObject.get("record");
 
-		if (recordObject instanceof JSONObject) {
-			// 说明是单条记录
-			dataset.add(convertJsonToMap((JSONObject) recordObject));
-		} else if (recordObject instanceof JSONArray) {
+		if (resultObject.has("record")) {
 			// 说明是多条记录
-			dataset = convertJsonArrayToArray((JSONArray) recordObject);
+			JSONArray records = resultObject.getJSONArray("record");
+			dataset = convertJsonArrayToArray(records);
 		} else {
-			// 除以上两种情况外均属错误数据
-			throw new JSONException("Error data");
+			// 说明是单条记录
+			dataset.add(convertJsonToMap(resultObject));
+
 		}
 
 		return dataset;

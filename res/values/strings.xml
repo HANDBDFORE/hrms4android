@@ -2,7 +2,9 @@
 
     <string name="app_name">Mobile</string>
     <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
+
+    <!-- 语言 -->
+    <string name="activity_login_loginbutton_text">login</string>
 
 </resources>

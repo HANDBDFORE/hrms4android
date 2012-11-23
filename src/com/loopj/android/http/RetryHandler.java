@@ -34,6 +34,7 @@ import javax.net.ssl.SSLHandshakeException;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
@@ -56,6 +57,10 @@ class RetryHandler implements HttpRequestRetryHandler {
         exceptionBlacklist.add(InterruptedIOException.class);
         // never retry SSL handshake failures
         exceptionBlacklist.add(SSLHandshakeException.class);
+        
+        //modified by emerson
+        //never retry when HttpHostConnectException occurs
+        exceptionBlacklist.add(HttpHostConnectException.class);
     }
 
     private final int maxRetries;
@@ -87,8 +92,14 @@ class RetryHandler implements HttpRequestRetryHandler {
         if(retry) {
             // resend all idempotent requests
             HttpUriRequest currentReq = (HttpUriRequest) context.getAttribute( ExecutionContext.HTTP_REQUEST );
-            String requestType = currentReq.getMethod();
-            retry = !requestType.equals("POST");
+            
+            //modified by emerson 
+            //add a null check here
+            if (currentReq!=null) {
+            	String requestType = currentReq.getMethod();
+            	retry = !requestType.equals("POST");
+			}
+            
         }
 
         if(retry) {
