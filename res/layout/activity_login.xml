@@ -4,9 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView style="@android:style/TextAppearance.Large"
+    <TextView
+        android:id="@+id/activity_login_textview_title"
+        style="@android:style/TextAppearance.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
         android:text="汉得移动商务" />
 
     <EditText

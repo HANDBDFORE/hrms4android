@@ -3,19 +3,20 @@ package com.hand.hrms4android.activity;
 import java.util.List;
 import java.util.Map;
 
+import com.hand.hrms4android.R;
+import com.hand.hrms4android.network.NetworkUtil;
+import com.loopj.android.http.HDJsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.hand.hrms4android.R;
-import com.hand.hrms4android.model.LoginModel;
-import com.hand.hrms4android.model.Model;
-import com.loopj.android.http.RequestParams;
-
-public class LoginActivity extends BaseActivity {
+public class LoginActivityBak extends Activity {
 
 	private EditText usernameEditText;
 	private EditText passwordEditText;
@@ -24,8 +25,8 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_login);
-		this.model = new LoginModel(this);
 		bindAllViews();
 	}
 
@@ -37,18 +38,10 @@ public class LoginActivity extends BaseActivity {
 		loginButton.setOnClickListener(new LoginButtonClickListener());
 	}
 
-	@Override
-	public void modelDidFinishedLoad(Model model) {
-		List<Map<String, String>> dataset = model.getResult();
-		String mobile_auto_status = dataset.get(0).get("mobile_auto_status");
-		Toast.makeText(this, mobile_auto_status, Toast.LENGTH_LONG).show();
-	}
-
 	private class LoginButtonClickListener implements OnClickListener {
 
 		@Override
 		public void onClick(View v) {
-
 			String username = usernameEditText.getText().toString();
 			String password = passwordEditText.getText().toString();
 
@@ -62,8 +55,36 @@ public class LoginActivity extends BaseActivity {
 			params.put("company_id", "1");
 			params.put("role_id", "41");
 
-			model.load(2, params);
+			NetworkUtil.addHeader("hello", "world");
+			NetworkUtil.post("", params, new HDJsonHttpResponseHandler() {
+
+				@Override
+				public void onStart() {
+					super.onStart();
+					Log.i("request", "onStart:");
+				}
+
+				@Override
+				public void onFailure(Throwable error, String content) {
+					super.onFailure(error, content);
+					Log.e("request", "onFailure:" + content);
+				}
+
+				@Override
+				public void onSuccess(int statusCode, List<Map<String, String>> dataset) {
+					super.onSuccess(statusCode, dataset);
+					Log.i("request", dataset.toString());
+				}
+
+				@Override
+				public void onFinish() {
+					super.onFinish();
+					Log.i("request", "onFinish:");
+				}
+			});
+
 		}
 
 	}
+
 }

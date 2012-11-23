@@ -10,10 +10,10 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class NetworkUtil {
-//	private static final String BASE_URL = "http://172.20.0.72:8080/hr_new/modules/ios/public/login_iphone.svc";
+	private static final String BASE_URL = "http://172.20.0.72:8080/hr_new/modules/ios/public/login_iphone.svc";
 	// private static final String BASE_URL =
 	// "http://192.168.10.100:8080/TestServer/Test";
-	private static final String BASE_URL = "http://10.213.214.74:8080/TestServer/Test";
+//	private static final String BASE_URL = "http://10.213.214.74:8080/TestServer/Test";
 
 	private static Map<String, String> headers = new HashMap<String, String>();
 
