@@ -5,6 +5,9 @@
     <string name="title_activity_main">MainActivity</string>
 
     <!-- 语言 -->
-    <string name="activity_login_loginbutton_text">login</string>
+    <string name="activity_login_loginbutton_text">登录</string>
+    <string name="activity_login_prompt_title">汉得移动商务</string>
+    <string name="activity_login_prompt_username">用户名：</string>
+    <string name="activity_login_prompt_password">密码：</string>
 
 </resources>

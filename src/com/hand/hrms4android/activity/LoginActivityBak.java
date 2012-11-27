@@ -56,7 +56,7 @@ public class LoginActivityBak extends Activity {
 			params.put("role_id", "41");
 
 			NetworkUtil.addHeader("hello", "world");
-			NetworkUtil.post("", params, new HDJsonHttpResponseHandler() {
+			NetworkUtil.post("/modules/ios/public/login_iphone.svc", params, new HDJsonHttpResponseHandler() {
 
 				@Override
 				public void onStart() {

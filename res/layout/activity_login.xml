@@ -12,28 +12,67 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="50dp"
         android:gravity="center"
-        android:text="汉得移动商务" />
+        android:text="@string/activity_login_prompt_title" />
 
-    <EditText
-        android:id="@+id/activity_login_textedit_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:text="2652" />
+    <!-- 账户 -->
 
-    <EditText
-        android:id="@+id/activity_login_textedit_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:text="handhand" />
+    <LinearLayout
+        style="@style/login_input_container"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/container_up_corner" >
+
+        <TextView
+            style="@style/login_prompt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_login_prompt_username" />
+
+        <EditText
+            android:id="@+id/activity_login_textedit_username"
+            style="@style/login_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:text="2652" />
+    </LinearLayout>
+
+    <!-- 密码 -->
+
+    <LinearLayout
+        style="@style/login_input_container"
+        android:background="@drawable/container_down_corner" >
+
+        <TextView
+            style="@style/login_prompt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_login_prompt_password" />
+
+        <EditText
+            android:id="@+id/activity_login_textedit_password"
+            style="@style/login_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:text="handhand" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/activity_login_textedit_loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
         android:text="@string/activity_login_loginbutton_text" />
+
+    <!--
+         <Button android:onClick="oneTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="测试" />
+    -->
 
 </LinearLayout>

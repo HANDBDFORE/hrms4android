@@ -9,18 +9,12 @@ public class BaseModel implements Model {
 
 	protected ModelActivity activity;
 	protected List<Map<String, String>> dataset;
-	
 
 	public BaseModel() {
 	}
 
 	public BaseModel(ModelActivity activity) {
 		this.activity = activity;
-	}
-
-	@Override
-	public void load(int type) {
-
 	}
 
 	public ModelActivity getActivity() {
@@ -32,12 +26,17 @@ public class BaseModel implements Model {
 	}
 
 	@Override
-	public void load(int type, Object param) {
+	public List<Map<String, String>> getResult() {
+		return dataset;
+	}
+
+	@Override
+	public void load(LoadType loadType) {
 
 	}
 
 	@Override
-	public List<Map<String, String>> getResult() {
-		return dataset;
+	public void load(LoadType loadType, Object param) {
+
 	}
 }

@@ -4,9 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 public interface Model {
-	void load(int type);
 
-	void load(int type, Object param);
+	public enum LoadType {
+		Local, Network, LocalAndNetwork
+	};
+
+	void load(LoadType loadType);
+
+	void load(LoadType loadType, Object param);
 
 	List<Map<String, String>> getResult();
 }

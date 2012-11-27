@@ -14,7 +14,7 @@ public class BaseActivity extends Activity implements ModelActivity {
 	@Override
 	public void setModel(Model model) {
 		this.model = model;
-		model.load(2);
+		model.load(Model.LoadType.Network);
 	}
 
 	@Override

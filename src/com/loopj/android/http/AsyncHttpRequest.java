@@ -21,12 +21,21 @@ package com.loopj.android.http;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.protocol.HttpContext;
+
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+
+import com.hand.hrms4android.application.HrmsApplication;
+import com.hand.hrms4android.network.NetworkUtil;
 
 class AsyncHttpRequest implements Runnable {
     private final AbstractHttpClient client;
@@ -79,6 +88,26 @@ class AsyncHttpRequest implements Runnable {
             } else{
                 //TODO: should raise InterruptedException? this block is reached whenever the request is cancelled before its response is received
             }
+            
+			////// update by emerson
+			CookieStore cookieStore = client.getCookieStore();
+			if (cookieStore != null && cookieStore.getCookies().size() != 0) {
+				NetworkUtil.setCookieStore(cookieStore);
+				CookieManager cookieManager = CookieManager.getInstance(); 
+				CookieSyncManager.createInstance(HrmsApplication.getApplication());
+				cookieManager.setAcceptCookie(true);
+				cookieManager.removeSessionCookie();
+				CookieSyncManager.getInstance().sync();
+				
+				List<Cookie> cookies = cookieStore.getCookies();
+				for (Cookie cookie : cookies) {
+					String cookieString = cookie.getName() + "=" + cookie.getValue() + "; domain=" + cookie.getDomain()+"; ";
+					System.out.println(cookieString);
+					cookieManager.setCookie(cookie.getDomain(), cookieString);
+					CookieSyncManager.getInstance().sync();
+				}
+			}
+			//////update end;
         }
     }
 

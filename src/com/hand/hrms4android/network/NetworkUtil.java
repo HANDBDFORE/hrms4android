@@ -1,21 +1,26 @@
 package com.hand.hrms4android.network;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class NetworkUtil {
-	private static final String BASE_URL = "http://172.20.0.72:8080/hr_new/modules/ios/public/login_iphone.svc";
+	public static final String BASE_URL = "http://172.20.0.72:8080/hr_new";
 	// private static final String BASE_URL =
 	// "http://192.168.10.100:8080/TestServer/Test";
-//	private static final String BASE_URL = "http://10.213.214.74:8080/TestServer/Test";
+	// private static final String BASE_URL =
+	// "http://10.213.214.74:8080/TestServer";
 
 	private static Map<String, String> headers = new HashMap<String, String>();
+
+	private static CookieStore cookieStore = null;
 
 	/**
 	 * 以get方式请求
@@ -30,6 +35,7 @@ public class NetworkUtil {
 			AsyncHttpResponseHandler responseHandler) {
 
 		AsyncHttpClient client = new AsyncHttpClient();
+		client.setCookieStore(cookieStore);
 		client = setClientHeader(client, headers);
 		client.get(getAbsoluteUrl(url), params, responseHandler);
 	}
@@ -45,8 +51,8 @@ public class NetworkUtil {
 	 */
 	public static void post(String url, RequestParams params,
 			AsyncHttpResponseHandler responseHandler) {
-
 		AsyncHttpClient client = new AsyncHttpClient();
+		client.setCookieStore(cookieStore);
 		client = setClientHeader(client, headers);
 		client.post(getAbsoluteUrl(url), params, responseHandler);
 	}
@@ -59,13 +65,13 @@ public class NetworkUtil {
 	 * @return
 	 */
 	private static String getAbsoluteUrl(String relativeUrl) {
+		System.out.println(BASE_URL + relativeUrl);
 		return BASE_URL + relativeUrl;
 	}
 
 	private static AsyncHttpClient setClientHeader(AsyncHttpClient client,
 			Map<String, String> headers) {
 		Set<String> keys = headers.keySet();
-
 		for (String key : keys) {
 			client.addHeader(key, headers.get(key));
 		}
@@ -82,4 +88,13 @@ public class NetworkUtil {
 		}
 		NetworkUtil.headers = header;
 	}
+
+	public static CookieStore getCookieStore() {
+		return cookieStore;
+	}
+
+	public static void setCookieStore(CookieStore cookieStore) {
+		NetworkUtil.cookieStore = cookieStore;
+	}
+
 }

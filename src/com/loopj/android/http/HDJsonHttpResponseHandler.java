@@ -60,7 +60,7 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 			if (temp != null) {
 				entity = new BufferedHttpEntity(temp);
 				responseBody = EntityUtils.toString(entity, "UTF-8").trim();
-				System.out.println(responseBody);
+//				System.out.println(responseBody);
 			}
 		} catch (IOException e) {
 			sendFailureMessage(e, (String) null);
