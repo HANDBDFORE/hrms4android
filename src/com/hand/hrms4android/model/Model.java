@@ -9,8 +9,6 @@ public interface Model {
 		Local, Network, LocalAndNetwork
 	};
 
-	void load(LoadType loadType);
-
 	void load(LoadType loadType, Object param);
 
 	List<Map<String, String>> getResult();

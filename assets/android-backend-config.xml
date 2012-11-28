@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<activity name="login_activity">
-		<title_textview text="汉得移动NMB"/>
+		<view>
+			<title_textview text="汉得移动配置文件"/>
+		</view>
+		<request>
+			<url name="login_submit_url" value="/modules/ios/public/login_android.svc"></url>
+			<url name="todo_list_query_url" value="/autocrud/ios.ios_test.ios_todo_list_test/query?_fetchall=true&amp;_autocount=false"></url>
+		</request>
 	</activity>
+	
 </config>

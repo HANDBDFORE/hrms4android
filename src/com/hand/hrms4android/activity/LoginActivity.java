@@ -3,6 +3,7 @@ package com.hand.hrms4android.activity;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.model.LoginModel;
@@ -55,7 +55,7 @@ public class LoginActivity extends BaseActivity {
 	private void readConfig() {
 		try {
 			titleTextView.setText(configReader.getAttr(new Expression(
-					"/config/activity[@name='login_activity']/title_textview", "text")));
+			        "/config/activity[@name='login_activity']/view/title_textview", "text")));
 		} catch (ParseExpressionException pe) {
 			pe.printStackTrace();
 		}
@@ -63,9 +63,7 @@ public class LoginActivity extends BaseActivity {
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
-		List<Map<String, String>> dataset = model.getResult();
-		String mobile_auto_status = dataset.get(0).get("mobile_auto_status");
-		Toast.makeText(this, mobile_auto_status, Toast.LENGTH_LONG).show();
+		startActivity(new Intent(this, TodoListActivity.class));
 	}
 
 	private class LoginButtonClickListener implements OnClickListener {
@@ -89,13 +87,22 @@ public class LoginActivity extends BaseActivity {
 			model.load(Model.LoadType.Network, params);
 		}
 	}
+	
 
-//	public void oneTest(View v) {
-//		NetworkUtil.post("/autocrud/ios.ios_test.ios_todo_list_test/query?_fetchall=true&amp;_autocount=false", null, new HDJsonHttpResponseHandler() {
-//			@Override
-//			public void onSuccess(int statusCode, List<Map<String, String>> dataset) {
-//				Log.i("onSuccess", dataset.toString());
-//			}
-//		});
-//	}
+	public void oneTest(View v) {
+		NetworkUtil.post("/autocrud/ios.ios_test.ios_todo_list_test/query?_fetchall=true&amp;_autocount=false", null, new HDJsonHttpResponseHandler() {
+			@Override
+			public void onSuccess(int statusCode, List<Map<String, String>> dataset) {
+			    super.onSuccess(statusCode, dataset);
+			    Log.i("success", "result :"+dataset.toString());
+			}
+			
+			@Override
+			public void onFailure(Throwable error, String content) {
+			    super.onFailure(error, content);
+			    Log.i("onFailure", "reason :"+content);
+			}
+		});
+	}
+
 }

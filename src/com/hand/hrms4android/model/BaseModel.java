@@ -31,11 +31,6 @@ public class BaseModel implements Model {
 	}
 
 	@Override
-	public void load(LoadType loadType) {
-
-	}
-
-	@Override
 	public void load(LoadType loadType, Object param) {
 
 	}

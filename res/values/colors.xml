@@ -3,5 +3,6 @@
 
     <color name="yellow">#ffff00</color>
     <color name="login_container_backgroud_color">#FFFFF0</color>
+    <color name="login_background_color">#99ccff</color>
 
 </resources>

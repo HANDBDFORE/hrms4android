@@ -8,4 +8,8 @@
         android:topLeftRadius="0dp"
         android:topRightRadius="0dp" />
 
+    <stroke
+        android:width="0.5dp"
+        android:color="@android:color/darker_gray" />
+
 </shape>

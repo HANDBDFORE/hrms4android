@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Message;
+import android.util.Log;
 
 /**
  * 适合于aurora框架的网络请求，对返回数据进行加工组装
@@ -60,7 +61,7 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 			if (temp != null) {
 				entity = new BufferedHttpEntity(temp);
 				responseBody = EntityUtils.toString(entity, "UTF-8").trim();
-//				System.out.println(responseBody);
+				Log.d("server response", responseBody);
 			}
 		} catch (IOException e) {
 			sendFailureMessage(e, (String) null);
