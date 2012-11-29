@@ -1,4 +1,4 @@
-package com.hand.hrms4android.adapter;
+package com.hand.hrms4android.listable.adapter;
 
 import java.util.List;
 import java.util.Map;

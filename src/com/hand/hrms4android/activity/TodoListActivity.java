@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hand.hrms4android.R;
-import com.hand.hrms4android.adapter.TodoListAdapter;
+import com.hand.hrms4android.listable.adapter.TodoListAdapter;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.TodoListModel;
 
