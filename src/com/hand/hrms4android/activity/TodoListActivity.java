@@ -5,8 +5,13 @@ import java.util.Map;
 
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.adapter.TodoListAdapter;
+import com.hand.hrms4android.listable.item.ItemFactory;
+import com.hand.hrms4android.listable.item.TodoListItem;
+import com.hand.hrms4android.listable.item.TodoListItemFactory;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.TodoListModel;
+import com.hand.hrms4android.parser.ConfigReader;
+import com.hand.hrms4android.parser.xml.XmlConfigReader;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,6 +21,9 @@ import android.widget.ListView;
 public class TodoListActivity extends BaseActivity {
 
 	private ListView todoListView;
+	
+	private ItemFactory<TodoListItem> itemFactory ;
+	private ConfigReader configReader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +33,8 @@ public class TodoListActivity extends BaseActivity {
 		bindAllViews();
 
 		setModel(new TodoListModel(this));
+		configReader = XmlConfigReader.getInstance();
+		itemFactory = new TodoListItemFactory(configReader);
 	}
 
 	private void bindAllViews() {
@@ -34,11 +44,13 @@ public class TodoListActivity extends BaseActivity {
 	@Override
 	public void modelDidFinishedLoad(Model model) {
 		super.modelDidFinishedLoad(model);
+		//取结果
 		List<Map<String, String>> dataset = model.getResult();
-
-		ArrayAdapter<Map<String, String>> listAdapter = new TodoListAdapter(this, R.layout.todo_list_cell, dataset);
+		
+		//转换为ListItem
+		List<TodoListItem> items =  itemFactory.getItemList(dataset);
+		ArrayAdapter<TodoListItem> listAdapter = new TodoListAdapter(this, items);
 		todoListView.setAdapter(listAdapter);
-//		todoListView.invalidate();
 	}
 
 	@Override

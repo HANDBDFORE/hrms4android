@@ -1,7 +1,6 @@
 package com.hand.hrms4android.listable.adapter;
 
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,12 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.listable.item.TodoListItem;
 
-public class TodoListAdapter extends ArrayAdapter<Map<String, String>> {
+public class TodoListAdapter extends ArrayAdapter<TodoListItem> {
 
 	private LayoutInflater mLayoutInflater;
 
-	public TodoListAdapter(Context context, int textViewResourceId, List<Map<String, String>> datas) {
+	public TodoListAdapter(Context context, List<TodoListItem> datas) {
 		super(context, 0, datas);
 		mLayoutInflater = (LayoutInflater) context
 		        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -35,12 +35,12 @@ public class TodoListAdapter extends ArrayAdapter<Map<String, String>> {
 			wrapper = (TodoListCellWrapper) row.getTag();
 		}
 
-		Map<String, String> record = getItem(position);
+		TodoListItem todoItem = getItem(position);
 
-		wrapper.getTitleTextView().setText(record.get("workflow_name"));
-		wrapper.getDateTextView().setText(record.get("date_limit"));
-		wrapper.getSubTitleTextView().setText(record.get("node_name"));
-		wrapper.getInformationTextView().setText(record.get("workflow_desc"));
+		wrapper.getTitleTextView().setText(todoItem.getTitle());
+		wrapper.getDateTextView().setText(todoItem.getDate());
+		wrapper.getSubTitleTextView().setText(todoItem.getSubTitle());
+		wrapper.getInformationTextView().setText(todoItem.getInformation());
 
 		return row;
 	}
@@ -49,7 +49,7 @@ public class TodoListAdapter extends ArrayAdapter<Map<String, String>> {
 
 /**
  * @author emerson
- *
+ * 
  */
 class TodoListCellWrapper {
 	private View base;

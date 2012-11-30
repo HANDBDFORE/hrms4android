@@ -10,4 +10,18 @@
 		</request>
 	</activity>
 	
+	<activity name="todo_list_activity">
+		<view>
+			<listview_cell>
+				<title_textview text="${workflow_name}"/>
+				<date_textview text="${date_limit}"/>
+				<subtitle_textview text="${node_name}"/>
+				<information_textview text="${workflow_desc}:${node_name}?${date_limit}"/>
+			</listview_cell>
+		</view>
+		<request>
+			<url name="todo_list_query_url" value="/autocrud/ios.ios_test.ios_todo_list_test/query?_fetchall=true&amp;_autocount=false"></url>
+		</request>
+	</activity>
+	
 </config>

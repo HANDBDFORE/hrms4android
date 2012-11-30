@@ -28,11 +28,12 @@ public class TodoListModel extends BaseModel {
 
 	@Override
 	public void load(LoadType loadType, Object param) {
+		
 		String service = "";
 		try {
 			service = configReader
 			        .getAttr(new Expression(
-			                "/config/activity[@name='login_activity']/request/url[@name='todo_list_query_url']",
+			                "/config/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']",
 			                "value"));
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
@@ -44,6 +45,7 @@ public class TodoListModel extends BaseModel {
 			@Override
 			public void onSuccess(int statusCode, List<Map<String, String>> ds) {
 				dataset = ds;
+				
 				activity.modelDidFinishedLoad(TodoListModel.this);
 			}
 
