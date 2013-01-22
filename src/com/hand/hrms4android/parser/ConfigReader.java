@@ -1,6 +1,6 @@
 package com.hand.hrms4android.parser;
 
-import com.hand.hrms4android.parser.exception.ParseExpressionException;
+import com.hand.hrms4android.exception.ParseExpressionException;
 
 public interface ConfigReader {
 	/**

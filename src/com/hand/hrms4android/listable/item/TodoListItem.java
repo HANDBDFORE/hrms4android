@@ -1,20 +1,31 @@
 package com.hand.hrms4android.listable.item;
 
-public class TodoListItem extends BaseListItem{
+public class TodoListItem extends BaseListItem {
+
+	private int id;
 	private String title;
 	private String date;
 	private String subTitle;
 	private String information;
+	private String errorMessage;
+	private String status;
+	private boolean isLate;
 
 	public TodoListItem() {
-		this(null, null, null, null);
+		this(0, null, null, null, null, null, null,false);
 	}
 
-	public TodoListItem(String title, String date, String subTitle, String information) {
+	public TodoListItem(int id, String title, String date, String subTitle, String information, String errorMessage,
+	        String status,boolean isLate) {
+		super();
+		this.id = id;
 		this.title = title;
 		this.date = date;
 		this.subTitle = subTitle;
 		this.information = information;
+		this.errorMessage = errorMessage;
+		this.status = status;
+		this.isLate = isLate;
 	}
 
 	public String getTitle() {
@@ -49,4 +60,35 @@ public class TodoListItem extends BaseListItem{
 		this.information = information;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public boolean isLate() {
+		return isLate;
+	}
+
+	public void setLate(boolean isLate) {
+		this.isLate = isLate;
+	}
 }

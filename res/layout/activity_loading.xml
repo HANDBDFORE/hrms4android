@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoadingActivity" >
+
+    <Button
+        android:id="@+id/activity_loading_reload_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="reload"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/activity_loading_infomation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/activity_loading_reload_button"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="36dp"
+        android:gravity="center" />
+
+</RelativeLayout>

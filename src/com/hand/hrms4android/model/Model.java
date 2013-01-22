@@ -11,5 +11,19 @@ public interface Model {
 
 	void load(LoadType loadType, Object param);
 
-	List<Map<String, String>> getResult();
+	/**
+	 * 得到适合aurora的数据集
+	 * 
+	 * @return
+	 */
+	public List<Map<String, String>> getAuroraDataset();
+
+	/**
+	 * 得到处理结果
+	 * 
+	 * @return
+	 */
+	public Object getProcessResult();
+
+	public int getModelId();
 }

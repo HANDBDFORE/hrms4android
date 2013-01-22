@@ -1,4 +1,4 @@
-package com.hand.hrms4android.parser.exception;
+package com.hand.hrms4android.exception;
 
 public class ParseExpressionException extends ParseException {
 

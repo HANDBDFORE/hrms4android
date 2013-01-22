@@ -5,18 +5,27 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.http.client.CookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+
+import com.hand.hrms4android.application.HrmsApplication;
+import com.hand.hrms4android.util.Constrants;
+import com.hand.hrms4android.util.LogUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class NetworkUtil {
-	public static final String BASE_URL = "http://172.20.0.72:8080/hr_new";
+	public static final String BASE_URL = "http://172.20.0.72:8180/hr_new/";
 	// private static final String BASE_URL =
 	// "http://192.168.10.100:8080/TestServer/Test";
 	// private static final String BASE_URL =
 	// "http://10.213.214.74:8080/TestServer";
+	private static SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(HrmsApplication
+	        .getApplication());
 
 	private static Map<String, String> headers = new HashMap<String, String>();
 
@@ -31,8 +40,7 @@ public class NetworkUtil {
 	 * @param responseHandler
 	 *            回调
 	 */
-	public static void get(String url, RequestParams params,
-			AsyncHttpResponseHandler responseHandler) {
+	public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.setCookieStore(cookieStore);
@@ -49,11 +57,17 @@ public class NetworkUtil {
 	 * @param responseHandler
 	 *            回调
 	 */
-	public static void post(String url, RequestParams params,
-			AsyncHttpResponseHandler responseHandler) {
+	public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 		AsyncHttpClient client = new AsyncHttpClient();
+		// CookieStore cs = readLocalCookies();
+		// if (cs != null && cs.getCookies().size() != 0)
+		// client.setCookieStore(readLocalCookies());
+
 		client.setCookieStore(cookieStore);
-		client = setClientHeader(client, headers);
+
+		if (params != null) {
+			LogUtil.debug(NetworkUtil.class, "send", params.toString());
+		}
 		client.post(getAbsoluteUrl(url), params, responseHandler);
 	}
 
@@ -64,13 +78,25 @@ public class NetworkUtil {
 	 *            除去基础地址之外的部分
 	 * @return
 	 */
-	private static String getAbsoluteUrl(String relativeUrl) {
-		System.out.println(BASE_URL + relativeUrl);
-		return BASE_URL + relativeUrl;
+	public static String getAbsoluteUrl(String relativeUrl) {
+		LogUtil.info(NetworkUtil.class, "request", getBaseUrl() + relativeUrl);
+		return getBaseUrl() + relativeUrl;
 	}
 
-	private static AsyncHttpClient setClientHeader(AsyncHttpClient client,
-			Map<String, String> headers) {
+	/**
+	 * @return
+	 */
+	private static String getBaseUrl() {
+		String base = mPreferences.getString(Constrants.SYS_PREFRENCES_SERVER_BASE_URL, "");
+		if (base.length() != 0) {
+			if (base.charAt(base.length() - 1) != '/') {
+				base += "/";
+			}
+		}
+		return base;
+	}
+
+	private static AsyncHttpClient setClientHeader(AsyncHttpClient client, Map<String, String> headers) {
 		Set<String> keys = headers.keySet();
 		for (String key : keys) {
 			client.addHeader(key, headers.get(key));
@@ -97,4 +123,31 @@ public class NetworkUtil {
 		NetworkUtil.cookieStore = cookieStore;
 	}
 
+	// private static CookieStore readLocalCookies() {
+	// cookieStore = new BasicCookieStore();
+	// CookieSyncManager.createInstance(HrmsApplication.getApplication());
+	// CookieManager cookieManager = CookieManager.getInstance();
+	// String cookieString = cookieManager.getCookie(getBaseUrl());
+	//
+	// if (cookieString != null) {
+	// String[] cookieStrings = cookieString.split(";");
+	//
+	// for (int i = 0; i < cookieStrings.length; i++) {
+	// String[] pair = cookieStrings[i].split("=");
+	// BasicClientCookie c = new BasicClientCookie(pair[0].trim(),
+	// pair[1].trim());
+	// c.setDomain(getBaseUrl());
+	// cookieStore.addCookie(c);
+	// }
+	// }
+	// return cookieStore;
+	// }
+
+	public static void removeAllCookies() {
+		cookieStore = null;
+		CookieSyncManager.createInstance(HrmsApplication.getApplication());
+		CookieManager cookieManager = CookieManager.getInstance();
+		cookieManager.removeAllCookie();
+		CookieSyncManager.getInstance().sync();
+	}
 }

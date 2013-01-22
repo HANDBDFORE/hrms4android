@@ -1,0 +1,16 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--
+         NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it.
+    -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <com.hand.hrms4android.widget.ExitSystemDialogPreference
+        android:dialogMessage="确认退出系统吗？退出后所有本地保存的数据将被清空！"
+        android:dialogTitle="退出系统"
+        android:negativeButtonText="取消"
+        android:positiveButtonText="退出"
+        android:title="@string/pref_title_sync_frequency" >
+    </com.hand.hrms4android.widget.ExitSystemDialogPreference>
+
+</PreferenceScreen>

@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Mobile</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="app_name">移动商务</string>
 
-    <!-- 语言 -->
+    <!-- ///// loading语言 //// -->
+    <string name="menu_settings">Settings</string>
+    <string name="activity_loading_text">加载中&#8230;</string>
+
+    <!-- ///// 登录语言 //// -->
     <string name="activity_login_loginbutton_text">登录</string>
+    <string name="activity_login_loginbutton_loading">登录中&#8230;</string>
     <string name="activity_login_prompt_title">汉得移动商务</string>
     <string name="activity_login_prompt_username">用户名：</string>
     <string name="activity_login_prompt_password">密码：</string>
-    <string name="menu_settings">Settings</string>
-    <string name="title_activity_todo_list">TodoListActivity</string>
+    <!-- ///// 结束 //// -->
+
+
+    <!-- ///// 待办语言 //// -->
+    <string name="activity_todo_list_actionitem_approve">同意</string>
+    <string name="activity_todo_list_actionitem_deny">拒绝</string>
+    <string name="title_activity_todo_list">待办事项</string>
+    <string name="title_activity_approve_detail">明细内容</string>
+    <string name="title_activity_loading">Loading</string>
+    <string name="title_activity_deliver">转交</string>
+
+    <!-- ///// 转交语言 //// -->
+    <string name="activity_diliver_prompt_to">转交给</string>
 
 </resources>

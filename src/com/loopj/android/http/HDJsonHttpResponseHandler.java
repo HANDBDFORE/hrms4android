@@ -17,8 +17,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.hand.hrms4android.exception.AuroraServerFailure;
+import com.hand.hrms4android.util.LogUtil;
+
 import android.os.Message;
-import android.util.Log;
 
 /**
  * 适合于aurora框架的网络请求，对返回数据进行加工组装
@@ -61,16 +63,15 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 			if (temp != null) {
 				entity = new BufferedHttpEntity(temp);
 				responseBody = EntityUtils.toString(entity, "UTF-8").trim();
-				Log.d("server response", responseBody);
+				LogUtil.debug(this, "server response", responseBody);
 			}
 		} catch (IOException e) {
 			sendFailureMessage(e, (String) null);
 		}
 
 		if (status.getStatusCode() >= 300) {
-			sendFailureMessage(
-					new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()),
-					responseBody);
+			sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()),
+			        responseBody);
 		} else {
 
 			try {
@@ -92,7 +93,7 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 					} else {
 						errorMessage = "Unknown Error";
 					}
-					sendFailureMessage(new Exception(errorMessage), errorMessage);
+					sendFailureMessage(new AuroraServerFailure(errorMessage), errorMessage);
 				}
 
 			} catch (JSONException e) {
@@ -165,13 +166,24 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 		JSONObject resultObject = new JSONObject(responseBody);
 
 		if (resultObject.has("record")) {
-			// 说明是多条记录
-			JSONArray records = resultObject.getJSONArray("record");
-			dataset = convertJsonArrayToArray(records);
+			Object recordObject = resultObject.get("record");
+			if (recordObject instanceof JSONObject) {
+				// 说明是单条记录
+				dataset.add(convertJsonToMap((JSONObject) recordObject));
+			} else if (recordObject instanceof JSONArray) {
+				// 说明是多条记录
+				JSONArray records = resultObject.getJSONArray("record");
+				dataset = convertJsonArrayToArray(records);
+			} else {
+				throw new JSONException("转换错误");
+			}
+
 		} else {
 			// 说明是单条记录
-			dataset.add(convertJsonToMap(resultObject));
-
+			Map<String, String> r = convertJsonToMap(resultObject);
+			if (r != null) {
+				dataset.add(convertJsonToMap(resultObject));
+			}
 		}
 
 		return dataset;
@@ -193,7 +205,13 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 			String key = iter.next();
 			record.put(key, jsonObject.get(key).toString());
 		}
-		return record;
+
+		if (record.size() == 0) {
+			return null;
+		} else {
+			return record;
+		}
+
 	}
 
 	/**
@@ -203,8 +221,7 @@ public class HDJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 	 * @return
 	 * @throws JSONException
 	 */
-	private List<Map<String, String>> convertJsonArrayToArray(JSONArray jsonArray)
-			throws JSONException {
+	private List<Map<String, String>> convertJsonArrayToArray(JSONArray jsonArray) throws JSONException {
 		List<Map<String, String>> dataset = new LinkedList<Map<String, String>>();
 
 		// 循环数组

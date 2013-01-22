@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseManager extends SQLiteOpenHelper implements DataManage {
+
 	/**
 	 * 数据库文件名称
 	 */
@@ -48,11 +49,25 @@ public class DatabaseManager extends SQLiteOpenHelper implements DataManage {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// 建代办列表的 列名表
-		db.execSQL("CREATE TABLE  todo_column  ( todo_column_id INTEGER PRIMARY KEY, todo_column_key  TEXT NOT NULL, todo_column_value_id INTEGER NOT NULL)");
+		db.execSQL("CREATE TABLE  " + DataBaseMetadata.TableTodoListColumnMetadata.TABLENAME
+		        + "  ( todo_column_id INTEGER PRIMARY KEY, "
+		        + DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_KEY + "  TEXT , "
+		        + DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_VALUE_ID + " INTEGER )");
 
 		// 建代办列表 值表
-		db.execSQL("CREATE TABLE todo_value ( todo_value_id INTEGER PRIMARY KEY , todo_value_0 TEXT NOT NULL, todo_value_1 TEXT NOT NULL, todo_value_2 TEXT NOT NULL, todo_value_3 TEXT NOT NULL, todo_value_4 TEXT NOT NULL, todo_value_5 TEXT NOT NULL, todo_value_6 TEXT NOT NULL, todo_value_7 TEXT NOT NULL, todo_value_8 TEXT NOT NULL, todo_value_9 TEXT NOT NULL, todo_value_10 TEXT NOT NULL, todo_value_11 TEXT NOT NULL, todo_value_12 TEXT NOT NULL, todo_value_13 TEXT NOT NULL, todo_value_14 TEXT NOT NULL, todo_value_15 TEXT NOT NULL, todo_value_16 TEXT NOT NULL, todo_value_17 TEXT NOT NULL, todo_value_18 TEXT NOT NULL, todo_value_19 TEXT NOT NULL, todo_value_20 TEXT NOT NULL, todo_value_21 TEXT NOT NULL, todo_value_22 TEXT NOT NULL, todo_value_23 TEXT NOT NULL, todo_value_24 TEXT NOT NULL, todo_value_25 TEXT NOT NULL, todo_value_26 TEXT NOT NULL, todo_value_27 TEXT NOT NULL, todo_value_28 TEXT NOT NULL, todo_value_29 TEXT NOT NULL )");
+		db.execSQL("CREATE TABLE "
+		        + DataBaseMetadata.TableTodoListValueMetadata.TABLENAME
+		        + " ( "
+		        + DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK
+		        + " INTEGER PRIMARY KEY , todo_value_0 TEXT , todo_value_1 TEXT , todo_value_2 TEXT , todo_value_3 TEXT , todo_value_4 TEXT , todo_value_5 TEXT , todo_value_6 TEXT , todo_value_7 TEXT , todo_value_8 TEXT , todo_value_9 TEXT , todo_value_10 TEXT , todo_value_11 TEXT , todo_value_12 TEXT , todo_value_13 TEXT , todo_value_14 TEXT , todo_value_15 TEXT , todo_value_16 TEXT , todo_value_17 TEXT , todo_value_18 TEXT , todo_value_19 TEXT , todo_value_20 TEXT , todo_value_21 TEXT , todo_value_22 TEXT , todo_value_23 TEXT , todo_value_24 TEXT , todo_value_25 TEXT , todo_value_26 TEXT , todo_value_27 TEXT , todo_value_28 TEXT , todo_value_29 TEXT , todo_value_30 TEXT , todo_value_31 TEXT , todo_value_32 TEXT , todo_value_33 TEXT , todo_value_34 TEXT , todo_value_35 TEXT , todo_value_36 TEXT , todo_value_37 TEXT , todo_value_38 TEXT , todo_value_39 TEXT)");
 
+		// 审批动作表
+		db.execSQL("CREATE TABLE  " + DataBaseMetadata.TableActions.TABLENAME
+		        + "  ( local_action_id INTEGER PRIMARY KEY, "
+		        + DataBaseMetadata.TableActions.COLUMN_TODO_COLUMN_LOGICAL_PK + "  TEXT , "
+		        + DataBaseMetadata.TableActions.COLUMN_ACTION_ID + " TEXT ,"
+		        + DataBaseMetadata.TableActions.COLUMN_ACTION_TYPE + " TEXT ,"
+		        + DataBaseMetadata.TableActions.COLUMN_ACTION_TITLE + " TEXT )");
 	}
 
 	@Override

@@ -1,0 +1,15 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ApproveOpinionActivity" >
+
+    <EditText
+        android:id="@+id/approve_opinion_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_holo_light"
+        android:inputType="textMultiLine|textCapSentences"
+        android:scrollHorizontally="false" />
+
+</ScrollView>

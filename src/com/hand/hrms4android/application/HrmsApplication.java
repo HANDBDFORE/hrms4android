@@ -3,6 +3,7 @@ package com.hand.hrms4android.application;
 import java.io.IOException;
 
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
+import com.hand.hrms4android.util.PlatformUtil;
 
 import android.app.Application;
 
@@ -22,12 +23,24 @@ public class HrmsApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
-		
-		//xmlconfig读取工具
+
+		if (PlatformUtil.getAndroidSDKVersion() == 14) {
+			// 怪异的问题
+			try {
+				Class.forName("android.os.AsyncTask");
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// xmlconfig读取工具
 		try {
 			XmlConfigReader.createInstanceByInputStream(getAssets().open("android-backend-config.xml"));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	
+	
 }

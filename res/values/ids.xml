@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- todo_list行 tag的id -->
+    <item name="todo_list_row_tag_wrapper" type="id"/>
+    <item name="todo_list_row_tag_position" type="id"/>
+    <item name="todo_list_row_tag_id" type="id"/>
+
+    <!-- 审批意见activity的menuid -->
+    <item name="approve_opinion_ok" type="id"/>
+    <item name="approve_opinion_cancel" type="id"/>
+
+    <!-- 代办列表activity的menuid -->
+    <item name="todo_list_menu_batch" type="id"/>
+    <item name="todo_list_menu_search" type="id"/>
+    <item name="todo_list_menu_refresh" type="id"/>
+    <item name="todo_list_menu_settings" type="id"/>
+    <item name="todo_list_menu_logout" type="id"/>
+
+    <!-- 详情页activity的menuid -->
+    <item name="approve_detail_employee" type="id"/>
+    <item name="approve_detail_tool_previous" type="id"/>
+    <item name="approve_detail_tool_next" type="id"/>
+    <item name="approve_detail_action" type="id"/>
+    <item name="approve_detail_action_deliver" type="id"/>
+
+</resources>

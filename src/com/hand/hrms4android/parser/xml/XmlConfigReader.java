@@ -14,10 +14,13 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
+import android.content.Context;
+
 import com.hand.hrms4android.application.HrmsApplication;
+import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
-import com.hand.hrms4android.parser.exception.ParseExpressionException;
+import com.hand.hrms4android.util.Constrants;
 
 public class XmlConfigReader implements ConfigReader {
 
@@ -70,9 +73,16 @@ public class XmlConfigReader implements ConfigReader {
 		XPath xpath = XPathFactory.newInstance().newXPath();
 		InputStream configFileInputStream = null;
 		try {
-			configFileInputStream = HrmsApplication.getApplication().getAssets()
-			        .open("android-backend-config.xml");
-			xmlInputSource = new InputSource(configFileInputStream);
+			//TODO 重构
+//			configFileInputStream = HrmsApplication.getApplication().getAssets()
+//			        .open("android-backend-config.xml");
+//			xmlInputSource = new InputSource(configFileInputStream);
+			
+			File dir = HrmsApplication.getApplication().getDir(Constrants.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
+			        Context.MODE_PRIVATE);
+			File configFile = new File(dir, "android-backend-config.xml");
+			FileInputStream inputStream = new FileInputStream(configFile);
+			xmlInputSource = new InputSource(inputStream);
 			Object result = xpath.evaluate(expression, xmlInputSource, XPathConstants.NODE);
 			if (result != null && result instanceof Element) {
 				return (Element) result;
