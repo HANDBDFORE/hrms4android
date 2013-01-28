@@ -3,6 +3,17 @@ package com.hand.hrms4android.activity;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
@@ -20,18 +31,6 @@ import com.hand.hrms4android.pojo.ApproveAction;
 import com.hand.hrms4android.util.PlaceHolderReplacer;
 import com.hand.hrms4android.util.TempTransfer;
 import com.hand.hrms4android.widget.EmployeeCardDialog;
-
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 
 public class ApproveDetailActivity extends ActionBarActivity {
 
@@ -85,16 +84,16 @@ public class ApproveDetailActivity extends ActionBarActivity {
 		try {
 			urlKeyName = configReader
 			        .getAttr(new Expression(
-			                "/config/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/detail_page_url_column",
+			                "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/detail_page_url_column",
 			                "name"));
 
 			actionItemTextKeyName = configReader.getAttr(new Expression(
-			        "/config/activity[@name='approve_detail_activity']/view/employee_action_item", "text"));
+			        "/config/application/activity[@name='approve_detail_activity']/view/employee_action_item", "text"));
 
 			loadComponentValues();
 		} catch (ParseExpressionException e) {
-			// TODO 写读取失败的提示
 			e.printStackTrace();
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -105,7 +104,7 @@ public class ApproveDetailActivity extends ActionBarActivity {
 		// 拿到当前指向的记录
 		currentRowData = todoListModel.currentItem();
 		String pageURL = NetworkUtil.getAbsoluteUrl(currentRowData.get(urlKeyName));
-		
+
 		contentWebView.loadUrl(pageURL);
 		this.model = new ApproveDetailActionModel(0, this);
 		this.model.load(LoadType.Network, currentRowData);
@@ -213,9 +212,10 @@ public class ApproveDetailActivity extends ActionBarActivity {
 		case R.id.approve_detail_employee: {
 			// 显示名片
 			try {
-				String configUrl = configReader.getAttr(new Expression(
-				        "/config/activity[@name='approve_detail_activity']/request/url[@name='employee_card_url']",
-				        "value"));
+				String configUrl = configReader
+				        .getAttr(new Expression(
+				                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='employee_card_url']",
+				                "value"));
 				String completeUrl = PlaceHolderReplacer.replaceForValue(currentRowData, configUrl);
 
 				if (employeeCard == null) {
@@ -319,4 +319,5 @@ public class ApproveDetailActivity extends ActionBarActivity {
 			return true;
 		}
 	}
+
 }

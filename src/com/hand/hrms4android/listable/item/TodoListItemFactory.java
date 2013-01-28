@@ -29,23 +29,23 @@ public class TodoListItemFactory implements ItemFactory<TodoListItem> {
 
 		try {
 			titlePlaceHolder = configReader.getAttr(new Expression(
-			        "/config/activity[@name='todo_list_activity']/view/listview_cell/title_textview", "text"));
+			        "/config/application/activity[@name='todo_list_activity']/view/listview_cell/title_textview", "text"));
 
 			datePlaceHolder = configReader.getAttr(new Expression(
-			        "/config/activity[@name='todo_list_activity']/view/listview_cell/date_textview", "text"));
+			        "/config/application/activity[@name='todo_list_activity']/view/listview_cell/date_textview", "text"));
 
 			subTitlePlaceHolder = configReader.getAttr(new Expression(
-			        "/config/activity[@name='todo_list_activity']/view/listview_cell/subtitle_textview", "text"));
+			        "/config/application/activity[@name='todo_list_activity']/view/listview_cell/subtitle_textview", "text"));
 
 			informationPlaceHolder = configReader.getAttr(new Expression(
-			        "/config/activity[@name='todo_list_activity']/view/listview_cell/information_textview", "text"));
+			        "/config/application/activity[@name='todo_list_activity']/view/listview_cell/information_textview", "text"));
 
 			// 是否崔办
 			isLateKey = configReader.getAttr(new Expression(
-			        "/config/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/is_late",
+			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/is_late",
 			        "name"));
 			isLateTrueValue = configReader.getAttr(new Expression(
-			        "/config/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/is_late",
+			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/is_late",
 			        "true_value"));
 
 		} catch (ParseExpressionException e) {

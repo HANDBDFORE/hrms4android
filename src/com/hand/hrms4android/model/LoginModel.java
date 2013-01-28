@@ -36,7 +36,7 @@ public class LoginModel extends AbstractModel {
 		String service = "";
 		try {
 			service = configReader.getAttr(new Expression(
-			        "/config/activity[@name='login_activity']/request/url[@name='login_submit_url']", "value"));
+			        "/config/application/activity[@name='login_activity']/request/url[@name='login_submit_url']", "value"));
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			activity.modelFailedLoad(new Exception("Cannot get url from config file! "), this);

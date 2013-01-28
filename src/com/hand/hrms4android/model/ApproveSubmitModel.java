@@ -24,7 +24,7 @@ public class ApproveSubmitModel extends AbstractModel {
 	public void load(LoadType loadType, Object param) {
 		try {
 			String actionURL = configReader.getAttr(new Expression(
-			        "/config/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']", "value"));
+			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']", "value"));
 
 			NetworkUtil.post(actionURL, null, new HDJsonHttpResponseHandler(param) {
 				@Override

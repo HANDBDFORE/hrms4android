@@ -1,5 +1,6 @@
 package com.hand.hrms4android.activity;
 
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -142,8 +143,9 @@ public class ActionBarActivity extends AbstractActivity implements OnCreatePanel
 		getSherlock().dispatchInvalidateOptionsMenu();
 	}
 
-	public void supportInvalidateOptionsMenu() {
-		invalidateOptionsMenu();
+	@SuppressLint("NewApi")
+    public void supportInvalidateOptionsMenu() {
+		this.invalidateOptionsMenu();
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class XmlConfigReader implements ConfigReader {
 
 	/**
 	 * xml文件来源
-	 */ 
+	 */
 	private InputSource xmlInputSource;
 
 	private static XmlConfigReader configReader;
@@ -57,8 +57,7 @@ public class XmlConfigReader implements ConfigReader {
 
 	public static XmlConfigReader getInstance() {
 		if (configReader == null) {
-			throw new RuntimeException(
-			        "must call createInstanceByInputStream before use this class");
+			throw new RuntimeException("must call createInstanceByInputStream before use this class");
 		}
 		return configReader;
 	}
@@ -73,11 +72,10 @@ public class XmlConfigReader implements ConfigReader {
 		XPath xpath = XPathFactory.newInstance().newXPath();
 		InputStream configFileInputStream = null;
 		try {
-			//TODO 重构
-//			configFileInputStream = HrmsApplication.getApplication().getAssets()
-//			        .open("android-backend-config.xml");
+			// TODO 重构
+//			configFileInputStream = HrmsApplication.getApplication().getAssets().open("android-backend-config.xml");
 //			xmlInputSource = new InputSource(configFileInputStream);
-			
+
 			File dir = HrmsApplication.getApplication().getDir(Constrants.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
 			        Context.MODE_PRIVATE);
 			File configFile = new File(dir, "android-backend-config.xml");
@@ -88,8 +86,7 @@ public class XmlConfigReader implements ConfigReader {
 				return (Element) result;
 			} else {
 				throw new ParseExpressionException(
-				        "Can't find the node or the result is not an instance of Element ,expression:"
-				                + expression);
+				        "Can't find the node or the result is not an instance of Element ,expression:" + expression);
 			}
 		} catch (XPathExpressionException e) {
 			throw new ParseExpressionException(e);

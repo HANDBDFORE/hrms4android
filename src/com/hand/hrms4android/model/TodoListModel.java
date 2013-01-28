@@ -108,7 +108,7 @@ public class TodoListModel extends AbstractModel implements Aggregate<Map<String
 		try {
 			// 读取地址
 			String actionURL = configReader.getAttr(new Expression(
-			        "/config/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']", "value"));
+			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']", "value"));
 
 			NetworkUtil.post(actionURL, requestParams, new HDJsonHttpResponseHandler() {
 				@Override
@@ -169,7 +169,7 @@ public class TodoListModel extends AbstractModel implements Aggregate<Map<String
 		String service = "";
 		try {
 			service = configReader.getAttr(new Expression(
-			        "/config/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']", "value"));
+			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']", "value"));
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			activity.modelFailedLoad(new Exception("Cannot get url from config file! "), this);
@@ -211,7 +211,7 @@ public class TodoListModel extends AbstractModel implements Aggregate<Map<String
 
 					// 获取主键
 					String primaryKey = configReader.getAttr(new Expression(
-					        "/config/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/pk",
+					        "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/pk",
 					        "name"));
 
 					// 保存主键

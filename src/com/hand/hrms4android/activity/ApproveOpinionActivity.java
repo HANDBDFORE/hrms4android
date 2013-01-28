@@ -1,5 +1,7 @@
 package com.hand.hrms4android.activity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
@@ -7,11 +9,14 @@ import com.hand.hrms4android.persistence.DataBaseMetadata;
 
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
 public class ApproveOpinionActivity extends ActionBarActivity {
 	public static final String EXTRA_TITLE = "title";
 
+	private Animation shake;
 	private EditText opinionEditText;
 
 	@Override
@@ -31,6 +36,8 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 		opinionEditText = (EditText) findViewById(R.id.approve_opinion_comments);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 	}
 
 	@Override
@@ -46,6 +53,13 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 
 		case R.id.approve_opinion_ok: {
 			String comments = opinionEditText.getText().toString();
+
+			// 检查输入
+			if (StringUtils.isEmpty(comments)) {
+				opinionEditText.requestFocus();
+				opinionEditText.startAnimation(shake);
+				return true;
+			}
 
 			Intent i = new Intent(getIntent());
 			i.putExtra(DataBaseMetadata.TodoListLogical.COMMENTS, comments);

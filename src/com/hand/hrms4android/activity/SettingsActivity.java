@@ -58,7 +58,7 @@ public class SettingsActivity extends PreferenceActivity {
 		// use the older PreferenceActivity APIs.
 
 		// Add 'general' preferences.
-		PreferenceCategory fakeHeader = new PreferenceCategory(this);
+		 PreferenceCategory fakeHeader = new PreferenceCategory(this);
 		addPreferencesFromResource(R.xml.pref_general);
 
 		// Add 'notifications' preferences, and a corresponding header.
@@ -67,10 +67,13 @@ public class SettingsActivity extends PreferenceActivity {
 		// addPreferencesFromResource(R.xml.pref_notification);
 		//
 		// // Add 'data and sync' preferences, and a corresponding header.
-		fakeHeader = new PreferenceCategory(this);
-		fakeHeader.setTitle(R.string.pref_header_data_sync);
-		getPreferenceScreen().addPreference(fakeHeader);
-		addPreferencesFromResource(R.xml.pref_data_sync);
+
+		// 去除
+		// fakeHeader = new PreferenceCategory(this);
+		// fakeHeader.setTitle(R.string.pref_header_data_sync);
+		// getPreferenceScreen().addPreference(fakeHeader);
+		// addPreferencesFromResource(R.xml.pref_data_sync);
+		// 去除结束
 
 		// Bind the summaries of EditText/List/Dialog/Ringtone preferences to
 		// their values. When their values change, their summaries are updated
@@ -150,6 +153,7 @@ public class SettingsActivity extends PreferenceActivity {
 						StorageUtil.removeSavedInfo();
 						StorageUtil.removeCachedConfigFile();
 
+						// TODO 改为非静态方法，或许会有问题
 						// 设定结果，说明改变了值
 						SettingsActivity.this.setResult(RESULT_OK);
 					}

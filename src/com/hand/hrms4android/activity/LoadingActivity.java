@@ -2,23 +2,22 @@ package com.hand.hrms4android.activity;
 
 import java.io.IOException;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.exception.ParseException;
 import com.hand.hrms4android.model.LoadingModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
-
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class LoadingActivity extends ActionBarActivity {
 	private SharedPreferences mPreferences;
@@ -26,6 +25,7 @@ public class LoadingActivity extends ActionBarActivity {
 
 	private Button reloadButton;
 	private TextView informationTextView;
+	private ImageView alertImage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,7 @@ public class LoadingActivity extends ActionBarActivity {
 	private void bindAllViews() {
 		informationTextView = (TextView) findViewById(R.id.activity_loading_infomation);
 		reloadButton = (Button) findViewById(R.id.activity_loading_reload_button);
+		alertImage = (ImageView) findViewById(R.id.activity_loading_alert);
 		reloadButton.setOnClickListener(new ButtonClickListener());
 
 	}
@@ -69,7 +70,7 @@ public class LoadingActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 
-		informationTextView.setText(R.string.activity_loading_text);
+		setViewAsNew();
 
 		baseUrl = mPreferences.getString("sys_basic_url", "");
 		if (checkBaseUrl(baseUrl)) {
@@ -86,7 +87,7 @@ public class LoadingActivity extends ActionBarActivity {
 
 	@Override
 	public void modelFailedLoad(Exception e, Model model) {
-		reloadButton.setVisibility(View.VISIBLE);
+		setErrorViews();
 
 		if (e instanceof IOException) {
 			// 提示网络有问题
@@ -122,7 +123,7 @@ public class LoadingActivity extends ActionBarActivity {
 	}
 
 	public void doReload() {
-		reloadButton.setVisibility(View.INVISIBLE);
+		setViewAsNew();
 		model.load(LoadType.Network, baseUrl);
 	}
 
@@ -139,5 +140,16 @@ public class LoadingActivity extends ActionBarActivity {
 				doReload();
 			}
 		}
+	}
+
+	private void setErrorViews() {
+		reloadButton.setVisibility(View.VISIBLE);
+		alertImage.setVisibility(View.VISIBLE);
+	}
+
+	private void setViewAsNew() {
+		informationTextView.setText(R.string.activity_loading_text);
+		reloadButton.setVisibility(View.INVISIBLE);
+		alertImage.setVisibility(View.INVISIBLE);
 	}
 }

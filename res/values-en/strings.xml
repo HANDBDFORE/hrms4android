@@ -1,6 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Mobile Business</string>
-    <string name="hello_world">Hello world!</string>
+
+    <!-- ///// loading语言 //// -->
+    <string name="menu_settings">Settings</string>
+    <string name="activity_loading_text">Loading&#8230;</string>
+
+    <!-- ///// 登录语言 //// -->
+    <string name="activity_login_loginbutton_text">Login</string>
+    <string name="activity_login_loginbutton_loading">Logining in&#8230;</string>
+    <string name="activity_login_prompt_title">Hand Mobile Business</string>
+    <string name="activity_login_prompt_username">User Name：</string>
+    <string name="activity_login_prompt_password">Password：</string>
+    <!-- ///// 结束 //// -->
+
+
+    <!-- ///// 待办语言 //// -->
+    <string name="activity_todo_list_actionitem_approve">Approve</string>
+    <string name="activity_todo_list_actionitem_deny">Deny</string>
+    <string name="title_activity_todo_list">Todo List</string>
+    <string name="title_activity_approve_detail">details</string>
+    <string name="title_activity_loading">Loading</string>
+    <string name="title_activity_deliver">deliver</string>
+
+    <!-- ///// 转交语言 //// -->
+    <string name="activity_diliver_prompt_to">deliver to</string>
 
 </resources>

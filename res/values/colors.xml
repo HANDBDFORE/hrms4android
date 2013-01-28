@@ -4,10 +4,13 @@
     <color name="yellow">#ffff00</color>
     <color name="blue">#0000ff</color>
     <color name="login_container_backgroud">#FFFFF0</color>
-    <color name="login_background">#99ccff</color>
-    <color name="todo_list_cell_normal_background">#FFFFF0</color>
+    <!-- <color name="login_background">#99ccff</color> -->
+    <color name="login_background">#EDEDED</color>
+    <color name="login_button_pressed">#F4F4F4</color>
+    
 
     <!-- todo listview cell用 -->
+    <color name="todo_list_cell_normal_background">#FFFFF0</color>
     <color name="todo_listview_unread">#FFFFF0</color>
     <color name="todo_listview_read">#F4F4F4</color>
     <color name="todo_listview_focused">#66ccff</color>

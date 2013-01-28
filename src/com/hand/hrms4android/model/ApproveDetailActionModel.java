@@ -37,7 +37,7 @@ public class ApproveDetailActionModel extends AbstractModel {
 		try {
 			final String recordLogicalPK = configReader
 			        .getAttr(new Expression(
-			                "/config/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/pk",
+			                "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/pk",
 			                "name"));
 			String recordLogicalPKValue = record.get(recordLogicalPK);
 			List<ApproveAction> storedActions = actionsDao.getAllActionsByRecordId(recordLogicalPKValue);
@@ -46,7 +46,7 @@ public class ApproveDetailActionModel extends AbstractModel {
 			if (storedActions.size() == 0) {
 
 				String urlValueAtConfigFile = configReader.getAttr(new Expression(
-				        "/config/activity[@name='approve_detail_activity']/request/url[@name='action_query_url']",
+				        "/config/application/activity[@name='approve_detail_activity']/request/url[@name='action_query_url']",
 				        "value"));
 				String service = PlaceHolderReplacer.replaceForValue(record, urlValueAtConfigFile);
 

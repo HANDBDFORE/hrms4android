@@ -25,7 +25,7 @@ public class LoadingModel extends AbstractModel {
 	@Override
 	public void load(LoadType loadType, Object param) {
 		String baseUrl = (String) param;
-		String url = baseUrl + "/android-backend-config.xml";
+		String url = baseUrl + "/android-backend-config-aries.xml";
 
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.get(url, null, new BinaryHttpResponseHandler(new String[] { "application/xml" }) {

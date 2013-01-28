@@ -2,12 +2,13 @@ package com.hand.hrms4android.widget;
 
 import com.hand.hrms4android.R;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 public class EmployeeCardDialog extends Dialog {
@@ -23,19 +24,22 @@ public class EmployeeCardDialog extends Dialog {
 		bindAllViews(context);
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
 	private void bindAllViews(Context context) {
 		cardContent = (WebView) findViewById(R.id.dialog_employee_card_webview);
 		loadingProgress = (ProgressBar) findViewById(R.id.dialog_employee_card_loading);
 		// 设置缓存策略
 		WebSettings webSettings = cardContent.getSettings();
 		webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-
+		webSettings.setJavaScriptEnabled(true);
 		cardContent.loadUrl(cardUrl);
-		cardContent.setWebViewClient(new WebViewClient() {
+		cardContent.setWebChromeClient(new WebChromeClient() {
 			@Override
-			public void onPageFinished(WebView view, String url) {
-				super.onPageFinished(view, url);
-				loadingProgress.setVisibility(View.GONE);
+			public void onProgressChanged(WebView view, int newProgress) {
+				super.onProgressChanged(view, newProgress);
+				if (newProgress == 100) {
+					loadingProgress.setVisibility(View.GONE);
+				}
 			}
 		});
 	}

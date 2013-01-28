@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <!-- function_list行 tag的id -->
+    <item name="function_list_row_tag_wrapper" type="id"/>
+    <item name="function_list_row_tag_is_item" type="id"/>
 
     <!-- todo_list行 tag的id -->
     <item name="todo_list_row_tag_wrapper" type="id"/>

@@ -24,7 +24,7 @@
     <LinearLayout
         style="@style/login_input_container"
         android:layout_marginTop="30dp"
-        android:background="@drawable/container_up_corner" >
+        android:background="@drawable/container_no_corner" > <!--  -->
 
         <TextView
             style="@style/login_prompt"
@@ -46,7 +46,7 @@
     <LinearLayout
         style="@style/login_input_container"
         android:layout_marginTop="-1dp"
-        android:background="@drawable/container_down_corner" >
+        android:background="@drawable/container_no_corner" > <!-- android:background="@drawable/container_down_corner" -->
 
         <TextView
             style="@style/login_prompt"
@@ -59,8 +59,9 @@
             style="@style/login_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword" />
+            android:imeOptions="actionGo"
+            android:inputType="textPassword"
+            android:singleLine="true" />
     </LinearLayout>
 
     <!-- 登录 -->
@@ -69,10 +70,10 @@
         android:id="@+id/activity_login_textedit_loginButton"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/btn_default_holo_light"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="-1dp"
+        android:background="@drawable/btn_login"
         android:text="@string/activity_login_loginbutton_text" />
 
 </LinearLayout>

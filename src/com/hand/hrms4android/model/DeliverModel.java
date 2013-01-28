@@ -28,7 +28,7 @@ public class DeliverModel extends AbstractModel {
 
 		try {
 			String actionName = configReader.getAttr(new Expression(
-			        "/config/activity[@name='deliver_activity']/request/url[@name='employee_query_url']", "value"));
+			        "/config/application/activity[@name='deliver_activity']/request/url[@name='employee_query_url']", "value"));
 
 			RequestParams params = new RequestParams();
 			params.put("parameter", userInput);

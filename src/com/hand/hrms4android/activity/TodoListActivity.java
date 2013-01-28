@@ -397,26 +397,28 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		int index = 0;
-		// menu.add(0, R.id.todo_list_menu_search, index++,
-		// "搜索").setIcon(R.drawable.ic_search_inverse)
-		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
-		// MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		// menu.add(0, R.id.todo_list_menu_refresh, index++,
-		// "刷新").setIcon(R.drawable.ic_refresh_inverse)
-		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
-		// MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		// menu.add(0, R.id.todo_list_menu_settings, index++,
-		// "设置").setIcon(R.drawable.ic_menu_preferences)
-		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
-		// MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		menu.add(0, R.id.todo_list_menu_logout, index++, "退出登录").setIcon(R.drawable.ic_exit)
-		        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-		return true;
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// int index = 0;
+	// // menu.add(0, R.id.todo_list_menu_search, index++,
+	// // "搜索").setIcon(R.drawable.ic_search_inverse)
+	// // .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
+	// // MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	// // menu.add(0, R.id.todo_list_menu_refresh, index++,
+	// // "刷新").setIcon(R.drawable.ic_refresh_inverse)
+	// // .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
+	// // MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	// // menu.add(0, R.id.todo_list_menu_settings, index++,
+	// // "设置").setIcon(R.drawable.ic_menu_preferences)
+	// // .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
+	// // MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	// menu.add(0, R.id.todo_list_menu_logout, index++,
+	// "退出登录").setIcon(R.drawable.ic_exit)
+	// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
+	// MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	//
+	// return true;
+	// }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
