@@ -140,7 +140,7 @@ public class DeliverActivity extends ActionBarActivity {
 			if (autoCompleteAdapter.getItem(position) instanceof Map<?, ?>) {
 				selectedItemData = (Map<String, String>) autoCompleteAdapter.getItem(position);
 				deliverTo.setSelection(position);
-				deliverTo.setText(selectedItemData.get(adapter_from_place_holder[1]));
+				deliverTo.setText(selectedItemData.get(adapter_from_place_holder[0]));
 			}
 		}
 	}
@@ -157,7 +157,7 @@ public class DeliverActivity extends ActionBarActivity {
 		MenuItem item = menu.findItem(R.id.approve_opinion_ok);
 
 		String input = deliverTo.getText().toString();
-		if (selectedItemData != null && (input.equals(selectedItemData.get(adapter_from_place_holder[1])))) {
+		if (selectedItemData != null && (input.equals(selectedItemData.get(adapter_from_place_holder[0])))) {
 			item.setEnabled(true);
 		} else {
 			item.setEnabled(false);

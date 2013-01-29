@@ -8,16 +8,19 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.network.NetworkUtil;
 
-public class HTMLActivity extends Activity {
+public class HTMLActivity extends ActionBarActivity {
 	private WebView contentView;
+	private ProgressBar loadingProgress;
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
@@ -31,11 +34,12 @@ public class HTMLActivity extends Activity {
 		webSettings.setJavaScriptEnabled(true);
 		String url = getIntent().getStringExtra("url");
 		contentView.loadUrl(NetworkUtil.getAbsoluteUrl(url.replace("${base_url}", "")));
-
 		String title = getIntent().getStringExtra("title");
 		if (!StringUtils.isEmpty(title)) {
 			setTitle(title);
 		}
+
+		loadingProgress = (ProgressBar) findViewById(R.id.html_activity_loading_progress);
 	}
 
 	private class ContentWebClient extends WebViewClient {
@@ -79,7 +83,12 @@ public class HTMLActivity extends Activity {
 			}
 
 			return false;
+		}
 
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			super.onPageFinished(view, url);
+			loadingProgress.setVisibility(View.GONE);
 		}
 	}
 

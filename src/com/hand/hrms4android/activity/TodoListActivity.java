@@ -12,11 +12,14 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
@@ -50,6 +53,8 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 	private static int LISTVIEW_HEADER_COUNT = 1;
 
 	private PullToRefreshListView todoListViewWrapper;
+	private ImageButton reloadButton;
+	private TextView reloadText;
 
 	private ActionMode.Callback actionModeCallback;
 	private TodoListAdapter listAdapter;
@@ -69,6 +74,9 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 
 		bindAllViews();
 		buildResource();
+
+		// 第一次进入程序，从本地读取
+		this.model.load(LoadType.Local, null);
 	}
 
 	private void bindAllViews() {
@@ -77,6 +85,17 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 		todoListViewWrapper.setOnItemClickListener(this);
 		todoListViewWrapper.getRefreshableView().setChoiceMode(ListView.CHOICE_MODE_NONE);
 		todoListViewWrapper.setOnRefreshListener(new PulldownListener());
+
+		reloadButton = (ImageButton) findViewById(R.id.activity_todo_list_reload_button);
+		reloadButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				model.load(LoadType.Network, null);
+				reloadButton.setEnabled(false);
+				setSupportProgressBarIndeterminateVisibility(true);
+			}
+		});
+		reloadText = (TextView) findViewById(R.id.activity_todo_list_reload_text);
 	}
 
 	private void buildResource() {
@@ -103,12 +122,19 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 		listAdapter = new TodoListAdapter(this, listModel);
 		todoListViewWrapper.setAdapter(listAdapter);
 
-		// 第一次进入程序，从本地读取
-		this.model.load(LoadType.Local, null);
 	}
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
+		// 重新绘制界面
+		listAdapter.reFetchData();
+
+		if ((listAdapter.getCount() == 0) && (!listModel.needLoadOnceMore())) {
+			showEmptyTip();
+		} else {
+			showList();
+		}
+
 		if (listModel.needLoadOnceMore()) {
 			setSupportProgressBarIndeterminateVisibility(true);
 			listModel.load(LoadType.Network, null);
@@ -117,8 +143,6 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 			todoListViewWrapper.onRefreshComplete();
 		}
 
-		// 重新绘制界面
-		listAdapter.reFetchData();
 	}
 
 	@Override
@@ -238,6 +262,22 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 
 	private int getSelectedRowCount() {
 		return listAdapter.getSelectedRowCount();
+	}
+
+	private void showList() {
+		todoListViewWrapper.setVisibility(View.VISIBLE);
+		todoListViewWrapper.bringToFront();
+		reloadButton.setVisibility(View.INVISIBLE);
+		reloadText.setVisibility(View.INVISIBLE);
+	}
+
+	private void showEmptyTip() {
+		todoListViewWrapper.setVisibility(View.INVISIBLE);
+		reloadButton.setVisibility(View.VISIBLE);
+		reloadButton.setEnabled(true);
+		reloadButton.bringToFront();
+		reloadText.setVisibility(View.VISIBLE);
+		reloadText.bringToFront();
 	}
 
 	/**

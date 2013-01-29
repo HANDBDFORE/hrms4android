@@ -52,6 +52,11 @@ public class FunctionListAdapter extends BaseAdapter {
 	}
 
 	@Override
+	public int getViewTypeCount() {
+		return super.getViewTypeCount() + 1;
+	}
+
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		int type = getItemViewType(position);
 		// System.out.println("getView " + position + " " + convertView +
@@ -130,13 +135,9 @@ public class FunctionListAdapter extends BaseAdapter {
 			// 找到图像所在行
 			View row = mListView.findViewWithTag(rowPosition);
 			if (row != null) {
-
 				FunctionListCellWrapper wrapper = (FunctionListCellWrapper) row
 				        .getTag(R.id.function_list_row_tag_wrapper);
-				// TODO 临时解决方案，有点乱
-				if (wrapper.getImage() != null) {
-					wrapper.getImage().setImageBitmap(bitmap);
-				}
+				wrapper.getImage().setImageBitmap(bitmap);
 			}
 		}
 
