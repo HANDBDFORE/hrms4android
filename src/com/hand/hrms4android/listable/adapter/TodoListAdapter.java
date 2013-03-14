@@ -65,7 +65,7 @@ public class TodoListAdapter extends BaseAdapter {
 
 		// 设置显示值
 		wrapper.getTitleTextView().setText(todoItem.getTitle());
-		wrapper.getDateTextView().setText(todoItem.getDate());
+		wrapper.getDateTextView().setText(todoItem.getTitleRight());
 		wrapper.getSubTitleTextView().setText(todoItem.getSubTitle());
 		wrapper.getInformationTextView().setText(todoItem.getInformation());
 

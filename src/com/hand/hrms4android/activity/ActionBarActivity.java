@@ -20,7 +20,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class ActionBarActivity extends AbstractActivity implements OnCreatePanelMenuListener, OnPreparePanelListener,
+public class ActionBarActivity extends BaseActivity implements OnCreatePanelMenuListener, OnPreparePanelListener,
         OnMenuItemSelectedListener, OnActionModeStartedListener, OnActionModeFinishedListener {
 	private ActionBarSherlock mActionBarHelper;
 

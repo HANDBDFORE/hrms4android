@@ -17,6 +17,7 @@ import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
+import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.StorageUtil;
 
 import android.app.AlertDialog;
@@ -37,7 +38,15 @@ public class FunctionListActivity extends ActionBarActivity implements OnItemCli
 
 	private List<FunctionListItem> fixItem;
 
+	/**
+	 * 待办事项
+	 */
 	private static final String TODO_ITEM_ID = "todo";
+
+	/**
+	 * 已完成事项
+	 */
+	private static final String DONE_ITEM_ID = "done";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +72,15 @@ public class FunctionListActivity extends ActionBarActivity implements OnItemCli
 			e.printStackTrace();
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
-
 	}
 
 	private void buildFixedItems() {
 		fixItem = new ArrayList<FunctionListItem>();
-		fixItem.add(new FunctionListItem("SECTION", "工作流", "", "", "fixed"));
-		fixItem.add(new FunctionListItem("ITEM", "待办事项", "bundle://todo_unread.png", "", TODO_ITEM_ID));
+		fixItem.add(new FunctionListItem(Constrants.FUNCTION_LIST_ITEM_TYPE_SECTION, "工作流", "", "", "fixed"));
+		fixItem.add(new FunctionListItem(Constrants.FUNCTION_LIST_ITEM_TYPE_ITEM, "待办事项", "bundle://todo_unread.png",
+		        "", TODO_ITEM_ID));
+		fixItem.add(new FunctionListItem(Constrants.FUNCTION_LIST_ITEM_TYPE_ITEM, "已审批", "bundle://todo_unread.png",
+		        "", DONE_ITEM_ID));
 	}
 
 	@Override
@@ -88,11 +99,21 @@ public class FunctionListActivity extends ActionBarActivity implements OnItemCli
 	}
 
 	@Override
+	public void modelFailedLoad(Exception e, Model model) {
+		super.modelFailedLoad(e, model);
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> listview, View row, int position, long id) {
 		FunctionListItem item = listAdapter.getItem(position);
 
 		if (item.getParentId() != null && item.getParentId().equalsIgnoreCase(TODO_ITEM_ID)) {
 			startActivity(new Intent(this, TodoListActivity.class));
+			return;
+		}
+
+		if (item.getParentId() != null && item.getParentId().equalsIgnoreCase(DONE_ITEM_ID)) {
+			startActivity(new Intent(this, DoneListActivity.class));
 			return;
 		}
 

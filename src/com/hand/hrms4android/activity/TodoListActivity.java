@@ -99,6 +99,7 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 	}
 
 	private void buildResource() {
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		listModel = new TodoListModel(0, this);
 		this.model = listModel;
 
@@ -492,6 +493,11 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 			});
 			builder.show();
 
+			break;
+		}
+
+		case android.R.id.home: {
+			finish();
 			break;
 		}
 		default:

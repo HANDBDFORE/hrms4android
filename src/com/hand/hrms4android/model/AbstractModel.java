@@ -1,5 +1,6 @@
 package com.hand.hrms4android.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ public abstract class AbstractModel implements Model {
 	public AbstractModel(int id, ModelActivity activity) {
 		modelID = id;
 		this.activity = activity;
+		loadAuroraDataset = new ArrayList<Map<String, String>>();
 	}
 
 	public ModelActivity getActivity() {

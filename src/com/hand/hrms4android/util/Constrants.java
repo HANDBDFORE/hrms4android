@@ -12,4 +12,7 @@ public class Constrants {
 
 	public static final String SYS_PREFRENCES_SERVER_BASE_URL = "sys_basic_url";
 	public static final String SYS_PREFRENCES_USERNAME = "username";
+
+	public static final String FUNCTION_LIST_ITEM_TYPE_SECTION = "SECTION";
+	public static final String FUNCTION_LIST_ITEM_TYPE_ITEM = "ITEM";
 }

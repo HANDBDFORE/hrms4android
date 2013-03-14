@@ -1,0 +1,2 @@
+1、修改配置文件来源 XmlConfigReader
+2、LogUtil isDebug改为false

@@ -29,6 +29,6 @@ public class LogUtil {
 	}
 
 	private static boolean isDebug() {
-		return false;
+		return true;
 	}
 }

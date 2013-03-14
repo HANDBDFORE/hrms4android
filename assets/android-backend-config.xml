@@ -5,7 +5,7 @@
 			<view>
 				<title_textview text="汉得移动配置文件" />
 			</view>
-
+ 
 			<request>
 				<url
 					name="login_submit_url"
@@ -75,6 +75,23 @@
 				<url
 					name="employee_query_url"
 					value="autocrud/ios.ios_deliver.ios_workflow_deliver_query/query" />
+			</request>
+		</activity>
+		
+		<activity name="done_list_activity" >
+			<view>
+				<listview_cell>
+					<title_textview text="${record_id}" />
+					<date_textview text="${date_limit}" />
+					<subtitle_textview text="${node_name}" />
+					<information_textview text="${workflow_desc}:${node_name}?${date_limit}" />
+				</listview_cell>
+			</view>
+
+			<request>
+				<url
+					name="done_list_query_url"
+					value="autocrud/ios.ios_test.ios_done_list_test/query" />
 			</request>
 		</activity>
 	</application>

@@ -30,5 +30,7 @@
     <!-- ///// 功能语言 //// -->
     <string name="title_activity_function_list">Functions</string>
     <string name="title_activity_html"></string>
+    <string name="title_activity_done_list">DoneListActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

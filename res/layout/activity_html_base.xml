@@ -1,15 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_approve_detail_container"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    tools:context=".DetailBaseActivity" >
+
+    <!-- DetailBaseActivity 使用的布局文件 -->
 
     <WebView
-        android:id="@+id/activity_approve_detail_content_webview"
+        android:id="@+id/html_base_activity_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <ProgressBar
-        android:id="@+id/activity_approve_detail_progress"
+        android:id="@+id/html_base_activity_loading_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

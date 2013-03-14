@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ public class ApproveDetailActivity extends ActionBarActivity {
 	private static final int GROUP_TOOLS = 101;
 
 	private WebView contentWebView;
+	private ProgressBar loadingProgressBar;
 	private RelativeLayout rootView;
 	private Dialog employeeCard;
 	private ConfigReader configReader;
@@ -66,7 +69,10 @@ public class ApproveDetailActivity extends ActionBarActivity {
 		// LinearLayout rootView = (LinearLayout)
 		// findViewById(R.id.activity_approve_detail_container);
 		contentWebView = (WebView) findViewById(R.id.activity_approve_detail_content_webview);
+		contentWebView.setWebChromeClient(new ContentWebviewChromeClient());
 		rootView = (RelativeLayout) findViewById(R.id.activity_approve_detail_container);
+
+		loadingProgressBar = (ProgressBar) findViewById(R.id.activity_approve_detail_progress);
 
 	}
 
@@ -104,7 +110,7 @@ public class ApproveDetailActivity extends ActionBarActivity {
 		// 拿到当前指向的记录
 		currentRowData = todoListModel.currentItem();
 		String pageURL = NetworkUtil.getAbsoluteUrl(currentRowData.get(urlKeyName));
-
+		loadingProgressBar.setVisibility(View.VISIBLE);
 		contentWebView.loadUrl(pageURL);
 		this.model = new ApproveDetailActionModel(0, this);
 		this.model.load(LoadType.Network, currentRowData);
@@ -133,34 +139,6 @@ public class ApproveDetailActivity extends ActionBarActivity {
 		if (actions == null || actions.size() == 0) {
 			return super.onCreateOptionsMenu(menu);
 		} else {
-
-			// for (int i = 0; i < actions.size(); i++) {
-			// ApproveAction action = actions.get(i);
-			//
-			// MenuItem item = menu.add(GROUP_ACTION,
-			// R.id.approve_detail_action, menuItemBaseOrder++,
-			// action.actionTitle);
-			// item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
-			// MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-			//
-			// Intent intent = new Intent();
-			// intent.putExtra(DataBaseMetadata.TodoListLogical.ACTION,
-			// action.actionId);
-			// item.setIntent(intent);
-			//
-			// if (action.actionType.equals(ApproveAction.ACTION_TYPE_APPROVE))
-			// {
-			// item.setIcon(R.drawable.ic_menu_mark);
-			// } else if
-			// (action.actionType.equals(ApproveAction.ACTION_TYPE_REJECT)) {
-			// item.setIcon(R.drawable.ic_menu_block);
-			// } else if
-			// (action.actionType.equals(ApproveAction.ACTION_TYPE_DELIVER)) {
-			// item.setIcon(R.drawable.ic_menu_cc);
-			// } else {
-			// item.setIcon(R.drawable.ic_compose);
-			// }
-			// }
 
 			for (int i = 0; i < actions.size(); i++) {
 				ApproveAction action = actions.get(i);
@@ -317,6 +295,16 @@ public class ApproveDetailActivity extends ActionBarActivity {
 			rootView.invalidate();
 
 			return true;
+		}
+	}
+
+	private class ContentWebviewChromeClient extends WebChromeClient {
+		@Override
+		public void onProgressChanged(WebView view, int newProgress) {
+			if (newProgress == 100) {
+				loadingProgressBar.setVisibility(View.GONE);
+			}
+			super.onProgressChanged(view, newProgress);
 		}
 	}
 
