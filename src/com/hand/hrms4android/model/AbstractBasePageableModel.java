@@ -70,11 +70,10 @@ public abstract class AbstractBasePageableModel extends AbstractPageableModel<Ma
 
 	@Override
 	public Iterator<Map<String, String>> createIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 	public void setRecordAsSelected(IndexPath selectedIndex) {
-		this.currentSelectedIndex = selectedIndex;
+		this.currentSelectedIndex = new IndexPath(selectedIndex);
 	}
 }

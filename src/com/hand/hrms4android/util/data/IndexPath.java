@@ -12,6 +12,11 @@ public class IndexPath {
 		this.row = row;
 	}
 
+	public IndexPath(IndexPath path) {
+		this.setSection(path.getSection());
+		this.setRow(path.getRow());
+	}
+
 	public int getSection() {
 		return section;
 	}

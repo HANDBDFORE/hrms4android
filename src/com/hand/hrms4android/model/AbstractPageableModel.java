@@ -8,7 +8,6 @@ public abstract class AbstractPageableModel<E> extends AbstractModel implements 
 
 	public AbstractPageableModel(int id, ModelActivity activity) {
 		super(id, activity);
-		// TODO Auto-generated constructor stub
 	}
 
 }

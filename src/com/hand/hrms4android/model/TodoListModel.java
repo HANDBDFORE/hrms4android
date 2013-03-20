@@ -85,12 +85,6 @@ public class TodoListModel extends AbstractBasePageableModel {
 
 	}
 
-	@Override
-	public void setRecordAsSelected(IndexPath selectedIndex) {
-		this.currentSelectedIndex.setRow(selectedIndex.getRow());
-		this.currentSelectedIndex.setSection(selectedIndex.getSection());
-	}
-
 	// /////////////////////////////////////////////////////////////////////////////
 	// 提交数据
 	// /////////////////////////////////////////////////////////////////////////////
@@ -427,7 +421,7 @@ public class TodoListModel extends AbstractBasePageableModel {
 	public Iterator<Map<String, String>> createIterator() {
 		return this;
 	}
-	
+
 	// /////////////////////////////////////////////////////////////////////////////
 	// 放入审批数据
 	// /////////////////////////////////////////////////////////////////////////////
