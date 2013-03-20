@@ -1,27 +1,32 @@
 package com.hand.hrms4android.activity;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.adapter.DoneListAdapter;
+import com.hand.hrms4android.model.AbstractBasePageableModel;
 import com.hand.hrms4android.model.DoneListModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
+import com.hand.hrms4android.util.TempTransfer;
+import com.hand.hrms4android.util.data.IndexPath;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class DoneListActivity extends ActionBarActivity {
+public class DoneListActivity extends ActionBarActivity implements OnItemClickListener {
 	private ListView doneList;
 	private ConfigReader configReader;
 	private String loadURL;
 	private DoneListAdapter listAdapter;
+	private AbstractBasePageableModel doneModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +34,10 @@ public class DoneListActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_done_list);
 
 		doneList = (ListView) findViewById(android.R.id.list);
+		doneList.setOnItemClickListener(this);
 
-		this.model = new DoneListModel(this, 0);
+		doneModel = new DoneListModel(this, 0);
+		this.model = doneModel;
 		listAdapter = getAdapter();
 		doneList.setAdapter(listAdapter);
 
@@ -58,9 +65,16 @@ public class DoneListActivity extends ActionBarActivity {
 
 	private DoneListAdapter getAdapter() {
 		if (listAdapter == null) {
-			listAdapter = new DoneListAdapter(this, model);
+			listAdapter = new DoneListAdapter(this, doneModel);
 		}
 		return listAdapter;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		TempTransfer.container.put(TempTransfer.KEY_TODO_LIST_MODEL, model);
+		doneModel.setRecordAsSelected(new IndexPath(0, position));
+		startActivity(new Intent(this, DoneReceiptActivity.class));
 	}
 
 }

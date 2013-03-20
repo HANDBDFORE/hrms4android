@@ -9,7 +9,7 @@ import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.util.PlaceHolderReplacer;
 
-public class DoneListItemFactory implements ItemFactory<TextListItem> {
+public class DoneListItemFactory implements ItemFactory<DoneListItem> {
 
 	private String titlePlaceHolder;
 	private String datePlaceHolder;
@@ -45,20 +45,20 @@ public class DoneListItemFactory implements ItemFactory<TextListItem> {
 	}
 
 	@Override
-	public TextListItem getItem(Map<String, String> record) {
-		TextListItem item = new TextListItem();
+	public DoneListItem getItem(Map<String, String> record) {
+		DoneListItem item = new DoneListItem();
 
 		item.setTitle(PlaceHolderReplacer.replaceForValue(record, titlePlaceHolder));
 		item.setTitleRight(PlaceHolderReplacer.replaceForValue(record, datePlaceHolder));
 		item.setSubTitle(PlaceHolderReplacer.replaceForValue(record, subTitlePlaceHolder));
 		item.setInformation((PlaceHolderReplacer.replaceForValue(record, informationPlaceHolder)));
-
+		item.setScreenName(record.get("screen_name"));
 		return item;
 	}
 
 	@Override
-	public List<TextListItem> getItemList(List<Map<String, String>> dataset) {
-		List<TextListItem> result = new ArrayList<TextListItem>();
+	public List<DoneListItem> getItemList(List<Map<String, String>> dataset) {
+		List<DoneListItem> result = new ArrayList<DoneListItem>();
 
 		for (Map<String, String> record : dataset) {
 			result.add(getItem(record));

@@ -67,8 +67,8 @@
 
 		<activity name="deliver_activity" >
 			<view>
-				<autocomplete_title text="${unit_name}" />
-				<autocomplete_sub_title text="${employee_code}" />
+				<autocomplete_title text="${name}" />
+				<autocomplete_sub_title text="${unit_name} ${position_name}" />
 			</view>
 
 			<request>

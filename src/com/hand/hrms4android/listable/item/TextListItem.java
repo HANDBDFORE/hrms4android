@@ -15,7 +15,8 @@ public class TextListItem extends SimpleTextListItem {
 		super();
 	}
 
-	public TextListItem(String subTitle, String information) {
+	public TextListItem(String title, String titleRight, String subTitle, String information) {
+		super(subTitle, titleRight);
 		this.subTitle = subTitle;
 		this.information = information;
 	}

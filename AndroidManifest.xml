@@ -63,6 +63,16 @@
             android:name="com.hand.hrms4android.activity.HTMLActivity"
             android:label="@string/title_activity_html" >
         </activity>
+        <activity
+            android:name="com.hand.hrms4android.activity.BaseReceiptActivity"
+            android:label="@string/title_activity_receipt_base"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.hand.hrms4android.activity.DoneReceiptActivity"
+            android:label="@string/title_activity_done_receipt"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
     </application>
 
 </manifest>

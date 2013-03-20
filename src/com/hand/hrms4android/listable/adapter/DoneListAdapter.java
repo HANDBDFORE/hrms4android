@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.listable.item.DoneListItem;
 import com.hand.hrms4android.listable.item.DoneListItemFactory;
 import com.hand.hrms4android.listable.item.ItemFactory;
-import com.hand.hrms4android.listable.item.TextListItem;
-import com.hand.hrms4android.model.Model;
+import com.hand.hrms4android.model.AbstractBasePageableModel;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 
 import android.content.Context;
@@ -18,15 +18,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class DoneListAdapter extends BaseAdapter {
-	private Model model;
+	private AbstractBasePageableModel model;
 	private LayoutInflater mInflater;
-	private ItemFactory<TextListItem> itemFactory;
-	private List<TextListItem> items;
+	private ItemFactory<DoneListItem> itemFactory;
+	private List<DoneListItem> items;
 
-	public DoneListAdapter(Context context, Model model) {
+	public DoneListAdapter(Context context, AbstractBasePageableModel model) {
 		this.model = model;
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		items = new ArrayList<TextListItem>();
+		items = new ArrayList<DoneListItem>();
 		itemFactory = new DoneListItemFactory(XmlConfigReader.getInstance());
 
 	}
@@ -37,7 +37,7 @@ public class DoneListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public TextListItem getItem(int position) {
+	public DoneListItem getItem(int position) {
 		return items.get(position);
 	}
 
@@ -59,7 +59,7 @@ public class DoneListAdapter extends BaseAdapter {
 			wrapper = (DoneListCellWrapper) row.getTag();
 		}
 
-		TextListItem item = getItem(position);
+		DoneListItem item = getItem(position);
 		wrapper.getTitleTextView().setText(item.getTitle());
 		wrapper.getTitleRightTextView().setText(item.getTitleRight());
 		wrapper.getSubTitleTextView().setText(item.getSubTitle());
@@ -69,7 +69,7 @@ public class DoneListAdapter extends BaseAdapter {
 	}
 
 	public void reFetchData() {
-		List<TextListItem> newItems = itemFactory.getItemList(model.getAuroraDataset());
+		List<DoneListItem> newItems = itemFactory.getItemList(model.getAuroraDataset());
 		this.items = newItems;
 		this.notifyDataSetChanged();
 	}

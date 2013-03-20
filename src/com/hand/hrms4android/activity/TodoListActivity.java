@@ -190,12 +190,12 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 			} else {
 				mActionMode.setSubtitle(String.valueOf(getSelectedRowCount()));
 			}
-
 		}
 		// 非多选状态
 		else {
 
 			// 启动明细页面
+//			Intent intent = new Intent(this, ApproveDetailActivity.class);
 			Intent intent = new Intent(this, ApproveDetailActivity.class);
 			listModel.setRecordAsSelected(new IndexPath(0, position - LISTVIEW_HEADER_COUNT));
 

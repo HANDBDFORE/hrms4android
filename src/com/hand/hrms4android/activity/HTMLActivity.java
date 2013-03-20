@@ -7,7 +7,7 @@ import android.os.Bundle;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.network.NetworkUtil;
 
-public class HTMLActivity extends DetailBaseActivity {
+public class HTMLActivity extends HTMLBaseActivity {
 
 	@Override
 	protected void setCurrentContentView(Bundle savedInstanceState) {
@@ -17,7 +17,7 @@ public class HTMLActivity extends DetailBaseActivity {
 	@Override
 	protected void afterSuperOnCreateFinish(Bundle savedInstanceState) {
 		String url = getIntent().getStringExtra("url");
-		contentView.loadUrl(NetworkUtil.getAbsoluteUrl(url.replace("${base_url}", "")));
+		contentWebView.loadUrl(NetworkUtil.getAbsoluteUrl(url.replace("${base_url}", "")));
 		String title = getIntent().getStringExtra("title");
 		if (!StringUtils.isEmpty(title)) {
 			setTitle(title);

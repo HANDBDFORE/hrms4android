@@ -31,8 +31,7 @@ import com.loopj.android.http.HDJsonHttpResponseHandler;
 import com.loopj.android.http.HDRequestParamsBatch;
 import com.loopj.android.http.RequestParams;
 
-public class TodoListModel extends AbstractModel implements Aggregate<Map<String, String>>,
-        Iterator<Map<String, String>> {
+public class TodoListModel extends AbstractBasePageableModel {
 
 	private ConfigReader configReader;
 	private TodoListDao dao;
@@ -86,6 +85,7 @@ public class TodoListModel extends AbstractModel implements Aggregate<Map<String
 
 	}
 
+	@Override
 	public void setRecordAsSelected(IndexPath selectedIndex) {
 		this.currentSelectedIndex.setRow(selectedIndex.getRow());
 		this.currentSelectedIndex.setSection(selectedIndex.getSection());
@@ -108,7 +108,8 @@ public class TodoListModel extends AbstractModel implements Aggregate<Map<String
 		try {
 			// 读取地址
 			String actionURL = configReader.getAttr(new Expression(
-			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']", "value"));
+			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']",
+			        "value"));
 
 			NetworkUtil.post(actionURL, requestParams, new HDJsonHttpResponseHandler() {
 				@Override
@@ -168,8 +169,10 @@ public class TodoListModel extends AbstractModel implements Aggregate<Map<String
 		// 查询数据
 		String service = "";
 		try {
-			service = configReader.getAttr(new Expression(
-			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']", "value"));
+			service = configReader
+			        .getAttr(new Expression(
+			                "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']",
+			                "value"));
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			activity.modelFailedLoad(new Exception("Cannot get url from config file! "), this);
@@ -210,9 +213,10 @@ public class TodoListModel extends AbstractModel implements Aggregate<Map<String
 					boolean sameAsLocal = checkLocalData(fields);
 
 					// 获取主键
-					String primaryKey = configReader.getAttr(new Expression(
-					        "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/pk",
-					        "name"));
+					String primaryKey = configReader
+					        .getAttr(new Expression(
+					                "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/pk",
+					                "name"));
 
 					// 保存主键
 					// TODO：这样写很别扭，要重构
@@ -423,59 +427,7 @@ public class TodoListModel extends AbstractModel implements Aggregate<Map<String
 	public Iterator<Map<String, String>> createIterator() {
 		return this;
 	}
-
-	// ///////////////////////////////////////////////////
-	// 实现迭代
-	// ///////////////////////////////////////////////////
-	@Override
-	public void moveToFirst() {
-		currentSelectedIndex.setSection(0);
-		currentSelectedIndex.setRow(0);
-
-	}
-
-	@Override
-	public void next() {
-		int row = currentSelectedIndex.getRow();
-		if (row < loadAuroraDataset.size()) {
-			currentSelectedIndex.setRow(++row);
-		}
-	}
-
-	@Override
-	public boolean hasNext() {
-		int row = currentSelectedIndex.getRow();
-		if ((++row) >= loadAuroraDataset.size()) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public Map<String, String> currentItem() {
-		if (currentSelectedIndex.getRow() >= loadAuroraDataset.size()) {
-			return null;
-		}
-		return loadAuroraDataset.get(currentSelectedIndex.getRow());
-	}
-
-	@Override
-	public boolean hasPrevious() {
-		int row = currentSelectedIndex.getRow();
-		if ((--row) < 0) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public void previous() {
-		int row = currentSelectedIndex.getRow();
-		if (row > 0) {
-			currentSelectedIndex.setRow(--row);
-		}
-	}
-
+	
 	// /////////////////////////////////////////////////////////////////////////////
 	// 放入审批数据
 	// /////////////////////////////////////////////////////////////////////////////
