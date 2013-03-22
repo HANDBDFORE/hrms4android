@@ -1,9 +1,11 @@
 package com.hand.hrms4android.activity;
 
+import java.util.Map;
+
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.adapter.DoneListAdapter;
-import com.hand.hrms4android.model.AbstractBasePageableModel;
+import com.hand.hrms4android.model.AbstractPageableModel;
 import com.hand.hrms4android.model.DoneListModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
@@ -26,7 +28,7 @@ public class DoneListActivity extends ActionBarActivity implements OnItemClickLi
 	private ConfigReader configReader;
 	private String loadURL;
 	private DoneListAdapter listAdapter;
-	private AbstractBasePageableModel doneModel;
+	private AbstractPageableModel<Map<String, String>> doneModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,6 @@ public class DoneListActivity extends ActionBarActivity implements OnItemClickLi
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
-
 		listAdapter.reFetchData();
 	}
 

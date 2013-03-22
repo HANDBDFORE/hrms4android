@@ -17,12 +17,12 @@ import com.hand.hrms4android.pojo.ApproveAction;
 import com.hand.hrms4android.util.PlaceHolderReplacer;
 import com.loopj.android.http.HDJsonHttpResponseHandler;
 
-public class ApproveDetailActionModel extends AbstractModel {
+public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveAction>> {
 	private ConfigReader configReader;
 	private ActionsDao actionsDao;
 	private List<ApproveAction> actions;
 
-	public ApproveDetailActionModel(int id,ModelActivity activity) {
+	public ApproveDetailActionModel(int id, ModelActivity activity) {
 		super(id, activity);
 		this.configReader = XmlConfigReader.getInstance();
 		actionsDao = new ActionsDao();
@@ -45,9 +45,10 @@ public class ApproveDetailActionModel extends AbstractModel {
 			// 没有存储此项动作
 			if (storedActions.size() == 0) {
 
-				String urlValueAtConfigFile = configReader.getAttr(new Expression(
-				        "/config/application/activity[@name='approve_detail_activity']/request/url[@name='action_query_url']",
-				        "value"));
+				String urlValueAtConfigFile = configReader
+				        .getAttr(new Expression(
+				                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='action_query_url']",
+				                "value"));
 				String service = PlaceHolderReplacer.replaceForValue(record, urlValueAtConfigFile);
 
 				NetworkUtil.post(service, null, new HDJsonHttpResponseHandler() {
@@ -83,7 +84,7 @@ public class ApproveDetailActionModel extends AbstractModel {
 	}
 
 	@Override
-	public Object getProcessResult() {
+	public List<ApproveAction> getProcessData() {
 		return actions;
 	}
 }

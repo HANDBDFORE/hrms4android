@@ -13,14 +13,14 @@ import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.loopj.android.http.HDJsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class DeliverModel extends AbstractModel {
-	private ConfigReader configReader;
+public class DeliverModel extends AbstractListModel<Map<String, String>> {
 
 	public DeliverModel(int id, ModelActivity activity) {
 		super(id, activity);
 		configReader = XmlConfigReader.getInstance();
-
 	}
+
+	private ConfigReader configReader;
 
 	@Override
 	public void load(LoadType loadType, Object param) {
@@ -28,7 +28,8 @@ public class DeliverModel extends AbstractModel {
 
 		try {
 			String actionName = configReader.getAttr(new Expression(
-			        "/config/application/activity[@name='deliver_activity']/request/url[@name='employee_query_url']", "value"));
+			        "/config/application/activity[@name='deliver_activity']/request/url[@name='employee_query_url']",
+			        "value"));
 
 			RequestParams params = new RequestParams();
 			params.put("parameter", userInput);
@@ -52,7 +53,11 @@ public class DeliverModel extends AbstractModel {
 			activity.modelFailedLoad(e, DeliverModel.this);
 			return;
 		}
+	}
 
+	@Override
+	public List<Map<String, String>> getProcessData() {
+		return loadAuroraDataset;
 	}
 
 }

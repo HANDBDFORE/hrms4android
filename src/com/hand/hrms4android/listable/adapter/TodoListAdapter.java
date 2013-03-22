@@ -2,6 +2,7 @@ package com.hand.hrms4android.listable.adapter;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.item.ItemFactory;
 import com.hand.hrms4android.listable.item.TodoListItem;
 import com.hand.hrms4android.listable.item.TodoListItemFactory;
-import com.hand.hrms4android.model.Model;
+import com.hand.hrms4android.model.AbstractPageableModel;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.persistence.DataBaseMetadata;
 import com.hand.hrms4android.util.Constrants;
@@ -24,12 +25,12 @@ public class TodoListAdapter extends BaseAdapter {
 
 	private LayoutInflater mLayoutInflater;
 	private List<String> selectedRecordIDs;
-	private Model model;
+	private AbstractPageableModel<Map<String, String>> model;
 	private List<TodoListItem> items;
 	private ItemFactory<TodoListItem> itemFactory;
 	private Context context;
 
-	public TodoListAdapter(Context context, Model model) {
+	public TodoListAdapter(Context context, AbstractPageableModel<Map<String, String>> model) {
 		this.context = context;
 		mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		selectedRecordIDs = new LinkedList<String>();
@@ -38,9 +39,9 @@ public class TodoListAdapter extends BaseAdapter {
 		this.model = model;
 
 		// 转换显示值
-		if (model != null && model.getAuroraDataset() != null) {
+		if (model != null && model.getProcessData() != null) {
 
-			items = itemFactory.getItemList(model.getAuroraDataset());
+			items = itemFactory.getItemList(model.getProcessData());
 		}
 	}
 
@@ -75,7 +76,7 @@ public class TodoListAdapter extends BaseAdapter {
 		}
 
 		// 判断该行对应数值的状态
-		String recordLocalStatus = model.getAuroraDataset().get(position).get(DataBaseMetadata.TodoListLogical.STATUS);
+		String recordLocalStatus = model.getProcessData().get(position).get(DataBaseMetadata.TodoListLogical.STATUS);
 		if (recordLocalStatus.equals(Constrants.APPROVE_RECORD_STATUS_ERROR)) {
 			// 说明是出错项
 			wrapper.getErrorMessageTextView().setVisibility(View.VISIBLE);
@@ -154,14 +155,14 @@ public class TodoListAdapter extends BaseAdapter {
 	 */
 	public void reFetchData() {
 		if (this.model != null) {
-			this.items = itemFactory.getItemList(model.getAuroraDataset());
+			this.items = itemFactory.getItemList(model.getProcessData());
 		}
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public boolean isEnabled(int position) {
-		String localStatus = model.getAuroraDataset().get(position).get(DataBaseMetadata.TodoListLogical.STATUS);
+		String localStatus = model.getProcessData().get(position).get(DataBaseMetadata.TodoListLogical.STATUS);
 		if ((localStatus.equals(Constrants.APPROVE_RECORD_STATUS_WAITING))
 		        || (localStatus.equals(Constrants.APPROVE_RECORD_STATUS_DIFFERENT))) {
 			return false;

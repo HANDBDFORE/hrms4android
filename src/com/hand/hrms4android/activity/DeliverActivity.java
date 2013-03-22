@@ -105,7 +105,8 @@ public class DeliverActivity extends ActionBarActivity {
 	public void modelDidFinishedLoad(Model model) {
 
 		try {
-			autoCompleteAdapter = new SimpleAdapter(this, convertAuroraMapToAutoComplete(model.getAuroraDataset()),
+			autoCompleteAdapter = new SimpleAdapter(this,
+			        convertAuroraMapToAutoComplete((List<Map<String, String>>) model.getProcessData()),
 			        android.R.layout.simple_list_item_2, adapter_from_place_holder, adapter_to);
 		} catch (ParseException e) {
 			e.printStackTrace();

@@ -45,7 +45,7 @@ public class BaseReceiptActivity extends HTMLBaseActivity {
 	}
 
 	protected void onPageableOptionsItemSelected(MenuItem item) {
-
+		
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import com.hand.hrms4android.util.LogUtil;
 import com.loopj.android.http.HDJsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class LoginModel extends AbstractModel {
+public class LoginModel extends AbstractBaseModel<Void> {
 	private ConfigReader configReader;
 
 	public LoginModel(int id) {

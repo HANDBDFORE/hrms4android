@@ -20,8 +20,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class ActionBarActivity extends BaseActivity implements OnCreatePanelMenuListener, OnPreparePanelListener,
-        OnMenuItemSelectedListener, OnActionModeStartedListener, OnActionModeFinishedListener {
+public class ActionBarActivity extends BaseModelActivity implements OnCreatePanelMenuListener,
+        OnPreparePanelListener, OnMenuItemSelectedListener, OnActionModeStartedListener, OnActionModeFinishedListener {
 	private ActionBarSherlock mActionBarHelper;
 
 	protected final ActionBarSherlock getSherlock() {
@@ -144,7 +144,7 @@ public class ActionBarActivity extends BaseActivity implements OnCreatePanelMenu
 	}
 
 	@SuppressLint("NewApi")
-    public void supportInvalidateOptionsMenu() {
+	public void supportInvalidateOptionsMenu() {
 		this.invalidateOptionsMenu();
 	}
 

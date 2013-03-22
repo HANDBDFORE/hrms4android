@@ -16,7 +16,7 @@ import com.hand.hrms4android.util.Constrants;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 
-public class LoadingModel extends AbstractModel {
+public class LoadingModel extends AbstractBaseModel<Void> {
 
 	public LoadingModel(int id, ModelActivity activity) {
 		super(id, activity);

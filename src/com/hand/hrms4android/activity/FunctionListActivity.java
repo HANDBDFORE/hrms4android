@@ -31,33 +31,29 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class FunctionListActivity extends ActionBarActivity implements OnItemClickListener {
-	private Model functionListModel;
 	private ListView mListView;
 	private ConfigReader configReader;
 	private FunctionListAdapter listAdapter;
 
-	private List<FunctionListItem> fixItem;
-
 	/**
 	 * 待办事项
 	 */
-	private static final String TODO_ITEM_ID = "todo";
+	public static final String TODO_ITEM_ID = "todo";
 
 	/**
 	 * 已完成事项
 	 */
-	private static final String DONE_ITEM_ID = "done";
+	public static final String DONE_ITEM_ID = "done";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_function_list);
 
-		functionListModel = new FunctionListModel(0, this);
+		model = new FunctionListModel(0, this);
 		mListView = (ListView) findViewById(android.R.id.list);
 		configReader = XmlConfigReader.getInstance();
-		buildFixedItems();
-		listAdapter = new FunctionListAdapter(this, fixItem, mListView);
+		listAdapter = new FunctionListAdapter(this, new ArrayList<FunctionListItem>(), mListView);
 		mListView.setAdapter(listAdapter);
 		mListView.setOnItemClickListener(this);
 
@@ -67,32 +63,16 @@ public class FunctionListActivity extends ActionBarActivity implements OnItemCli
 			        .getAttr(new Expression(
 			                "/config/application/activity[@name='function_list_activity']/request/url[@name='function_query_url']",
 			                "value"));
-			functionListModel.load(LoadType.Network, queryUrl);
+			model.load(LoadType.Network, queryUrl);
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
-	private void buildFixedItems() {
-		fixItem = new ArrayList<FunctionListItem>();
-		fixItem.add(new FunctionListItem(Constrants.FUNCTION_LIST_ITEM_TYPE_SECTION, "工作流", "", "", "fixed"));
-		fixItem.add(new FunctionListItem(Constrants.FUNCTION_LIST_ITEM_TYPE_ITEM, "待办事项", "bundle://todo_unread.png",
-		        "", TODO_ITEM_ID));
-		fixItem.add(new FunctionListItem(Constrants.FUNCTION_LIST_ITEM_TYPE_ITEM, "已审批", "bundle://todo_unread.png",
-		        "", DONE_ITEM_ID));
-	}
-
 	@Override
 	public void modelDidFinishedLoad(Model model) {
-		List<FunctionListItem> items = new ArrayList<FunctionListItem>(fixItem);
-		List<Map<String, String>> rawData = model.getAuroraDataset();
-
-		int rawDataSize = rawData.size();
-		for (int i = 0; i < rawDataSize; i++) {
-			Map<String, String> record = rawData.get(i);
-			items.add(new FunctionListItem(record));
-		}
+		List<FunctionListItem> items = (List<FunctionListItem>) model.getProcessData();
 
 		listAdapter.setDatas(items);
 		listAdapter.notifyDataSetChanged();

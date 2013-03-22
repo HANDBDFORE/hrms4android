@@ -11,7 +11,7 @@ import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.loopj.android.http.HDJsonHttpResponseHandler;
 
-public class ApproveSubmitModel extends AbstractModel {
+public class ApproveSubmitModel extends AbstractBaseModel<Void> {
 	private ConfigReader configReader;
 
 	public ApproveSubmitModel(int id, ModelActivity activity) {
@@ -24,7 +24,8 @@ public class ApproveSubmitModel extends AbstractModel {
 	public void load(LoadType loadType, Object param) {
 		try {
 			String actionURL = configReader.getAttr(new Expression(
-			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']", "value"));
+			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']",
+			        "value"));
 
 			NetworkUtil.post(actionURL, null, new HDJsonHttpResponseHandler(param) {
 				@Override
@@ -33,7 +34,6 @@ public class ApproveSubmitModel extends AbstractModel {
 				}
 			});
 		} catch (ParseExpressionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

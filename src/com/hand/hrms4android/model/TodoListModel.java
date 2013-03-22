@@ -21,7 +21,6 @@ import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.persistence.AdditionalInformation;
 import com.hand.hrms4android.persistence.DataBaseMetadata;
 import com.hand.hrms4android.persistence.DatabaseManager;
-import com.hand.hrms4android.util.Aggregate;
 import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.Iterator;
 import com.hand.hrms4android.util.LogUtil;
@@ -31,11 +30,10 @@ import com.loopj.android.http.HDJsonHttpResponseHandler;
 import com.loopj.android.http.HDRequestParamsBatch;
 import com.loopj.android.http.RequestParams;
 
-public class TodoListModel extends AbstractBasePageableModel {
+public class TodoListModel extends AbstractPageableModel<Map<String, String>> {
 
 	private ConfigReader configReader;
 	private TodoListDao dao;
-	private IndexPath currentSelectedIndex;
 	private boolean firstLoadFromInternet;
 
 	private List<Map<String, String>> submitRecordsList;

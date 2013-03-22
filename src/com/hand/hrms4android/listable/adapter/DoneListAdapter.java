@@ -2,12 +2,13 @@ package com.hand.hrms4android.listable.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.item.DoneListItem;
 import com.hand.hrms4android.listable.item.DoneListItemFactory;
 import com.hand.hrms4android.listable.item.ItemFactory;
-import com.hand.hrms4android.model.AbstractBasePageableModel;
+import com.hand.hrms4android.model.AbstractPageableModel;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 
 import android.content.Context;
@@ -18,12 +19,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class DoneListAdapter extends BaseAdapter {
-	private AbstractBasePageableModel model;
+	private AbstractPageableModel<Map<String, String>> model;
 	private LayoutInflater mInflater;
 	private ItemFactory<DoneListItem> itemFactory;
 	private List<DoneListItem> items;
 
-	public DoneListAdapter(Context context, AbstractBasePageableModel model) {
+	public DoneListAdapter(Context context, AbstractPageableModel<Map<String, String>> model) {
 		this.model = model;
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		items = new ArrayList<DoneListItem>();
@@ -69,7 +70,7 @@ public class DoneListAdapter extends BaseAdapter {
 	}
 
 	public void reFetchData() {
-		List<DoneListItem> newItems = itemFactory.getItemList(model.getAuroraDataset());
+		List<DoneListItem> newItems = itemFactory.getItemList(model.getProcessData());
 		this.items = newItems;
 		this.notifyDataSetChanged();
 	}

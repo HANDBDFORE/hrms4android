@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
+@SuppressWarnings("rawtypes")
 public class ApproveOpinionActivity extends ActionBarActivity {
 	public static final String EXTRA_TITLE = "title";
 

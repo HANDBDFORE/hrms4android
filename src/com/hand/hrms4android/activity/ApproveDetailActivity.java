@@ -64,10 +64,28 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	// @Override
+	// @SuppressWarnings("unchecked")
+	// public void modelDidFinishedLoad(Model<List<ApproveAction>> model) {
+	// // actions = model.getProcessResult();
+	// super.invalidateOptionsMenu();
+	// }
+
+	// @Override
+	// public void modelDidFinishedLoad(Model<List<ApproveAction>> model) {
+	// // TODO Auto-generated method stub
+	// super.modelDidFinishedLoad(model);
+	// }
+
+	// @Override
+	// public void modelDidFinishedLoad(Model<List<ApproveAction>> model) {
+	// actions = model.getProcessResult();
+	// super.invalidateOptionsMenu();
+	// }
+
 	@Override
-	@SuppressWarnings("unchecked")
 	public void modelDidFinishedLoad(Model model) {
-		actions = (List<ApproveAction>) model.getProcessResult();
+		actions = (List<ApproveAction>) model.getProcessData();
 		super.invalidateOptionsMenu();
 	}
 
