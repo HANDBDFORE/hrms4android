@@ -1,5 +1,7 @@
 package com.hand.hrms4android.model;
 
-public interface QueryFilter<Result, Criteria> {
-	public Result filtData(Query<Criteria> query);
+import java.util.List;
+
+public interface QueryFilter<T> {
+	public void filtData(List<T> list, Query<T> matcher);
 }

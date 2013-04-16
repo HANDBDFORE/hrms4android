@@ -73,14 +73,14 @@ public class XmlConfigReader implements ConfigReader {
 		InputStream configFileInputStream = null;
 		try {
 			// TODO 重构
-			configFileInputStream = HrmsApplication.getApplication().getAssets().open("android-backend-config.xml");
-			xmlInputSource = new InputSource(configFileInputStream);
+//			configFileInputStream = HrmsApplication.getApplication().getAssets().open("android-backend-config.xml");
+//			xmlInputSource = new InputSource(configFileInputStream);
 
-//			File dir = HrmsApplication.getApplication().getDir(Constrants.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
-//			        Context.MODE_PRIVATE);
-//			File configFile = new File(dir, "android-backend-config.xml");
-//			FileInputStream inputStream = new FileInputStream(configFile);
-//			xmlInputSource = new InputSource(inputStream);
+			File dir = HrmsApplication.getApplication().getDir(Constrants.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
+			        Context.MODE_PRIVATE);
+			File configFile = new File(dir, "android-backend-config.xml");
+			FileInputStream inputStream = new FileInputStream(configFile);
+			xmlInputSource = new InputSource(inputStream);
 			Object result = xpath.evaluate(expression, xmlInputSource, XPathConstants.NODE);
 			if (result != null && result instanceof Element) {
 				return (Element) result;

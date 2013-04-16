@@ -30,7 +30,7 @@ import com.loopj.android.http.HDJsonHttpResponseHandler;
 import com.loopj.android.http.HDRequestParamsBatch;
 import com.loopj.android.http.RequestParams;
 
-public class TodoListModel extends AbstractPageableModel<Map<String, String>> {
+public class TodoListModel extends AbstractPageableQueryModel<Map<String, String>> {
 
 	private ConfigReader configReader;
 	private TodoListDao dao;

@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
 
-public abstract class HTMLBaseActivity extends ActionBarActivity {
+public class HTMLBaseActivity extends ActionBarActivity {
 	protected WebView contentWebView;
 	protected ProgressBar loadingProgress;
 

@@ -36,5 +36,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_done_receipt">DoneReceiptActivity</string>
     <string name="title_activity_approve_detai">ApproveDetaiActivity</string>
+    <string name="title_activity_test">TestActivity</string>
 
 </resources>
