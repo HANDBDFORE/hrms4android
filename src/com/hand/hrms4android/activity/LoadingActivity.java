@@ -1,6 +1,8 @@
 package com.hand.hrms4android.activity;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,17 +17,26 @@ import android.widget.Toast;
 
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.exception.ParseException;
+import com.hand.hrms4android.model.AbstractBaseModel;
+import com.hand.hrms4android.model.AutoLoginModel;
 import com.hand.hrms4android.model.LoadingModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
+import com.hand.hrms4android.util.Constrants;
 
 public class LoadingActivity extends ActionBarActivity {
+
+	private static final int MODEL_LOADING = 0;
+	private static final int MODEL_AUTO_LOGIN = 1;
+
 	private SharedPreferences mPreferences;
 	private String baseUrl;
 
 	private Button reloadButton;
 	private TextView informationTextView;
 	private ImageView alertImage;
+
+	private AbstractBaseModel<Void> autoLoginModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +45,8 @@ public class LoadingActivity extends ActionBarActivity {
 		bindAllViews();
 
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		model = new LoadingModel(0, this);
+		model = new LoadingModel(MODEL_LOADING, this);
+		autoLoginModel = new AutoLoginModel(MODEL_AUTO_LOGIN, this);
 
 		baseUrl = mPreferences.getString("sys_basic_url", "");
 
@@ -80,9 +92,44 @@ public class LoadingActivity extends ActionBarActivity {
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
+		if (model.getModelId() == MODEL_LOADING) {
+
+			if (mPreferences.getString(Constrants.SYS_PREFRENCES_SID, "").length() != 0) {
+				autoLoginModel.load(LoadType.Network, getAutoLoginParams());
+				return;
+			}
+
+			else {
+				startLoginActivity();
+			}
+
+		}
+
+		if (model.getModelId() == MODEL_AUTO_LOGIN) {
+			startFunctionListActivity();
+			return;
+		}
+	}
+
+	/**
+     * 
+     */
+	private void startLoginActivity() {
 		Intent i = new Intent(this, LoginActivity.class);
 		startActivity(i);
 		this.finish();
+	}
+
+	private void startFunctionListActivity() {
+		Intent i = new Intent(this, FunctionListActivity.class);
+		startActivity(i);
+		this.finish();
+	}
+
+	private Map<String, String> getAutoLoginParams() {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("sid", mPreferences.getString(Constrants.SYS_PREFRENCES_SID, ""));
+		return params;
 	}
 
 	@Override
@@ -96,11 +143,17 @@ public class LoadingActivity extends ActionBarActivity {
 			return;
 		}
 
-		else if (e instanceof ParseException) {
+		if (e instanceof ParseException) {
 			informationTextView.setText("配置文件读取后发生错误，请检查配置地址");
 			Toast.makeText(this, "配置文件读取后发生错误，请检查配置地址", Toast.LENGTH_LONG).show();
 			// 配置文件错误，弹出配置界面
 			startSettingsActivity();
+			return;
+		}
+
+		// 自动登陆发生错误，跳转到手动登陆
+		if (model.getModelId() == MODEL_AUTO_LOGIN) {
+			startLoginActivity();
 			return;
 		}
 

@@ -2,7 +2,6 @@ package com.hand.hrms4android.activity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -17,7 +16,6 @@ import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
-import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.StorageUtil;
 
 import android.app.AlertDialog;

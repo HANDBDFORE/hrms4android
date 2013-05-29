@@ -50,7 +50,7 @@ public class LoginActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		//
+		//TODO 保留
 		this.model = new LoginModel(0, this);
 		configReader = XmlConfigReader.getInstance();
 
@@ -164,8 +164,6 @@ public class LoginActivity extends ActionBarActivity {
 		params.put("user_language", "ZHS");
 		params.put("is_ipad", "N");
 		params.put("device_type", "Android");
-		params.put("company_id", "1");
-		params.put("role_id", "41");
 
 		model.load(Model.LoadType.Network, params);
 	}

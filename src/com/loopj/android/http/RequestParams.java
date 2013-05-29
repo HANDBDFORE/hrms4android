@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +109,7 @@ public class RequestParams {
         put(key, val);
       }
     }
+    
 
     /**
      * Adds a key/value string pair to the request.

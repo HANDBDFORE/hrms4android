@@ -197,7 +197,7 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 			// 启动明细页面
 			// Intent intent = new Intent(this, ApproveDetailActivity.class);
 			Intent intent = new Intent(this, ApproveDetailActivity.class);
-			listModel.setRecordAsSelected(new IndexPath(0, position - LISTVIEW_HEADER_COUNT));
+			listModel.setRecordAsSelected(new IndexPath(0, getCorrectRowPosition(position)));
 
 			// 因为此model不是可序列化，因此不能以extra形式传送
 			// TODO 考虑重构，放入application?
@@ -234,6 +234,16 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 			}
 		}
 
+	}
+
+	/**
+	 * 因为有listview 的 header ,会影响 onItemClick时的position
+	 * 
+	 * @param position
+	 * @return
+	 */
+	private int getCorrectRowPosition(int position) {
+		return position - LISTVIEW_HEADER_COUNT;
 	}
 
 	/**
@@ -372,9 +382,8 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 				// todoListViewWrapper.getRefreshableView().pointToPosition((int)
 				// e1.getX(),
 				// (int) e1.getY());
-				int position = todoListViewWrapper.getRefreshableView().pointToPosition((int) e1.getX(),
-				        (int) e1.getY())
-				        - LISTVIEW_HEADER_COUNT;
+				int position = getCorrectRowPosition(todoListViewWrapper.getRefreshableView().pointToPosition(
+				        (int) e1.getX(), (int) e1.getY()));
 				if (position >= 0) {
 					// 删除行
 					// next(null, position);
@@ -441,10 +450,14 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		int index = 0;
-//		menu.add(0, R.id.todo_list_menu_search, index++, "搜索").setIcon(R.drawable.ic_search_inverse)
-//		        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-//		menu.add(0, R.id.todo_list_menu_refresh, index++, "刷新").setIcon(R.drawable.ic_refresh_inverse)
-//		        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		// menu.add(0, R.id.todo_list_menu_search, index++,
+		// "搜索").setIcon(R.drawable.ic_search_inverse)
+		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
+		// MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		// menu.add(0, R.id.todo_list_menu_refresh, index++,
+		// "刷新").setIcon(R.drawable.ic_refresh_inverse)
+		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
+		// MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		return true;
 	}
 

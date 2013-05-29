@@ -27,7 +27,6 @@ import com.hand.hrms4android.util.LogUtil;
 import com.hand.hrms4android.util.TempTransfer;
 import com.hand.hrms4android.util.data.IndexPath;
 import com.loopj.android.http.HDJsonHttpResponseHandler;
-import com.loopj.android.http.HDRequestParamsBatch;
 import com.loopj.android.http.RequestParams;
 
 public class TodoListModel extends AbstractPageableQueryModel<Map<String, String>> {
@@ -94,16 +93,13 @@ public class TodoListModel extends AbstractPageableQueryModel<Map<String, String
 		// 提交数据的副本
 		final Map<String, String> record = new HashMap<String, String>(submitRecordsList.get(0));
 
-		// 组装传输参数
-		RequestParams requestParams = new HDRequestParamsBatch(record);
-
 		try {
 			// 读取地址
 			String actionURL = configReader.getAttr(new Expression(
 			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']",
 			        "value"));
 
-			NetworkUtil.post(actionURL, requestParams, new HDJsonHttpResponseHandler() {
+			NetworkUtil.post(actionURL, new RequestParams(record), new HDJsonHttpResponseHandler() {
 				@Override
 				public void onSuccess(int statusCode, List<Map<String, String>> dataset) {
 					// 提交成功！
@@ -196,7 +192,7 @@ public class TodoListModel extends AbstractPageableQueryModel<Map<String, String
 					record.put(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE, "");
 					record.put(DataBaseMetadata.TodoListLogical.ACTION, "");
 					record.put(DataBaseMetadata.TodoListLogical.COMMENTS, "");
-					record.put(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID, "");
+//					record.put(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID, "");
 				}
 
 				try {
@@ -280,7 +276,7 @@ public class TodoListModel extends AbstractPageableQueryModel<Map<String, String
 				if (error instanceof IOException) {
 					// TODO 包装错误
 				}
-				activity.modelFailedLoad(new Exception(error), TodoListModel.this);
+				activity.modelFailedLoad(new Exception(error.getMessage()), TodoListModel.this);
 			}
 
 			/**

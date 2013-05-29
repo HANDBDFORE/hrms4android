@@ -19,11 +19,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class NetworkUtil {
-	public static final String BASE_URL = "http://172.20.0.72:8180/hr_new/";
-	// private static final String BASE_URL =
-	// "http://192.168.10.100:8080/TestServer/Test";
-	// private static final String BASE_URL =
-	// "http://10.213.214.74:8080/TestServer";
 	private static SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(HrmsApplication
 	        .getApplication());
 
@@ -64,10 +59,12 @@ public class NetworkUtil {
 		// client.setCookieStore(readLocalCookies());
 
 		client.setCookieStore(cookieStore);
+		
 
 		if (params != null) {
 			LogUtil.debug(NetworkUtil.class, "send", params.toString());
 		}
+		
 		client.post(getAbsoluteUrl(url), params, responseHandler);
 	}
 
@@ -122,26 +119,6 @@ public class NetworkUtil {
 	public static void setCookieStore(CookieStore cookieStore) {
 		NetworkUtil.cookieStore = cookieStore;
 	}
-
-	// private static CookieStore readLocalCookies() {
-	// cookieStore = new BasicCookieStore();
-	// CookieSyncManager.createInstance(HrmsApplication.getApplication());
-	// CookieManager cookieManager = CookieManager.getInstance();
-	// String cookieString = cookieManager.getCookie(getBaseUrl());
-	//
-	// if (cookieString != null) {
-	// String[] cookieStrings = cookieString.split(";");
-	//
-	// for (int i = 0; i < cookieStrings.length; i++) {
-	// String[] pair = cookieStrings[i].split("=");
-	// BasicClientCookie c = new BasicClientCookie(pair[0].trim(),
-	// pair[1].trim());
-	// c.setDomain(getBaseUrl());
-	// cookieStore.addCookie(c);
-	// }
-	// }
-	// return cookieStore;
-	// }
 
 	public static void removeAllCookies() {
 		cookieStore = null;
