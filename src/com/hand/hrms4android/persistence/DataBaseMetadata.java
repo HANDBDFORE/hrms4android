@@ -19,7 +19,12 @@ public final class DataBaseMetadata {
 		public static final String COLUMN_TODO_VALUE_STATUS = "todo_value_1";
 		public static final String COLUMN_TODO_VALUE_SERVERMESSAGE = "todo_value_2";
 		public static final String COLUMN_TODO_VALUE_ACTION = "todo_value_3";
+
 		public static final String COLUMN_TODO_VALUE_COMMENTS = "todo_value_4";
+
+		/**
+		 * 转交人
+		 */
 		public static final String COLUMN_TODO_VALUE_EMPLOYEE_ID = "todo_value_5";
 	}
 
@@ -39,6 +44,10 @@ public final class DataBaseMetadata {
 		public static final String SERVER_MESSAGE = "serverMessage";
 		public static final String ACTION = "action_id";
 		public static final String COMMENTS = "comments";
+
+		/**
+		 * 转交人
+		 */
 		public static final String EMPLOYEE_ID = "employee_id";
 	}
 

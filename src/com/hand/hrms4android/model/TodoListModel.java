@@ -267,30 +267,29 @@ public class TodoListModel extends AbstractPageableQueryModel<Map<String, String
 			}
 
 			/**
-             * @param record
-             */
-            private void processRecordWhenLoadFromServer(Map<String, String> record) {
-	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.STATUS)) {
-	            	record.put(DataBaseMetadata.TodoListLogical.STATUS, "");
-	            }
-	            
-	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE)) {
-	            	record.put(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE, "");
-	            }
-	            
-	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.ACTION)) {
-	            	record.put(DataBaseMetadata.TodoListLogical.ACTION, "");
-	            }
-	            
-	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.COMMENTS)) {
-	            	record.put(DataBaseMetadata.TodoListLogical.COMMENTS, "");
-	            }
-	            
-	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.COMMENTS)) {
-	            	record.put(DataBaseMetadata.TodoListLogical.COMMENTS, "");
-	            }
-	            record.put(DataBaseMetadata.TodoListLogical.COMMENTS, "");
-            }
+			 * @param record
+			 */
+			private void processRecordWhenLoadFromServer(Map<String, String> record) {
+				if (!record.containsKey(DataBaseMetadata.TodoListLogical.STATUS)) {
+					record.put(DataBaseMetadata.TodoListLogical.STATUS, "");
+				}
+
+				if (!record.containsKey(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE)) {
+					record.put(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE, "");
+				}
+
+				if (!record.containsKey(DataBaseMetadata.TodoListLogical.ACTION)) {
+					record.put(DataBaseMetadata.TodoListLogical.ACTION, "");
+				}
+
+				if (!record.containsKey(DataBaseMetadata.TodoListLogical.COMMENTS)) {
+					record.put(DataBaseMetadata.TodoListLogical.COMMENTS, "");
+				}
+				
+				if (!record.containsKey(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID)) {
+					record.put(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID, "");
+				}
+			}
 
 			@Override
 			public void onFailure(Throwable error, String content) {
