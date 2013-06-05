@@ -41,7 +41,7 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 			                "name"));
 			String recordLogicalPKValue = record.get(recordLogicalPK);
 			List<ApproveAction> storedActions = actionsDao.getAllActionsByRecordId(recordLogicalPKValue);
-
+ 
 			// 没有存储此项动作
 			if (storedActions.size() == 0) {
 

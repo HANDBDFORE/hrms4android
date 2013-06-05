@@ -155,7 +155,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 	}
 
 	private String getAbsolutePageUrl(Map<String, String> record) {
-		return NetworkUtil.getAbsoluteUrl(listModel.currentItem().get(urlKeyName));
+		
+		return NetworkUtil.getAbsoluteUrl(PlaceHolderReplacer.replaceForValue(listModel.currentItem(), listModel.currentItem().get(urlKeyName)));
 	}
 
 	private void loadResources(Map<String, String> record) {

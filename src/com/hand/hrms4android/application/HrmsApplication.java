@@ -2,10 +2,11 @@ package com.hand.hrms4android.application;
 
 import java.io.IOException;
 
+import android.app.Application;
+
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.util.PlatformUtil;
-
-import android.app.Application;
+import com.igexin.slavesdk.MessageManager;
 
 public class HrmsApplication extends Application {
 	private static HrmsApplication instance;
@@ -32,7 +33,9 @@ public class HrmsApplication extends Application {
 				e1.printStackTrace();
 			}
 		}
-
+		//推送
+		MessageManager.getInstance().initialize(instance);
+		
 		// xmlconfig读取工具
 		try {
 			XmlConfigReader.createInstanceByInputStream(getAssets().open("android-backend-config.xml"));

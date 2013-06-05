@@ -188,11 +188,7 @@ public class TodoListModel extends AbstractPageableQueryModel<Map<String, String
 					Map<String, String> record = serverResponseDataset.get(i);
 
 					// 增加5列
-					record.put(DataBaseMetadata.TodoListLogical.STATUS, "");
-					record.put(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE, "");
-					record.put(DataBaseMetadata.TodoListLogical.ACTION, "");
-					record.put(DataBaseMetadata.TodoListLogical.COMMENTS, "");
-//					record.put(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID, "");
+					processRecordWhenLoadFromServer(record);
 				}
 
 				try {
@@ -270,11 +266,37 @@ public class TodoListModel extends AbstractPageableQueryModel<Map<String, String
 				activity.modelDidFinishedLoad(TodoListModel.this);
 			}
 
+			/**
+             * @param record
+             */
+            private void processRecordWhenLoadFromServer(Map<String, String> record) {
+	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.STATUS)) {
+	            	record.put(DataBaseMetadata.TodoListLogical.STATUS, "");
+	            }
+	            
+	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE)) {
+	            	record.put(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE, "");
+	            }
+	            
+	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.ACTION)) {
+	            	record.put(DataBaseMetadata.TodoListLogical.ACTION, "");
+	            }
+	            
+	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.COMMENTS)) {
+	            	record.put(DataBaseMetadata.TodoListLogical.COMMENTS, "");
+	            }
+	            
+	            if (!record.containsKey(DataBaseMetadata.TodoListLogical.COMMENTS)) {
+	            	record.put(DataBaseMetadata.TodoListLogical.COMMENTS, "");
+	            }
+	            record.put(DataBaseMetadata.TodoListLogical.COMMENTS, "");
+            }
+
 			@Override
 			public void onFailure(Throwable error, String content) {
 				LogUtil.error(this, "request", "onFailure:" + content);
 				if (error instanceof IOException) {
-					// TODO 包装错误
+					error = new IOException("通讯失败");
 				}
 				activity.modelFailedLoad(new Exception(error.getMessage()), TodoListModel.this);
 			}

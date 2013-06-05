@@ -131,7 +131,7 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 		listAdapter.reFetchData();
 
 		if ((listAdapter.getCount() == 0) && (!listModel.needLoadOnceMore())) {
-			showEmptyTip();
+			showEmptyTip("暂时没有待审批事项");
 		} else {
 			showList();
 		}
@@ -150,6 +150,12 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 	public void modelFailedLoad(Exception e, Model model) {
 		setSupportProgressBarIndeterminateVisibility(false);
 		todoListViewWrapper.onRefreshComplete();
+		
+		//如果没有数据，显示重试按钮
+		if ((listAdapter.getCount() == 0) && (!listModel.needLoadOnceMore())) {
+			showEmptyTip(e.getMessage());
+		} 
+		
 		super.modelFailedLoad(e, model);
 	}
 
@@ -282,12 +288,13 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 		reloadText.setVisibility(View.INVISIBLE);
 	}
 
-	private void showEmptyTip() {
+	private void showEmptyTip(String message) {
 		todoListViewWrapper.setVisibility(View.INVISIBLE);
 		reloadButton.setVisibility(View.VISIBLE);
 		reloadButton.setEnabled(true);
 		reloadButton.bringToFront();
 		reloadText.setVisibility(View.VISIBLE);
+		reloadText.setText(message);
 		reloadText.bringToFront();
 	}
 

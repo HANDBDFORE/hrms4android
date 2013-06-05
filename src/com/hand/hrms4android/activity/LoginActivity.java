@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,7 +51,7 @@ public class LoginActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		//TODO 保留
+		// TODO 保留
 		this.model = new LoginModel(0, this);
 		configReader = XmlConfigReader.getInstance();
 
@@ -156,6 +157,19 @@ public class LoginActivity extends ActionBarActivity {
 		editor.putString(Constrants.SYS_PREFRENCES_USERNAME, username);
 		editor.commit();
 
+		RequestParams params = generateLoginParams(username, password);
+
+		model.load(Model.LoadType.Network, params);
+	}
+
+	/**
+	 * 组装登陆请求使用的params
+	 * 
+	 * @param username
+	 * @param password
+	 * @return 组装好的参数
+	 */
+	private RequestParams generateLoginParams(String username, String password) {
 		// 拼参数
 		RequestParams params = new RequestParams();
 		params.put("user_name", username);
@@ -163,9 +177,20 @@ public class LoginActivity extends ActionBarActivity {
 		params.put("langugae", "简体中文");
 		params.put("user_language", "ZHS");
 		params.put("is_ipad", "N");
-		params.put("device_type", "Android");
 
-		model.load(Model.LoadType.Network, params);
+		// 设备系统类型
+		params.put("device_type", Constrants.SYS_ATTS_DEVICE_TYPE);
+
+		// 消息推送token
+		String token = mPreferences.getString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, "");
+		if (token.length() != 0) {
+			params.put("device_token", token);
+		}
+
+		// 设备imei，作为设备ID使用
+		params.put(Constrants.SYS_ATTS_DEVICE_ID,
+		        ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId());
+		return params;
 	}
 
 	@Override

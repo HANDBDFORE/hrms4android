@@ -10,14 +10,25 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <!-- =================推送sdk使用====================== -->
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <!-- ================= end ====================== -->
     <application
         android:name="com.hand.hrms4android.application.HrmsApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock.Light" >
-     <activity android:name="com.hand.hrms4android.activity.LoadingActivity" >
+        <activity
+            android:name="com.hand.hrms4android.activity.LoadingActivity"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -76,12 +87,91 @@
         <activity
             android:name="com.hand.hrms4android.activity.TestActivity"
             android:label="@string/title_activity_test" >
-           <!--  <intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
+            -->
         </activity>
+
+        <!-- =========================配置的第三方参数属性====================== -->
+        <meta-data
+            android:name="appid"
+            android:value="gjQJ0OVsch5I5x23sP4Bo9" />
+        <meta-data
+            android:name="appkey"
+            android:value="Wgm2rpJyzVA7mYbrGsi3d4" />
+        <meta-data
+            android:name="appsecret"
+            android:value="1epLF7nLjs85TtzNYhXNqA" />
+
+        <activity
+            android:name="com.igexin.sdk.SdkActivity"
+            android:excludeFromRecents="true"
+            android:process="com.hand.hrms4android.pushservice"
+            android:taskAffinity="android.task.SdkActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="com.igexin.action.popupact.com.hand.hrms4android" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.igexin.sdk.coordinator.SdkMsgService"
+            android:exported="true"
+            android:label="NotifyCenterAIDL"
+            android:process="com.hand.hrms4android.pushservice" >
+        </service>
+
+        <receiver android:name="com.igexin.sdk.coordinator.NotificationCenterAIDLReceiver" >
+            <intent-filter>
+                <action android:name="com.igexin.sdk.action.refreshls" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.igexin.sdk.SdkMainService"
+            android:exported="false"
+            android:label="NotifyCenter"
+            android:process="com.hand.hrms4android.pushservice" >
+        </service>
+
+        <receiver android:name="com.igexin.sdk.SdkReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="sdk.download.DownloadService"
+            android:process="com.hand.hrms4android.pushservice" />
+
+        <receiver
+            android:name="sdk.download.DownloadReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="sdk.download.DownloadProvider"
+            android:authorities="sdk.download.com.hand.hrms4android"
+            android:process="com.hand.hrms4android.pushservice" />
+        <!-- ========================= igetui 使用 ，结束====================== -->
+        <!-- 接收消息广播 -->
+        <receiver android:name="com.hand.hrms4android.receiver.HDMessageReceiver" >
+            <intent-filter>
+                <action android:name="com.igexin.sdk.action.gjQJ0OVsch5I5x23sP4Bo9" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

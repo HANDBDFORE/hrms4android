@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -129,6 +130,15 @@ public class LoadingActivity extends ActionBarActivity {
 	private Map<String, String> getAutoLoginParams() {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("sid", mPreferences.getString(Constrants.SYS_PREFRENCES_SID, ""));
+		
+		String device_token = mPreferences.getString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, "");
+		params.put("device_type", Constrants.SYS_ATTS_DEVICE_TYPE);
+		params.put(Constrants.SYS_ATTS_DEVICE_ID, ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
+				.getDeviceId());
+		
+		if (device_token.length()!=0) {
+			params.put("device_token", device_token);
+        }
 		return params;
 	}
 
