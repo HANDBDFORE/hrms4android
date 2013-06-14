@@ -36,7 +36,8 @@ public class LoginModel extends AbstractBaseModel<Void> {
 		String service = "";
 		try {
 			service = configReader.getAttr(new Expression(
-			        "/config/application/activity[@name='login_activity']/request/url[@name='login_submit_url']", "value"));
+			        "/config/application/activity[@name='login_activity']/request/url[@name='login_submit_url']",
+			        "value"));
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			activity.modelFailedLoad(new Exception("Cannot get url from config file! "), this);
@@ -85,19 +86,6 @@ public class LoginModel extends AbstractBaseModel<Void> {
 		editor.commit();
 
 	}
-
-	// /**
-	// * 将服务器返回有效信息存请求头
-	// *
-	// * @param responseData
-	// */
-	// private void updateRequestHeaders(Map<String, String> responseData) {
-	// String sid = responseData.get("sid");
-	// String encryted_session_id = responseData.get("encryted_session_id");
-	//
-	// NetworkUtil.addHeader("sid", sid);
-	// NetworkUtil.addHeader("encryted_session_id", encryted_session_id);
-	// }
 
 	@Override
 	public int getModelId() {

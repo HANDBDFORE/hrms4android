@@ -48,10 +48,10 @@ public class DoneListItemFactory implements ItemFactory<DoneListItem> {
 	public DoneListItem getItem(Map<String, String> record) {
 		DoneListItem item = new DoneListItem();
 
-		item.setTitle(PlaceHolderReplacer.replaceForValue(record, titlePlaceHolder));
-		item.setTitleRight(PlaceHolderReplacer.replaceForValue(record, datePlaceHolder));
-		item.setSubTitle(PlaceHolderReplacer.replaceForValue(record, subTitlePlaceHolder));
-		item.setInformation((PlaceHolderReplacer.replaceForValue(record, informationPlaceHolder)));
+		item.setTitle(PlaceHolderReplacer.replaceForValue(record, titlePlaceHolder,false));
+		item.setTitleRight(PlaceHolderReplacer.replaceForValue(record, datePlaceHolder,false));
+		item.setSubTitle(PlaceHolderReplacer.replaceForValue(record, subTitlePlaceHolder,false));
+		item.setInformation((PlaceHolderReplacer.replaceForValue(record, informationPlaceHolder,false)));
 		item.setScreenName(record.get("screen_name"));
 		return item;
 	}

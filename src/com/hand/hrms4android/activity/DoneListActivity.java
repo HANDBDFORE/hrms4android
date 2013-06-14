@@ -2,6 +2,17 @@ package com.hand.hrms4android.activity;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.adapter.DoneListAdapter;
@@ -15,14 +26,6 @@ import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.util.TempTransfer;
 import com.hand.hrms4android.util.data.IndexPath;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.Toast;
-
 public class DoneListActivity extends ActionBarActivity implements OnItemClickListener {
 	private ListView doneList;
 	private ConfigReader configReader;
@@ -33,6 +36,7 @@ public class DoneListActivity extends ActionBarActivity implements OnItemClickLi
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_done_list);
 
 		doneList = (ListView) findViewById(android.R.id.list);
@@ -45,23 +49,50 @@ public class DoneListActivity extends ActionBarActivity implements OnItemClickLi
 
 		this.configReader = XmlConfigReader.getInstance();
 
-		try {
+	}
+
+	/**
+     * 
+     */
+    private String getLoadUrl() {
+    	if (!StringUtils.isEmpty(loadURL)) {
+	        return loadURL;
+        }
+    	
+    	
+	    try {
 			loadURL = configReader
 			        .getAttr(new Expression(
 			                "/config/application/activity[@name='done_list_activity']/request/url[@name='done_list_query_url']",
 			                "value"));
+			
+			
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
 			loadURL = "";
 		}
+	    
+	    return loadURL;
+    }
 
-		model.load(LoadType.Network, loadURL);
+	@Override
+	protected void onResume() {
+		super.onResume();
+		model.load(LoadType.Network, getLoadUrl());
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
+		setSupportProgressBarIndeterminateVisibility(false);
 		listAdapter.reFetchData();
+	}
+
+	@Override
+	public void modelFailedLoad(Exception e, Model<? extends Object> model) {
+		super.modelFailedLoad(e, model);
+		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 	private DoneListAdapter getAdapter() {

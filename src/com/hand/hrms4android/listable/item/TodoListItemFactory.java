@@ -69,10 +69,10 @@ public class TodoListItemFactory implements ItemFactory<TodoListItem> {
 			item.setId(Integer.parseInt(localID));
 		}
 
-		item.setTitle(PlaceHolderReplacer.replaceForValue(record, titlePlaceHolder));
-		item.setTitleRight(PlaceHolderReplacer.replaceForValue(record, datePlaceHolder));
-		item.setSubTitle(PlaceHolderReplacer.replaceForValue(record, subTitlePlaceHolder));
-		item.setInformation((PlaceHolderReplacer.replaceForValue(record, informationPlaceHolder)));
+		item.setTitle(PlaceHolderReplacer.replaceForValue(record, titlePlaceHolder,false));
+		item.setTitleRight(PlaceHolderReplacer.replaceForValue(record, datePlaceHolder,false));
+		item.setSubTitle(PlaceHolderReplacer.replaceForValue(record, subTitlePlaceHolder,false));
+		item.setInformation((PlaceHolderReplacer.replaceForValue(record, informationPlaceHolder,false)));
 		item.setErrorMessage(record.get(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE));
 		item.setStatus(record.get(DataBaseMetadata.TodoListLogical.STATUS));
 
