@@ -18,11 +18,11 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -34,7 +34,7 @@ import com.hand.hrms4android.listable.item.TodoListItem;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.model.TodoListModel;
-import com.hand.hrms4android.persistence.DataBaseMetadata;
+import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.StorageUtil;
 import com.hand.hrms4android.util.TempTransfer;
@@ -150,12 +150,12 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 	public void modelFailedLoad(Exception e, Model model) {
 		setSupportProgressBarIndeterminateVisibility(false);
 		todoListViewWrapper.onRefreshComplete();
-		
-		//如果没有数据，显示重试按钮
+
+		// 如果没有数据，显示重试按钮
 		if ((listAdapter.getCount() == 0) && (!listModel.needLoadOnceMore())) {
 			showEmptyTip(e.getMessage());
-		} 
-		
+		}
+
 		super.modelFailedLoad(e, model);
 	}
 
@@ -201,7 +201,6 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 		else {
 
 			// 启动明细页面
-			// Intent intent = new Intent(this, ApproveDetailActivity.class);
 			Intent intent = new Intent(this, ApproveDetailActivity.class);
 			listModel.setRecordAsSelected(new IndexPath(0, getCorrectRowPosition(position)));
 
@@ -223,16 +222,12 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 				// 参数
 				Map<String, String> options = new HashMap<String, String>();
 
-				options.put(DataBaseMetadata.TodoListLogical.ACTION,
-				        data.getStringExtra(DataBaseMetadata.TodoListLogical.ACTION));
-				options.put(DataBaseMetadata.TodoListLogical.COMMENTS,
-				        data.getStringExtra(DataBaseMetadata.TodoListLogical.COMMENTS));
-				options.put(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID,
-				        data.getStringExtra(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID));
+				options.put(TodoList.ACTION, data.getStringExtra(TodoList.ACTION));
+				options.put(TodoList.COMMENTS, data.getStringExtra(TodoList.COMMENTS));
+				options.put(TodoList.EMPLOYEE_ID, data.getStringExtra(TodoList.EMPLOYEE_ID));
 
 				if (requestCode == REQUEST_ACTIVITY_DETAIL) {
-					listModel.addRecordToSubmitQueue(options, data
-					        .getStringExtra(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK));
+					listModel.addRecordToSubmitQueue(options, data.getStringExtra(TodoList.ID));
 				} else if (requestCode == REQUEST_ACTIVITY_OPINION) {
 					listModel.addRecordToSubmitQueue(options, listAdapter.getSelectedItemIDs());
 					mActionMode.finish();
@@ -332,10 +327,10 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 
 				if (item.getItemId() == MENU_ID_APPROVE) {
 					// 同意
-					opinionIntent.putExtra(DataBaseMetadata.TodoListLogical.ACTION, "Y");
+					opinionIntent.putExtra(TodoList.ACTION, "Y");
 				} else if (item.getItemId() == MENU_ID_DENY) {
 					// 拒绝
-					opinionIntent.putExtra(DataBaseMetadata.TodoListLogical.ACTION, "N");
+					opinionIntent.putExtra(TodoList.ACTION, "N");
 				}
 				opinionIntent.putExtra(ApproveOpinionActivity.EXTRA_TITLE, item.getTitle());
 				// 弹出意见
@@ -439,7 +434,7 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				// 删除本地数据
-				listModel.removeRowByID(itemID);
+				listModel.removeRowByID(String.valueOf(itemID));
 				// 通知更新
 				listAdapter.reFetchData();
 			}

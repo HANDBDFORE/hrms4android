@@ -8,6 +8,8 @@ public class FunctionListItem extends BaseListItem {
 	private String imageUrl;
 	private String url;
 	private String parentId;
+	public static final String FUNCTION_LIST_ITEM_TYPE_ITEM = "ITEM";
+	public static final String FUNCTION_LIST_ITEM_TYPE_SECTION = "SECTION";
 
 	public FunctionListItem() {
 	}

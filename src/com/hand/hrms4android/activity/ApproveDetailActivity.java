@@ -1,27 +1,27 @@
 package com.hand.hrms4android.activity;
 
+import java.net.URLEncoder;
 import java.util.List;
-import java.util.Map;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.hand.hrms4android.R;
-import com.hand.hrms4android.exception.ParseExpressionException;
-import com.hand.hrms4android.model.ApproveDetailActionModel;
-import com.hand.hrms4android.model.Model;
-import com.hand.hrms4android.model.Model.LoadType;
-import com.hand.hrms4android.network.NetworkUtil;
-import com.hand.hrms4android.parser.Expression;
-import com.hand.hrms4android.persistence.DataBaseMetadata;
-import com.hand.hrms4android.pojo.ApproveAction;
-import com.hand.hrms4android.util.PlaceHolderReplacer;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-public class ApproveDetailActivity extends BaseReceiptActivity {
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.hand.hrms4android.R;
+import com.hand.hrms4android.exception.ParseExpressionException;
+import com.hand.hrms4android.listable.doman.TodoListDomain;
+import com.hand.hrms4android.model.ApproveDetailActionModel;
+import com.hand.hrms4android.model.Model;
+import com.hand.hrms4android.model.Model.LoadType;
+import com.hand.hrms4android.network.NetworkUtil;
+import com.hand.hrms4android.parser.Expression;
+import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
+import com.hand.hrms4android.pojo.ApproveAction;
+
+public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 	private static final int REQUEST_ACTIVITY_OPINION = 1;
 	private static final int REQUEST_ACTIVITY_DELIVER = 2;
 
@@ -33,8 +33,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 		try {
 			urlKeyName = configReader
 			        .getAttr(new Expression(
-			                "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/detail_page_url_column",
-			                "name"));
+			                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='todo_detail_url']",
+			                "value"));
 
 			loadResources(listModel.currentItem());
 		} catch (ParseExpressionException e) {
@@ -50,8 +50,7 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 				// 再退回
 				Bundle bundle = data.getExtras();
 				// 将当前选中行的本地recordpk传回，用于标示
-				bundle.putString(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK, listModel
-				        .currentItem().get(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK));
+				bundle.putString(TodoList.ID, String.valueOf(listModel.currentItem().getId()));
 				Intent result = new Intent();
 				result.putExtras(bundle);
 				setResult(RESULT_OK, result);
@@ -63,25 +62,6 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
-	// @Override
-	// @SuppressWarnings("unchecked")
-	// public void modelDidFinishedLoad(Model<List<ApproveAction>> model) {
-	// // actions = model.getProcessResult();
-	// super.invalidateOptionsMenu();
-	// }
-
-	// @Override
-	// public void modelDidFinishedLoad(Model<List<ApproveAction>> model) {
-	// // TODO Auto-generated method stub
-	// super.modelDidFinishedLoad(model);
-	// }
-
-	// @Override
-	// public void modelDidFinishedLoad(Model<List<ApproveAction>> model) {
-	// actions = model.getProcessResult();
-	// super.invalidateOptionsMenu();
-	// }
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
@@ -137,7 +117,10 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 			        .getAttr(new Expression(
 			                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='employee_card_url']",
 			                "value"));
-			info.cardInfoUrl = PlaceHolderReplacer.replaceForValue(listModel.currentItem(), configUrl);
+			// info.cardInfoUrl =
+			// PlaceHolderReplacer.replaceForValue(listModel.currentItem(),
+			// configUrl);
+			info.cardInfoUrl = "";
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			info.cardInfoUrl = "";
@@ -146,7 +129,11 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 		try {
 			String actionItemTextKeyName = configReader.getAttr(new Expression(
 			        "/config/application/activity[@name='approve_detail_activity']/view/employee_action_item", "text"));
-			info.displayName = PlaceHolderReplacer.replaceForValue(listModel.currentItem(), actionItemTextKeyName);
+			// info.displayName =
+			// PlaceHolderReplacer.replaceForValue(listModel.currentItem(),
+			// actionItemTextKeyName);
+			// TODO 决定是否需要
+			info.displayName = "";
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			info.displayName = "";
@@ -154,12 +141,16 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 		return info;
 	}
 
-	private String getAbsolutePageUrl(Map<String, String> record) {
-		
-		return NetworkUtil.getAbsoluteUrl(PlaceHolderReplacer.replaceForValue(record, record.get(urlKeyName)));
+	private String getAbsolutePageUrl(TodoListDomain record) {
+		StringBuilder sb = new StringBuilder(urlKeyName);
+		sb.append("?");
+		sb.append("sourceSystemName=" + URLEncoder.encode(record.getSourceSystemName()));
+		sb.append("&");
+		sb.append("localId=" + URLEncoder.encode(record.getLocalId()));
+		return NetworkUtil.getAbsoluteUrl(sb.toString());
 	}
 
-	private void loadResources(Map<String, String> record) {
+	private void loadResources(TodoListDomain record) {
 		// 拿到当前指向的记录
 		loadingProgress.setVisibility(View.VISIBLE);
 		contentWebView.loadUrl(getAbsolutePageUrl(record));
@@ -202,7 +193,7 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 		 */
 		protected Intent prepareIntent(ApproveAction action) {
 			Intent intent = new Intent();
-			intent.putExtra(DataBaseMetadata.TodoListLogical.ACTION, action.actionId);
+			intent.putExtra(TodoList.ACTION, action.action);
 			intent.putExtra(ApproveOpinionActivity.EXTRA_TITLE, action.actionTitle);
 			return intent;
 		}
@@ -252,7 +243,7 @@ public class ApproveDetailActivity extends BaseReceiptActivity {
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 			item.setIcon(R.drawable.ic_menu_cc);
 			Intent intent = prepareIntent(action);
-			intent.putExtra(DataBaseMetadata.TodoListLogical.ACTION, "D");
+			intent.putExtra(TodoList.ACTION, "D");
 			item.setIntent(intent);
 			return item;
 		}

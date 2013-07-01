@@ -31,7 +31,7 @@ import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
-import com.hand.hrms4android.persistence.DataBaseMetadata;
+import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 import com.hand.hrms4android.util.PlaceHolderReplacer;
 import com.hand.hrms4android.util.PlatformUtil;
 
@@ -183,8 +183,8 @@ public class DeliverActivity extends ActionBarActivity {
 			}
 
 			Intent i = new Intent(getIntent());
-			i.putExtra(DataBaseMetadata.TodoListLogical.COMMENTS, comments);
-			i.putExtra(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID, employeeId);
+			i.putExtra(TodoList.COMMENTS, comments);
+			i.putExtra(TodoList.EMPLOYEE_ID, employeeId);
 			setResult(RESULT_OK, i);
 			finish();
 			break;

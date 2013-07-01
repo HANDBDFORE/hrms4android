@@ -2,14 +2,6 @@ package com.hand.hrms4android.listable.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import com.hand.hrms4android.R;
-import com.hand.hrms4android.listable.item.DoneListItem;
-import com.hand.hrms4android.listable.item.DoneListItemFactory;
-import com.hand.hrms4android.listable.item.ItemFactory;
-import com.hand.hrms4android.model.AbstractPageableModel;
-import com.hand.hrms4android.parser.xml.XmlConfigReader;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -18,17 +10,24 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.hand.hrms4android.R;
+import com.hand.hrms4android.listable.doman.TodoListDomain;
+import com.hand.hrms4android.listable.item.DoneListItem;
+import com.hand.hrms4android.listable.item.DoneListItemFactory;
+import com.hand.hrms4android.listable.item.ItemFactory;
+import com.hand.hrms4android.model.AbstractPageableModel;
+
 public class DoneListAdapter extends BaseAdapter {
-	private AbstractPageableModel<Map<String, String>> model;
+	private AbstractPageableModel<TodoListDomain> model;
 	private LayoutInflater mInflater;
 	private ItemFactory<DoneListItem> itemFactory;
 	private List<DoneListItem> items;
 
-	public DoneListAdapter(Context context, AbstractPageableModel<Map<String, String>> model) {
+	public DoneListAdapter(Context context, AbstractPageableModel<TodoListDomain> model) {
 		this.model = model;
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		items = new ArrayList<DoneListItem>();
-		itemFactory = new DoneListItemFactory(XmlConfigReader.getInstance());
+		itemFactory = new DoneListItemFactory();
 
 	}
 

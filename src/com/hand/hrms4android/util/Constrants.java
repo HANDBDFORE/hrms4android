@@ -6,7 +6,7 @@ public class Constrants {
 	public static final String APPROVE_RECORD_STATUS_DIFFERENT = "different";
 	public static final String APPROVE_RECORD_STATUS_ERROR = "error";
 
-	public static final String SYS_PREFRENCES_SID = "sid";
+	public static final String SYS_PREFRENCES_TOKEN = "token";
 	public static final String SYS_PREFRENCES_ENCRYTED_SESSION_ID = "encryted_session_id";
 	public static final String SYS_PREFRENCES_CONFIG_FILE_DIR_NAME = "config";
 	public static final String SYS_PREFRENCES_PUSH_TOKEN = "push_token";
@@ -14,9 +14,6 @@ public class Constrants {
 	public static final String SYS_PREFRENCES_SERVER_BASE_URL = "sys_basic_url";
 	public static final String SYS_PREFRENCES_USERNAME = "username";
 
-	public static final String FUNCTION_LIST_ITEM_TYPE_SECTION = "SECTION";
-	public static final String FUNCTION_LIST_ITEM_TYPE_ITEM = "ITEM";
-	
 	public static final String SYS_ATTS_DEVICE_TYPE = "Android";
 	public static final String SYS_ATTS_DEVICE_ID = "device_id";
 }

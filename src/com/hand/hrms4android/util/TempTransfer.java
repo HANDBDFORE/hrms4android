@@ -12,6 +12,4 @@ public class TempTransfer {
 	@SuppressLint("UseSparseArrays")
 	public static Map<Integer, Object> container = new HashMap<Integer, Object>();
 
-	public static String todoListAuroraRecordPKKey;
-
 }

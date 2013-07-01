@@ -2,18 +2,17 @@ package com.hand.hrms4android.activity;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.hand.hrms4android.R;
-import com.hand.hrms4android.persistence.DataBaseMetadata;
-
-import android.os.Bundle;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
-@SuppressWarnings("rawtypes")
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.hand.hrms4android.R;
+import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
+
 public class ApproveOpinionActivity extends ActionBarActivity {
 	public static final String EXTRA_TITLE = "title";
 
@@ -63,7 +62,7 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 			}
 
 			Intent i = new Intent(getIntent());
-			i.putExtra(DataBaseMetadata.TodoListLogical.COMMENTS, comments);
+			i.putExtra(TodoList.COMMENTS, comments);
 			setResult(RESULT_OK, i);
 			finish();
 			break;

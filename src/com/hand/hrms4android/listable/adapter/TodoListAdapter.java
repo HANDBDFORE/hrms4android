@@ -2,7 +2,6 @@ package com.hand.hrms4android.listable.adapter;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,28 +12,27 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.listable.item.ItemFactory;
 import com.hand.hrms4android.listable.item.TodoListItem;
 import com.hand.hrms4android.listable.item.TodoListItemFactory;
 import com.hand.hrms4android.model.AbstractPageableModel;
-import com.hand.hrms4android.parser.xml.XmlConfigReader;
-import com.hand.hrms4android.persistence.DataBaseMetadata;
 import com.hand.hrms4android.util.Constrants;
 
 public class TodoListAdapter extends BaseAdapter {
 
 	private LayoutInflater mLayoutInflater;
 	private List<String> selectedRecordIDs;
-	private AbstractPageableModel<Map<String, String>> model;
+	private AbstractPageableModel<TodoListDomain> model;
 	private List<TodoListItem> items;
 	private ItemFactory<TodoListItem> itemFactory;
 	private Context context;
 
-	public TodoListAdapter(Context context, AbstractPageableModel<Map<String, String>> model) {
+	public TodoListAdapter(Context context, AbstractPageableModel<TodoListDomain> model) {
 		this.context = context;
 		mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		selectedRecordIDs = new LinkedList<String>();
-		itemFactory = new TodoListItemFactory(XmlConfigReader.getInstance());
+		itemFactory = new TodoListItemFactory();
 
 		this.model = model;
 
@@ -76,7 +74,7 @@ public class TodoListAdapter extends BaseAdapter {
 		}
 
 		// 判断该行对应数值的状态
-		String recordLocalStatus = model.getProcessData().get(position).get(DataBaseMetadata.TodoListLogical.STATUS);
+		String recordLocalStatus = model.getProcessData().get(position).getStatus();
 		if (recordLocalStatus.equals(Constrants.APPROVE_RECORD_STATUS_ERROR)) {
 			// 说明是出错项
 			wrapper.getErrorMessageTextView().setVisibility(View.VISIBLE);
@@ -162,7 +160,7 @@ public class TodoListAdapter extends BaseAdapter {
 
 	@Override
 	public boolean isEnabled(int position) {
-		String localStatus = model.getProcessData().get(position).get(DataBaseMetadata.TodoListLogical.STATUS);
+		String localStatus = model.getProcessData().get(position).getStatus();
 		if ((localStatus.equals(Constrants.APPROVE_RECORD_STATUS_WAITING))
 		        || (localStatus.equals(Constrants.APPROVE_RECORD_STATUS_DIFFERENT))) {
 			return false;

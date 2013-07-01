@@ -172,11 +172,8 @@ public class LoginActivity extends ActionBarActivity {
 	private RequestParams generateLoginParams(String username, String password) {
 		// 拼参数
 		RequestParams params = new RequestParams();
-		params.put("user_name", username);
-		params.put("user_password", password);
-		params.put("langugae", "简体中文");
-		params.put("user_language", "ZHS");
-		params.put("is_ipad", "N");
+		params.put("username", username);
+		params.put("password", password);
 
 		// 设备系统类型
 		params.put("device_type", Constrants.SYS_ATTS_DEVICE_TYPE);
@@ -184,7 +181,7 @@ public class LoginActivity extends ActionBarActivity {
 		// 消息推送token
 		String token = mPreferences.getString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, "");
 		if (token.length() != 0) {
-			params.put("device_token", token);
+			params.put("push_token", token);
 		}
 
 		// 设备imei，作为设备ID使用

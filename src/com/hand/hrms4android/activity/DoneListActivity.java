@@ -16,6 +16,7 @@ import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.adapter.DoneListAdapter;
+import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.model.AbstractPageableModel;
 import com.hand.hrms4android.model.DoneListModel;
 import com.hand.hrms4android.model.Model;
@@ -31,7 +32,7 @@ public class DoneListActivity extends ActionBarActivity implements OnItemClickLi
 	private ConfigReader configReader;
 	private String loadURL;
 	private DoneListAdapter listAdapter;
-	private AbstractPageableModel<Map<String, String>> doneModel;
+	private AbstractPageableModel<TodoListDomain> doneModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

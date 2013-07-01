@@ -1,23 +1,18 @@
 package com.hand.hrms4android.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.hand.hrms4android.exception.PersistanceException;
-import com.hand.hrms4android.persistence.AdditionalInformation;
-import com.hand.hrms4android.persistence.DataBaseMetadata;
+import com.hand.hrms4android.listable.doman.TodoListDomain;
+import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 import com.hand.hrms4android.persistence.DataManage;
 import com.hand.hrms4android.persistence.DatabaseManager;
 import com.hand.hrms4android.persistence.QueryCallback;
 import com.hand.hrms4android.util.Constrants;
-import com.hand.hrms4android.util.LogUtil;
 
 public class TodoListDao {
 	private DataManage dataManager;
@@ -28,228 +23,11 @@ public class TodoListDao {
 
 	/**
 	 * @param data
-	 * @param additional
-	 * @return
-	 * @throws PersistanceException
-	 */
-	public int insertData(List<Map<String, String>> data, AdditionalInformation additional) throws PersistanceException {
-		int affectiveRows = 0;
-
-		if ((data == null) || (data.size() == 0)) {
-			return 0;
-		}
-
-		// 写数据库
-		// 首先将所有的列名写入todo_column表
-
-		// 取第一行，
-		Map<String, String> firstRecord = data.get(0);
-
-		// 获取所有列(副本)
-		Set<String> recordFields = new HashSet<String>(firstRecord.keySet());
-		List<String> toInsertFields = new ArrayList<String>();
-
-		final String valueColumnPrefix = "todo_value_";
-
-		// 头行对照字典
-		Map<String, String> recordDictionary = new HashMap<String, String>();
-
-		boolean PKnotFound = true;
-		// 检测主键，为了将主键插入第一行
-		for (String fieldName : recordFields) {
-			// 检测到主键
-			if (fieldName.equalsIgnoreCase(additional.primaryKeyName)) {
-				// 加入字典
-				recordDictionary.put(fieldName,
-				        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_LOGICAL_PK);
-
-				recordFields.remove(fieldName);
-				toInsertFields.add(fieldName);
-				PKnotFound = false;
-				break;
-			}
-		}
-
-		// 如果没有按要求找到pk，抛错
-		if (PKnotFound) {
-			throw new PersistanceException("Primary key is not found");
-		}
-
-		// 把本地特征列加入返回数据
-		// status，serverMessage,action,comments,employeeId
-		// 本地状态
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.STATUS,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_STATUS);
-		// 服务器返回信息
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_SERVERMESSAGE);
-		// 动作
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.ACTION,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_ACTION);
-		// 审批语
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.COMMENTS,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_COMMENTS);
-		// 员工id
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_EMPLOYEE_ID);
-
-		//
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.STATUS);
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE);
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.COMMENTS);
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.ACTION);
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID);
-
-		recordFields.remove(DataBaseMetadata.TodoListLogical.STATUS);
-		recordFields.remove(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE);
-		recordFields.remove(DataBaseMetadata.TodoListLogical.ACTION);
-		recordFields.remove(DataBaseMetadata.TodoListLogical.COMMENTS);
-		recordFields.remove(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID);
-
-		int columnStart = 7;
-		// 循环除主键和保留列之外的数据列，放入字典
-		LogUtil.error(this, "recordFields", recordFields.toString());
-
-		for (String fieldName : recordFields) {
-			String columnValue = valueColumnPrefix + columnStart;
-			recordDictionary.put(fieldName, columnValue);
-			toInsertFields.add(fieldName);
-			columnStart += 1;
-		}
-
-		for (String field : toInsertFields) {
-			ContentValues cv = new ContentValues();
-			cv.put(DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_KEY, field);
-			cv.put(DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_VALUE_ID,
-			        recordDictionary.get(field));
-			dataManager.insert(DataBaseMetadata.TableTodoListColumnMetadata.TABLENAME, null, cv);
-		}
-
-		// 插行表
-		for (Map<String, String> record : data) {
-			record.put(DataBaseMetadata.TodoListLogical.STATUS, Constrants.APPROVE_RECORD_STATUS_NORMAL);
-			ContentValues cv = new ContentValues();
-			for (String fieldName : firstRecord.keySet()) {
-				cv.put(recordDictionary.get(fieldName), record.get(fieldName));
-			}
-			dataManager.insert(DataBaseMetadata.TableTodoListValueMetadata.TABLENAME, null, cv);
-			affectiveRows += 1;
-		}
-
-		return affectiveRows;
-	}
-
-	/**
-	 * 插头表
-	 * 
-	 * @param data
-	 * @param additional
-	 * @return 数据字典
-	 * @throws PersistanceException
-	 */
-	public Map<String, String> insertTodoListColumns(List<Map<String, String>> data, AdditionalInformation additional)
-	        throws PersistanceException {
-		if ((data == null) || (data.size() == 0)) {
-			return new HashMap<String, String>();
-		}
-
-		// 写数据库
-		// 首先将所有的列名写入todo_column表
-
-		// 取第一行，
-		Map<String, String> firstRecord = data.get(0);
-
-		// 获取所有列(副本)
-		Set<String> recordFields = new HashSet<String>(firstRecord.keySet());
-		List<String> toInsertFields = new ArrayList<String>();
-
-		final String valueColumnPrefix = "todo_value_";
-
-		// 头行对照字典
-		Map<String, String> recordDictionary = new HashMap<String, String>();
-
-		boolean PKnotFound = true;
-		// 检测主键，为了将主键插入第一行
-		for (String fieldName : recordFields) {
-			// 检测到主键
-			if (fieldName.equalsIgnoreCase(additional.primaryKeyName)) {
-				// 加入字典
-				recordDictionary.put(fieldName,
-				        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_LOGICAL_PK);
-
-				recordFields.remove(fieldName);
-				toInsertFields.add(fieldName);
-				PKnotFound = false;
-				break;
-			}
-		}
-
-		// 如果没有按要求找到pk，抛错
-		if (PKnotFound) {
-			throw new PersistanceException("Primary key is not found");
-		}
-
-		// 把本地特征列加入返回数据
-		// status，serverMessage,action,comments,employeeId
-		// 本地状态
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.STATUS,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_STATUS);
-		// 服务器返回信息
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_SERVERMESSAGE);
-		// 动作
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.ACTION,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_ACTION);
-		// 审批语
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.COMMENTS,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_COMMENTS);
-		// 员工id
-		recordDictionary.put(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_EMPLOYEE_ID);
-
-		//
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.STATUS);
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE);
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.COMMENTS);
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.ACTION);
-		toInsertFields.add(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID);
-
-		recordFields.remove(DataBaseMetadata.TodoListLogical.STATUS);
-		recordFields.remove(DataBaseMetadata.TodoListLogical.SERVER_MESSAGE);
-		recordFields.remove(DataBaseMetadata.TodoListLogical.ACTION);
-		recordFields.remove(DataBaseMetadata.TodoListLogical.COMMENTS);
-		recordFields.remove(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID);
-
-		int columnStart = 7;
-		// 循环除主键和保留列之外的数据列，放入字典
-		LogUtil.error(this, "recordFields", recordFields.toString());
-
-		for (String fieldName : recordFields) {
-			String columnValue = valueColumnPrefix + columnStart;
-			recordDictionary.put(fieldName, columnValue);
-			toInsertFields.add(fieldName);
-			columnStart += 1;
-		}
-
-		for (String field : toInsertFields) {
-			ContentValues cv = new ContentValues();
-			cv.put(DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_KEY, field);
-			cv.put(DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_VALUE_ID,
-			        recordDictionary.get(field));
-			dataManager.insert(DataBaseMetadata.TableTodoListColumnMetadata.TABLENAME, null, cv);
-		}
-
-		return recordDictionary;
-	}
-
-	/**
-	 * @param data
 	 * @param dictionary
 	 * @return 受影响行数
 	 * @throws PersistanceException
 	 */
-	public int insertTodoListRowData(List<Map<String, String>> data, Map<String, String> dictionary)
-	        throws PersistanceException {
+	public int insertTodoListRowData(List<TodoListDomain> data) throws PersistanceException {
 		int affectiveRows = 0;
 
 		if ((data == null) || (data.size() == 0)) {
@@ -257,104 +35,24 @@ public class TodoListDao {
 		}
 
 		// 插行表
-		for (Map<String, String> record : data) {
-			record.put(DataBaseMetadata.TodoListLogical.STATUS, Constrants.APPROVE_RECORD_STATUS_NORMAL);
+		for (TodoListDomain record : data) {
+			record.setStatus(Constrants.APPROVE_RECORD_STATUS_NORMAL);
 			ContentValues cv = new ContentValues();
-			for (String fieldName : dictionary.keySet()) {
-				cv.put(dictionary.get(fieldName), record.get(fieldName));
-			}
-			dataManager.insert(DataBaseMetadata.TableTodoListValueMetadata.TABLENAME, null, cv);
+			cv.put(TodoList.STATUS, Constrants.APPROVE_RECORD_STATUS_NORMAL);
+			cv.put(TodoList.SERVER_MESSAGE, record.getServerMessage());
+			cv.put(TodoList.ACTION, record.getAction());
+			cv.put(TodoList.COMMENTS, record.getComments());
+			cv.put(TodoList.LOCALID, record.getLocalId());
+			cv.put(TodoList.ITEM1, record.getItem1());
+			cv.put(TodoList.ITEM2, record.getItem2());
+			cv.put(TodoList.ITEM3, record.getItem3());
+			cv.put(TodoList.ITEM4, record.getItem4());
+			cv.put(TodoList.SOURCE_SYSTEM_NAME, record.getSourceSystemName());
+			record.setId(String.valueOf(dataManager.insert(TodoList.TABLENAME, null, cv)));
 			affectiveRows += 1;
 		}
 
 		return affectiveRows;
-	}
-
-	/**
-	 * 获得已经存储的对照字典
-	 * 
-	 * @return
-	 * @throws PersistanceException
-	 */
-	public Map<String, String> getTodoListColumns() {
-		final Map<String, String> dictionary = new HashMap<String, String>();
-
-		QueryCallback callback = new QueryCallback() {
-			@Override
-			public void onQuerySuccess(Cursor cursor) {
-
-				if (cursor.moveToFirst()) {
-					int index_key = cursor
-					        .getColumnIndex(DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_KEY);
-					int index_value = cursor
-					        .getColumnIndex(DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_VALUE_ID);
-
-					do {
-						if (cursor.getString(index_key).equalsIgnoreCase("todo_column_id")) {
-							continue;
-						} else {
-							dictionary.put(cursor.getString(index_key), cursor.getString(index_value));
-						}
-					} while (cursor.moveToNext());
-				}
-			}
-		};
-
-		dataManager.query("select * from " + DataBaseMetadata.TableTodoListColumnMetadata.TABLENAME + " order by "
-		        + DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_VALUE_ID, null, callback);
-
-		return dictionary;
-	}
-
-	/**
-	 * 取所有key
-	 * 
-	 * @return
-	 */
-	public List<String> getAllKeys() {
-		final List<String> result = new ArrayList<String>();
-
-		QueryCallback callback = new QueryCallback() {
-			@Override
-			public void onQuerySuccess(Cursor cursor) {
-
-				if (cursor.moveToFirst()) {
-					do {
-						result.add(cursor.getString(0));
-					} while (cursor.moveToNext());
-				}
-			}
-		};
-
-		dataManager.query("select " + DataBaseMetadata.TableTodoListColumnMetadata.COLUMN_TODO_COLUMN_KEY + " from "
-		        + DataBaseMetadata.TableTodoListColumnMetadata.TABLENAME + " ", null, callback);
-		return result;
-	}
-
-	/**
-	 * 取所有值列的主键
-	 * 
-	 * @return
-	 */
-	public List<String> getAllColumnRecordPK() {
-		final List<String> result = new ArrayList<String>();
-
-		QueryCallback callback = new QueryCallback() {
-
-			@Override
-			public void onQuerySuccess(Cursor cursor) {
-				if (cursor.moveToFirst()) {
-					do {
-						result.add(cursor.getString(0));
-					} while (cursor.moveToNext());
-				}
-			}
-		};
-
-		dataManager.query("select " + DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_LOGICAL_PK
-		        + " from " + DataBaseMetadata.TableTodoListValueMetadata.TABLENAME, null, callback);
-
-		return result;
 	}
 
 	/**
@@ -365,14 +63,11 @@ public class TodoListDao {
 	 */
 	public int markRecordAsBeingApproved(List<String> dirtyRecordPKs) {
 		int affectiveRows = 0;
-		for (String pk : dirtyRecordPKs) {
+		for (String id : dirtyRecordPKs) {
 			ContentValues cv = new ContentValues();
-			cv.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_STATUS,
-			        Constrants.APPROVE_RECORD_STATUS_DIFFERENT);
-			cv.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_SERVERMESSAGE, "已在其他地方处理");
-			affectiveRows += dataManager.update(DataBaseMetadata.TableTodoListValueMetadata.TABLENAME, cv,
-			        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_LOGICAL_PK + "=?",
-			        new String[] { pk });
+			cv.put(TodoList.STATUS, Constrants.APPROVE_RECORD_STATUS_DIFFERENT);
+			cv.put(TodoList.SERVER_MESSAGE, "已在其他地方处理");
+			affectiveRows += dataManager.update(TodoList.TABLENAME, cv, TodoList.ID + "=?", new String[] { id });
 		}
 
 		return affectiveRows;
@@ -381,91 +76,59 @@ public class TodoListDao {
 	public int markAllRecordsAsBeingApproved() {
 		int affectiveRows = 0;
 		ContentValues cv = new ContentValues();
-		cv.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_STATUS,
-		        Constrants.APPROVE_RECORD_STATUS_DIFFERENT);
-		cv.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_SERVERMESSAGE, "已在其他地方处理");
-		affectiveRows = dataManager.update(DataBaseMetadata.TableTodoListValueMetadata.TABLENAME, cv, null, null);
+		cv.put(TodoList.STATUS, Constrants.APPROVE_RECORD_STATUS_DIFFERENT);
+		cv.put(TodoList.SERVER_MESSAGE, "已在其他地方处理");
+		affectiveRows = dataManager.update(TodoList.TABLENAME, cv, null, null);
 		return affectiveRows;
 	}
 
 	/**
 	 * @return
 	 */
-	public List<Map<String, String>> getAllTodoRecords() {
 
-		final Map<String, String> dictionary = new HashMap<String, String>();
-		final List<Map<String, String>> dataset = new ArrayList<Map<String, String>>();
-		final StringBuffer sqlBuffer = new StringBuffer();
+	public List<TodoListDomain> getAllTodoRecords() {
+
+		final List<TodoListDomain> datas = new ArrayList<TodoListDomain>();
 
 		// 先查出数据字段
 		QueryCallback getDictionaryCallback = new QueryCallback() {
-			final int index_todo_column_key = 0;
-			final int index_todo_column_value_id = 1;
+			int index = 0;
+
+			final int index_ID = index++;
+			final int index_STATUS = index++;
+			final int index_SERVER_MESSAGE = index++;
+			final int index_ACTION = index++;
+			final int index_COMMENTS = index++;
+			final int index_LOCALID = index++;
+			final int index_ITEM1 = index++;
+			final int index_ITEM2 = index++;
+			final int index_ITEM3 = index++;
+			final int index_ITEM4 = index++;
+			final int index_SOURCE_SYSTEM_NAME = index++;
 
 			@Override
 			public void onQuerySuccess(Cursor cursor) {
 				if (cursor.moveToFirst()) {
-					sqlBuffer.append("select ");
 					do {
-						String key = cursor.getString(index_todo_column_key);
-						String value = cursor.getString(index_todo_column_value_id);
-						sqlBuffer.append(" ");
-						sqlBuffer.append(value);
-						sqlBuffer.append(" ");
-						sqlBuffer.append(" as ");
-						sqlBuffer.append(key);
-						sqlBuffer.append(" ");
-
-						if (cursor.isLast()) {
-							sqlBuffer.append(", ");
-							sqlBuffer.append(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK);
-							sqlBuffer.append(" as ");
-							sqlBuffer.append(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK);
-							sqlBuffer.append(" ");
-						} else {
-							sqlBuffer.append(", ");
-						}
-
-						dictionary.put(key, value);
-
+						datas.add(new TodoListDomain(cursor.getString(index_ID), cursor.getString(index_STATUS), cursor
+						        .getString(index_SERVER_MESSAGE), cursor.getString(index_ACTION), cursor
+						        .getString(index_COMMENTS), cursor.getString(index_LOCALID), cursor
+						        .getString(index_ITEM1), cursor.getString(index_ITEM2), cursor.getString(index_ITEM3),
+						        cursor.getString(index_ITEM4), cursor.getString(index_SOURCE_SYSTEM_NAME)));
 					} while (cursor.moveToNext());
 
-					sqlBuffer.append(" from todo_value");
 				}
+
 			}
 		};
+
 		// 找出所有列
-		dataManager.query("select todo_column_key,todo_column_value_id from todo_column", null, getDictionaryCallback);
-
-		if (dictionary.size() == 0) {
-			// 说明没有查到数据，返回空集合
-			return dataset;
-		}
-
-		// 加入本地id
-
-		QueryCallback allRecordsCallback = new QueryCallback() {
-			@Override
-			public void onQuerySuccess(Cursor cursor) {
-
-				// 所有列名
-				if (cursor.moveToFirst()) {
-					do {
-						Map<String, String> record = new HashMap<String, String>();
-
-						for (int i = 0; i < cursor.getColumnCount(); i++) {
-							String columnName = cursor.getColumnName(i);
-							record.put(columnName, cursor.getString(i));
-						}
-						dataset.add(record);
-					} while (cursor.moveToNext());
-				}
-			}
-		};
-
-		dataManager.query(sqlBuffer.toString(), null, allRecordsCallback);
-
-		return dataset;
+		String sql = "select " + TodoList.ID + ", " + TodoList.STATUS + ", " + TodoList.SERVER_MESSAGE + ", "
+		        + TodoList.ACTION + ", " + TodoList.COMMENTS + ", " + TodoList.LOCALID + ", " + TodoList.ITEM1 + ", "
+		        + TodoList.ITEM2 + ", " + TodoList.ITEM3 + ", " + TodoList.ITEM4 + ", " + TodoList.SOURCE_SYSTEM_NAME
+		        + "  from " + TodoList.TABLENAME;
+		dataManager.query(sql, null, getDictionaryCallback);
+		return datas;
 	}
 
 	/**
@@ -473,15 +136,12 @@ public class TodoListDao {
 	 * @param serverMessage
 	 * @return
 	 */
-	public int updateApproveRecordAsError(String physicalRecordId, String serverMessage) {
+	public int updateApproveRecordAsError(String id, String serverMessage) {
 		ContentValues cv = new ContentValues();
-		cv.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_STATUS,
-		        Constrants.APPROVE_RECORD_STATUS_ERROR);
-		cv.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_SERVERMESSAGE, serverMessage);
+		cv.put(TodoList.STATUS, Constrants.APPROVE_RECORD_STATUS_ERROR);
+		cv.put(TodoList.SERVER_MESSAGE, serverMessage);
 
-		int affectiveRows = dataManager.update(DataBaseMetadata.TableTodoListValueMetadata.TABLENAME, cv,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK + "= ?",
-		        new String[] { physicalRecordId });
+		int affectiveRows = dataManager.update(TodoList.TABLENAME, cv, TodoList.ID + "= ?", new String[] { id });
 		return affectiveRows;
 	}
 
@@ -491,24 +151,20 @@ public class TodoListDao {
 	 * @param record
 	 * @return
 	 */
-	public int saveApproveAction(Map<String, String> record) {
+	public int saveApproveAction(TodoListDomain record) {
 		ContentValues updateValues = new ContentValues();
 		// 动作
-		updateValues.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_ACTION,
-		        record.get(DataBaseMetadata.TodoListLogical.ACTION));
+		updateValues.put(TodoList.ACTION, record.getAction());
 		// 意见
-		updateValues.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_COMMENTS,
-		        record.get(DataBaseMetadata.TodoListLogical.COMMENTS));
+		updateValues.put(TodoList.COMMENTS, record.getComments());
+		// TODO 转交？
 		// 转交id
-		updateValues.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_EMPLOYEE_ID,
-		        record.get(DataBaseMetadata.TodoListLogical.EMPLOYEE_ID));
+		// updateValues.put(TodoList.EMPLOYEE_ID, 0);
 		// 状态
-		updateValues.put(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_STATUS,
-		        Constrants.APPROVE_RECORD_STATUS_WAITING);
+		updateValues.put(TodoList.STATUS, Constrants.APPROVE_RECORD_STATUS_WAITING);
 
-		int affectiveRows = dataManager.update(DataBaseMetadata.TableTodoListValueMetadata.TABLENAME, updateValues,
-		        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK + "=?",
-		        new String[] { record.get(DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK) });
+		int affectiveRows = dataManager.update(TodoList.TABLENAME, updateValues, TodoList.ID + "=?",
+		        new String[] { String.valueOf(record.getId()) });
 		return affectiveRows;
 	}
 
@@ -522,10 +178,9 @@ public class TodoListDao {
 	public int deleteRecord(String... ids) {
 		int affectiveRows = 0;
 		for (int i = 0; i < ids.length; i++) {
-			affectiveRows += dataManager.delete(DataBaseMetadata.TableTodoListValueMetadata.TABLENAME,
-			        DataBaseMetadata.TableTodoListValueMetadata.COLUMN_TODO_VALUE_PHYSICAL_PK + "=?",
-			        new String[] { ids[i] });
+			affectiveRows += dataManager.delete(TodoList.TABLENAME, TodoList.ID + "=?", new String[] { ids[i] });
 		}
+
 		return affectiveRows;
 	}
 

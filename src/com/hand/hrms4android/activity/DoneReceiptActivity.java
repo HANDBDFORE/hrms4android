@@ -1,18 +1,16 @@
 package com.hand.hrms4android.activity;
 
-import java.util.Map;
-
-import com.actionbarsherlock.view.MenuItem;
-import com.hand.hrms4android.exception.ParseExpressionException;
-import com.hand.hrms4android.network.NetworkUtil;
-import com.hand.hrms4android.parser.Expression;
-import com.hand.hrms4android.util.PlaceHolderReplacer;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-public class DoneReceiptActivity extends BaseReceiptActivity {
+import com.actionbarsherlock.view.MenuItem;
+import com.hand.hrms4android.exception.ParseExpressionException;
+import com.hand.hrms4android.listable.doman.DoneListDomain;
+import com.hand.hrms4android.network.NetworkUtil;
+import com.hand.hrms4android.parser.Expression;
+
+public class DoneReceiptActivity extends BaseReceiptActivity<DoneListDomain> {
 
 	private String urlKeyName;
 
@@ -41,7 +39,9 @@ public class DoneReceiptActivity extends BaseReceiptActivity {
 			        .getAttr(new Expression(
 			                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='employee_card_url']",
 			                "value"));
-			info.cardInfoUrl = PlaceHolderReplacer.replaceForValue(listModel.currentItem(), configUrl);
+			//TODO
+//			info.cardInfoUrl = PlaceHolderReplacer.replaceForValue(listModel.currentItem(), configUrl);
+			info.cardInfoUrl = "";
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			info.cardInfoUrl = "";
@@ -50,7 +50,8 @@ public class DoneReceiptActivity extends BaseReceiptActivity {
 		try {
 			String actionItemTextKeyName = configReader.getAttr(new Expression(
 			        "/config/application/activity[@name='approve_detail_activity']/view/employee_action_item", "text"));
-			info.displayName = PlaceHolderReplacer.replaceForValue(listModel.currentItem(), actionItemTextKeyName);
+//			info.displayName = PlaceHolderReplacer.replaceForValue(listModel.currentItem(), actionItemTextKeyName);
+			info.displayName = "";
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
 			info.displayName = "";
@@ -63,8 +64,8 @@ public class DoneReceiptActivity extends BaseReceiptActivity {
 		loadResources(getAbsolutePageUrl(listModel.currentItem()));
 	}
 
-	private String getAbsolutePageUrl(Map<String, String> record) {
-		return NetworkUtil.getAbsoluteUrl(listModel.currentItem().get(urlKeyName));
+	private String getAbsolutePageUrl(DoneListDomain record) {
+		return NetworkUtil.getAbsoluteUrl(urlKeyName);
 	}
 
 	private void loadResources(String absoluteUrl) {

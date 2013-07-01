@@ -1,7 +1,7 @@
 package com.hand.hrms4android.model;
 
-import java.util.List;
-import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -16,8 +16,8 @@ import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.LogUtil;
-import com.loopj.android.http.HDJsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.UMJsonHttpResponseHandler;
 
 public class LoginModel extends AbstractBaseModel<Void> {
 	private ConfigReader configReader;
@@ -46,25 +46,26 @@ public class LoginModel extends AbstractBaseModel<Void> {
 
 		NetworkUtil.removeAllCookies();
 
-		NetworkUtil.post(service, (RequestParams) param, new HDJsonHttpResponseHandler() {
+		NetworkUtil.post(service, (RequestParams) param, new UMJsonHttpResponseHandler() {
+
+			@Override
+			public void onSuccess(int statusCode, JSONObject response) {
+				// 存储相关数据
+				try {
+					LoginModel.this.storeSomething(response.getJSONObject("body"));
+				} catch (JSONException e) {
+					e.printStackTrace();
+					activity.modelFailedLoad(new Exception("error data"), LoginModel.this);
+				}
+
+				// 通知Activity已完成加载
+				LoginModel.this.activity.modelDidFinishedLoad(LoginModel.this);
+			}
 
 			@Override
 			public void onFailure(Throwable error, String content) {
 				LogUtil.error(this, "request", "onFailure:" + content);
 				activity.modelFailedLoad(new Exception(error), LoginModel.this);
-			}
-
-			@Override
-			public void onSuccess(int statusCode, List<Map<String, String>> ds) {
-
-				// 存储相关数据
-				LoginModel.this.storeSomething(ds.get(0));
-
-				// // 设置请求头
-				// LoginModel.this.updateRequestHeaders(ds.get(0));
-
-				// 通知Activity已完成加载
-				LoginModel.this.activity.modelDidFinishedLoad(LoginModel.this);
 			}
 		});
 	}
@@ -74,16 +75,19 @@ public class LoginModel extends AbstractBaseModel<Void> {
 	 * 
 	 * @param record
 	 */
-	private void storeSomething(Map<String, String> record) {
+	private void storeSomething(JSONObject record) throws JSONException {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(HrmsApplication.getApplication());
 		Editor editor = preferences.edit();
 
-		String sid = record.get("sid");
-		String encryted_session_id = record.get("encryted_session_id");
+		try {
+			if (record.has(Constrants.SYS_PREFRENCES_TOKEN))
+				editor.putString(Constrants.SYS_PREFRENCES_TOKEN, record.getString(Constrants.SYS_PREFRENCES_TOKEN));
 
-		editor.putString(Constrants.SYS_PREFRENCES_SID, sid);
-		editor.putString(Constrants.SYS_PREFRENCES_ENCRYTED_SESSION_ID, encryted_session_id);
-		editor.commit();
+			if (record.has("encryted_session_id"))
+				editor.putString(Constrants.SYS_PREFRENCES_ENCRYTED_SESSION_ID, record.getString("encryted_session_id"));
+		} finally {
+			editor.commit();
+		}
 
 	}
 

@@ -95,7 +95,7 @@ public class LoadingActivity extends ActionBarActivity {
 	public void modelDidFinishedLoad(Model model) {
 		if (model.getModelId() == MODEL_LOADING) {
 
-			if (mPreferences.getString(Constrants.SYS_PREFRENCES_SID, "").length() != 0) {
+			if (mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN, "").length() != 0) {
 				autoLoginModel.load(LoadType.Network, getAutoLoginParams());
 				return;
 			}
@@ -129,7 +129,7 @@ public class LoadingActivity extends ActionBarActivity {
 
 	private Map<String, String> getAutoLoginParams() {
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("sid", mPreferences.getString(Constrants.SYS_PREFRENCES_SID, ""));
+		params.put(Constrants.SYS_PREFRENCES_TOKEN, mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN, ""));
 		
 		String device_token = mPreferences.getString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, "");
 		params.put("device_type", Constrants.SYS_ATTS_DEVICE_TYPE);

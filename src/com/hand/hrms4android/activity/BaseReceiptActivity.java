@@ -15,19 +15,19 @@ import com.hand.hrms4android.widget.EmployeeCardDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 
-public class BaseReceiptActivity extends HTMLBaseActivity {
+public class BaseReceiptActivity<E> extends HTMLBaseActivity {
 	protected static final int GROUP_ACTION = 1;
 	protected static final int GROUP_TOOLS = 101;
 
 	protected Dialog employeeCard;
 	protected ConfigReader configReader;
-	protected AbstractPageableModel<Map<String, String>> listModel;
+	protected AbstractPageableModel<E> listModel;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	protected void onCreate(Bundle savedInstanceState) {
 		configReader = XmlConfigReader.getInstance();
-		listModel = (AbstractPageableModel<Map<String, String>>) TempTransfer.container
+		listModel = (AbstractPageableModel<E>) TempTransfer.container
 		        .get(TempTransfer.KEY_TODO_LIST_MODEL);
 		TempTransfer.container.remove(TempTransfer.KEY_TODO_LIST_MODEL);
 
