@@ -39,7 +39,11 @@ public class NetworkUtil {
 
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.setCookieStore(cookieStore);
-		client = setClientHeader(client, headers);
+		String token = mPreferences.getString("token", "");
+		if (token.length() > 0) {
+			addHeader("token", token);
+		}
+		client = addClientHeaders(client, headers);
 		client.get(getAbsoluteUrl(url), params, responseHandler);
 	}
 
@@ -54,17 +58,19 @@ public class NetworkUtil {
 	 */
 	public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 		AsyncHttpClient client = new AsyncHttpClient();
-		// CookieStore cs = readLocalCookies();
-		// if (cs != null && cs.getCookies().size() != 0)
-		// client.setCookieStore(readLocalCookies());
 
 		client.setCookieStore(cookieStore);
-		
+
+		String token = mPreferences.getString("token", "");
+		if (token.length() > 0) {
+			addHeader("token", token);
+			addClientHeaders(client, headers);
+		}
 
 		if (params != null) {
 			LogUtil.debug(NetworkUtil.class, "send", params.toString());
 		}
-		
+
 		client.post(getAbsoluteUrl(url), params, responseHandler);
 	}
 
@@ -93,7 +99,7 @@ public class NetworkUtil {
 		return base;
 	}
 
-	private static AsyncHttpClient setClientHeader(AsyncHttpClient client, Map<String, String> headers) {
+	private static AsyncHttpClient addClientHeaders(AsyncHttpClient client, Map<String, String> headers) {
 		Set<String> keys = headers.keySet();
 		for (String key : keys) {
 			client.addHeader(key, headers.get(key));

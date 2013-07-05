@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 import com.hand.hrms4android.pojo.ApproveAction;
+import com.hand.hrms4android.util.Constrants;
 
 public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 	private static final int REQUEST_ACTIVITY_OPINION = 1;
@@ -147,15 +149,22 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 		sb.append("sourceSystemName=" + URLEncoder.encode(record.getSourceSystemName()));
 		sb.append("&");
 		sb.append("localId=" + URLEncoder.encode(record.getLocalId()));
+
+		String token = PreferenceManager.getDefaultSharedPreferences(this).getString(Constrants.SYS_PREFRENCES_TOKEN,
+		        "");
+		if (token.length() > 0) {
+			sb.append("&");
+			sb.append("token=" + URLEncoder.encode(token));
+		}
 		return NetworkUtil.getAbsoluteUrl(sb.toString());
 	}
 
 	private void loadResources(TodoListDomain record) {
 		// 拿到当前指向的记录
 		loadingProgress.setVisibility(View.VISIBLE);
-		contentWebView.loadUrl(getAbsolutePageUrl(record));
 		this.model = new ApproveDetailActionModel(0, this);
 		this.model.load(LoadType.Network, record);
+		contentWebView.loadUrl(getAbsolutePageUrl(record));
 	}
 
 	private ActionMenuItem menuItemFactory(ApproveAction action) {
