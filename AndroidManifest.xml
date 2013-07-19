@@ -98,15 +98,9 @@
         </activity>
 
         <!-- =========================配置的第三方参数属性====================== -->
-        <meta-data
-            android:name="appid"
-            android:value="gjQJ0OVsch5I5x23sP4Bo9" />
-        <meta-data
-            android:name="appkey"
-            android:value="Wgm2rpJyzVA7mYbrGsi3d4" />
-        <meta-data
-            android:name="appsecret"
-            android:value="1epLF7nLjs85TtzNYhXNqA" />
+		<meta-data android:name="appid" android:value="Ytk0ePKK6k65cRd8BGRN17" />
+		<meta-data android:name="appkey" android:value="tYaDvmhEbj8VTgQYZaEJP4" />
+		<meta-data android:name="appsecret" android:value="e1f4ZVg35n8tywU9XvBmm" />
 
         <activity
             android:name="com.igexin.sdk.SdkActivity"
@@ -169,7 +163,7 @@
         <!-- 接收消息广播 -->
         <receiver android:name="com.hand.hrms4android.receiver.HDMessageReceiver" >
             <intent-filter>
-                <action android:name="com.igexin.sdk.action.gjQJ0OVsch5I5x23sP4Bo9" />
+                <action android:name="com.igexin.sdk.action.Ytk0ePKK6k65cRd8BGRN17" />
             </intent-filter>
         </receiver>
     </application>

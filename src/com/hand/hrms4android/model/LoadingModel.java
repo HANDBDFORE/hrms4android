@@ -37,7 +37,7 @@ public class LoadingModel extends AbstractBaseModel<Void> {
 				File dir = HrmsApplication.getApplication().getDir(Constrants.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
 				        Context.MODE_PRIVATE);
 				File configFile = new File(dir, "android-backend-config.xml");
-				FileOutputStream fileOutputStream;
+				FileOutputStream fileOutputStream = null;
 				try {
 					fileOutputStream = new FileOutputStream(configFile);
 					fileOutputStream.write(binaryData);
@@ -45,6 +45,12 @@ public class LoadingModel extends AbstractBaseModel<Void> {
 					// 捕获错误
 					activity.modelFailedLoad(ex, LoadingModel.this);
 					return;
+				}finally{
+					try {
+	                    fileOutputStream.close();
+                    } catch (IOException e) {
+	                    e.printStackTrace();
+                    }
 				}
 
 				// 检查配置文件是否正确

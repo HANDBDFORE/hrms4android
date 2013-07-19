@@ -24,6 +24,16 @@ public class NetworkUtil {
 
 	private static Map<String, String> headers = new HashMap<String, String>();
 
+	static {
+		headers.put("product", android.os.Build.PRODUCT);
+		headers.put("model", android.os.Build.MODEL);
+		headers.put("SDK VERSION", android.os.Build.VERSION.RELEASE);
+		headers.put("DEVICE:", android.os.Build.DEVICE);
+		headers.put("ID", android.os.Build.ID);
+		headers.put("MANUFACTURER", android.os.Build.MANUFACTURER);
+		headers.put("product", android.os.Build.PRODUCT);
+	}
+
 	private static CookieStore cookieStore = null;
 
 	/**

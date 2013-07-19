@@ -69,7 +69,7 @@ public class StorageUtil {
 		Editor editor = savedPreferences.edit();
 		editor.remove(Constrants.SYS_PREFRENCES_TOKEN);
 		editor.remove(Constrants.SYS_PREFRENCES_ENCRYTED_SESSION_ID);
-		editor.remove(Constrants.SYS_PREFRENCES_PUSH_TOKEN);
+//		editor.remove(Constrants.SYS_PREFRENCES_PUSH_TOKEN);
 		editor.remove(Constrants.SYS_PREFRENCES_USERNAME);
 		editor.commit();
 	}

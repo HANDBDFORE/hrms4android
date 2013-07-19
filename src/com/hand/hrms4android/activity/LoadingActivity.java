@@ -43,7 +43,7 @@ public class LoadingActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading);
-		bindAllViews();
+		bindAllViews(); 
 
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		model = new LoadingModel(MODEL_LOADING, this);
