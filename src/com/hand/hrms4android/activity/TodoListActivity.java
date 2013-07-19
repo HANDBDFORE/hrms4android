@@ -1,7 +1,11 @@
 package com.hand.hrms4android.activity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import net.simonvt.menudrawer.MenuDrawer;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,6 +14,7 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,8 +34,11 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.listable.adapter.FunctionListAdapter;
 import com.hand.hrms4android.listable.adapter.TodoListAdapter;
+import com.hand.hrms4android.listable.item.FunctionListItem;
 import com.hand.hrms4android.listable.item.TodoListItem;
+import com.hand.hrms4android.model.FunctionListModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.model.TodoListModel;
@@ -46,6 +54,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 public class TodoListActivity extends ActionBarActivity implements OnItemClickListener, OnItemLongClickListener {
 	private static final int REQUEST_ACTIVITY_DETAIL = 1;
 	private static final int REQUEST_ACTIVITY_OPINION = 2;
+
+	private static final int MODEL_TODO = 1;
+	private static final int MODEL_FUNCTION = 2;
 
 	/**
 	 * listview 的 header ,会影响 onItemClick时的position，使用时减去此值
@@ -65,21 +76,67 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 
 	private boolean multiChoiceMode;
 
+	/*
+	 * 左右
+	 */
+	private MenuDrawer mDrawer;
+
+	/*
+	 * 功能列表
+	 */
+	private ListView functionListView;
+	private FunctionListAdapter functionListAdapter;
+	private FunctionListModel functionListModel;
+
+	/**
+	 * 待办事项
+	 */
+	public static final String TODO_ITEM_ID = "todo";
+
+	/**
+	 * 已完成事项
+	 */
+	public static final String DONE_ITEM_ID = "done";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.activity_todo_list);
 
 		bindAllViews();
 		buildResource();
 
 		// 第一次进入程序，从本地读取
 		this.model.load(LoadType.Local, null);
+		this.functionListModel.load(LoadType.Network, null);
 	}
 
 	private void bindAllViews() {
+		/*
+		 * function
+		 */
+		this.functionListView = new ListView(this);
+		this.functionListModel = new FunctionListModel(MODEL_FUNCTION, this);
+		this.functionListAdapter = new FunctionListAdapter(this, new ArrayList<FunctionListItem>(), functionListView);
+		this.functionListView.setAdapter(functionListAdapter);
+
+		/*
+		 * zuoyou
+		 */
+		mDrawer = MenuDrawer.attach(this);
+
+		mDrawer.setMenuView(functionListView);
+		mDrawer.setContentView(R.layout.activity_todo_list);
+
+		// The drawable that replaces the up indicator in the action bar
+		mDrawer.setSlideDrawable(R.drawable.ic_drawer);
+		// Whether the previous drawable should be shown
+		mDrawer.setDrawerIndicatorEnabled(true);
+
+		/*
+		 * 原来
+		 */
 		todoListViewWrapper = (PullToRefreshListView) findViewById(R.id.activity_todo_list_listviewwrapper);
 		todoListViewWrapper.getRefreshableView().setOnItemLongClickListener(this);
 		todoListViewWrapper.setOnItemClickListener(this);
@@ -96,26 +153,28 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 			}
 		});
 		reloadText = (TextView) findViewById(R.id.activity_todo_list_reload_text);
+
 	}
 
 	private void buildResource() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		listModel = new TodoListModel(0, this);
+		listModel = new TodoListModel(MODEL_TODO, this);
 		this.model = listModel;
 
-		gestureListener = new GestureRecogniser();
-		gestureDetector = new GestureDetector(this, gestureListener);
-		todoListViewWrapper.getRefreshableView().setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (gestureDetector.onTouchEvent(event)) {
-
-					todoListViewWrapper.getRefreshableView().onInterceptTouchEvent(event);
-					return true;
-				}
-				return false;
-			}
-		});
+		// gestureListener = new GestureRecogniser();
+		// gestureDetector = new GestureDetector(this, gestureListener);
+		// todoListViewWrapper.getRefreshableView().setOnTouchListener(new
+		// OnTouchListener() {
+		// @Override
+		// public boolean onTouch(View v, MotionEvent event) {
+		// if (gestureDetector.onTouchEvent(event)) {
+		//
+		// todoListViewWrapper.getRefreshableView().onInterceptTouchEvent(event);
+		// return true;
+		// }
+		// return false;
+		// }
+		// });
 
 		actionModeCallback = new ActionModeOfApproveCallback();
 		mActionMode = null;
@@ -127,21 +186,28 @@ public class TodoListActivity extends ActionBarActivity implements OnItemClickLi
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
-		// 重新绘制界面
-		listAdapter.reFetchData();
+		if (model.getModelId() == MODEL_TODO) {
+			// 重新绘制界面
+			listAdapter.reFetchData();
 
-		if ((listAdapter.getCount() == 0) && (!listModel.needLoadOnceMore())) {
-			showEmptyTip("暂时没有待审批事项");
-		} else {
-			showList();
-		}
+			if ((listAdapter.getCount() == 0) && (!listModel.needLoadOnceMore())) {
+				showEmptyTip("暂时没有待审批事项");
+			} else {
+				showList();
+			}
 
-		if (listModel.needLoadOnceMore()) {
-			setSupportProgressBarIndeterminateVisibility(true);
-			listModel.load(LoadType.Network, null);
-		} else {
-			setSupportProgressBarIndeterminateVisibility(false);
-			todoListViewWrapper.onRefreshComplete();
+			if (listModel.needLoadOnceMore()) {
+				setSupportProgressBarIndeterminateVisibility(true);
+				listModel.load(LoadType.Network, null);
+			} else {
+				setSupportProgressBarIndeterminateVisibility(false);
+				todoListViewWrapper.onRefreshComplete();
+			}
+		} else if (model.getModelId() == MODEL_FUNCTION) {
+			List<FunctionListItem> items = (List<FunctionListItem>) model.getProcessData();
+
+			functionListAdapter.setDatas(items);
+			functionListAdapter.notifyDataSetChanged();
 		}
 
 	}

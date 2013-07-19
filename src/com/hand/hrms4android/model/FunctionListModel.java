@@ -11,40 +11,54 @@ import org.json.JSONObject;
 
 import com.hand.hrms4android.activity.FunctionListActivity;
 import com.hand.hrms4android.activity.ModelActivity;
+import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.item.FunctionListItem;
 import com.hand.hrms4android.network.NetworkUtil;
+import com.hand.hrms4android.parser.ConfigReader;
+import com.hand.hrms4android.parser.Expression;
+import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.loopj.android.http.HDJsonHttpResponseHandler;
 import com.loopj.android.http.UMJsonHttpResponseHandler;
 
 public class FunctionListModel extends AbstractListModel<FunctionListItem> {
 
 	private List<FunctionListItem> items;
+	private ConfigReader configReader;
 
 	public FunctionListModel(int id, ModelActivity activity) {
 		super(id, activity);
+		configReader = XmlConfigReader.getInstance();
 	}
 
 	@Override
 	public void load(LoadType loadType, Object param) {
-		String url = param.toString();
+		try {
+			String queryUrl = configReader
+			        .getAttr(new Expression(
+			                "/config/application/activity[@name='function_list_activity']/request/url[@name='function_query_url']",
+			                "value"));
 
-		NetworkUtil.post(url, null, new UMJsonHttpResponseHandler() {
+			NetworkUtil.post(queryUrl, null, new UMJsonHttpResponseHandler() {
 
-			@Override
-			public void onSuccess(int statusCode, JSONObject response) {
-				items = buildFixedItems(items);
+				@Override
+				public void onSuccess(int statusCode, JSONObject response) {
+					items = buildFixedItems(items);
 
-				JSONArray sections = null;
-				try {
-					sections = response.getJSONObject("body").getJSONArray("list");
-					items.addAll(buildItems(sections));
-				} catch (JSONException e) {
-					e.printStackTrace();
+					JSONArray sections = null;
+					try {
+						sections = response.getJSONObject("body").getJSONArray("list");
+						items.addAll(buildItems(sections));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+
+					activity.modelDidFinishedLoad(FunctionListModel.this);
 				}
-
-				activity.modelDidFinishedLoad(FunctionListModel.this);
-			}
-		});
+			});
+		} catch (ParseExpressionException e1) {
+			e1.printStackTrace();
+			activity.modelFailedLoad(e1, FunctionListModel.this);
+		}
 	}
 
 	private List<FunctionListItem> buildFixedItems(List<FunctionListItem> item) {
