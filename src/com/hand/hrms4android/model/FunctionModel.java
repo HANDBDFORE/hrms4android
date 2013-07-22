@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.hand.hrms4android.activity.FunctionListFragment;
+import com.hand.hrms4android.activity.FunctionListActivity;
 import com.hand.hrms4android.activity.ModelActivity;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.item.FunctionItem;
@@ -68,8 +68,8 @@ public class FunctionModel extends AbstractListModel<Object> {
 		item.clear();
 
 		item.add(new FunctionSection("工作流"));
-		item.add(new FunctionItem(FunctionListFragment.TODO_ITEM_ID, "待办事项", "bundle://todo_unread.png", ""));
-		item.add(new FunctionItem(FunctionListFragment.DONE_ITEM_ID, "已审批", "bundle://todo_unread.png", ""));
+		item.add(new FunctionItem(FunctionListActivity.TODO_ITEM_ID, "待办事项", "bundle://todo_unread.png", ""));
+		item.add(new FunctionItem(FunctionListActivity.DONE_ITEM_ID, "已审批", "bundle://todo_unread.png", ""));
 		return item;
 	}
 

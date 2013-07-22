@@ -18,8 +18,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.adapter.FunctionListAdapter;
 import com.hand.hrms4android.model.FunctionModel;
@@ -28,7 +27,7 @@ import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.util.StorageUtil;
 
-public class FunctionListFragment extends SherlockFragmentActivity implements ModelActivity,OnItemClickListener {
+public class FunctionListActivity extends SherlockFragmentActivity implements ModelActivity, OnItemClickListener {
 
 	/**
 	 * 待办事项
@@ -39,7 +38,7 @@ public class FunctionListFragment extends SherlockFragmentActivity implements Mo
 	 * 已完成事项
 	 */
 	public static final String DONE_ITEM_ID = "done";
-	
+
 	private static final String STATE_CURRENT_FRAGMENT = "net.simonvt.menudrawer.samples.FragmentSample";
 
 	private FragmentManager mFragmentManager;
@@ -49,8 +48,8 @@ public class FunctionListFragment extends SherlockFragmentActivity implements Mo
 
 	protected MenuDrawer mMenuDrawer;
 
-	protected FunctionListAdapter mAdapter;
-	protected ListView mList;
+	protected FunctionListAdapter mFunctionListAdapter;
+	protected ListView mFunctionList;
 
 	private int mActivePosition = 0;
 
@@ -58,7 +57,9 @@ public class FunctionListFragment extends SherlockFragmentActivity implements Mo
 
 	@Override
 	protected void onCreate(Bundle arg0) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(arg0);
+		getSupportActionBar();
 
 		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, getDrawerPosition(), getDragMode());
 		mMenuDrawer.setMenuView(R.layout.activity_function_list);
@@ -88,9 +89,9 @@ public class FunctionListFragment extends SherlockFragmentActivity implements Mo
 	}
 
 	private void bindAllViews(View base) {
-		mList = (ListView) base.findViewById(android.R.id.list);
-		mAdapter = new FunctionListAdapter(this, new ArrayList<Object>(), mList);
-		mList.setAdapter(mAdapter);
+		mFunctionList = (ListView) base.findViewById(android.R.id.list);
+		mFunctionListAdapter = new FunctionListAdapter(this, new ArrayList<Object>(), mFunctionList);
+		mFunctionList.setAdapter(mFunctionListAdapter);
 	}
 
 	protected int getDragMode() {
@@ -150,71 +151,56 @@ public class FunctionListFragment extends SherlockFragmentActivity implements Mo
 	@Override
 	public void modelDidFinishedLoad(Model<? extends Object> model) {
 		List<Object> items = (List<Object>) model.getProcessData();
-		mAdapter.setDatas(items);
-		mAdapter.notifyDataSetChanged();
+		mFunctionListAdapter.setDatas(items);
+		mFunctionListAdapter.notifyDataSetChanged();
 
-	}
-	
-	@Override
-	public void onItemClick(AdapterView<?> listview, View row, int position, long id) {
-		Object item = mAdapter.getItem(position);
-
-//		if (item.getParentId() != null && item.getParentId().equalsIgnoreCase(TODO_ITEM_ID)) {
-//			startActivity(new Intent(this, TodoListActivity.class));
-//			return;
-//		}
-//
-//		if (item.getParentId() != null && item.getParentId().equalsIgnoreCase(DONE_ITEM_ID)) {
-//			startActivity(new Intent(this, DoneListActivity.class));
-//			return;
-//		}
-//
-//		Intent i = new Intent(this, HTMLActivity.class);
-//		i.putExtra("url", item.getUrl());
-//		i.putExtra("title", item.getText());
-//		startActivity(i);
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		int index = 0;
-		menu.add(0, R.id.todo_list_menu_logout, index++, "退出登录").setIcon(R.drawable.ic_exit)
-		        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	public void onItemClick(AdapterView<?> listview, View row, int position, long id) {
+		Object item = mFunctionListAdapter.getItem(position);
 
-		return true;
+		// if (item.getParentId() != null &&
+		// item.getParentId().equalsIgnoreCase(TODO_ITEM_ID)) {
+		// startActivity(new Intent(this, TodoListActivity.class));
+		// return;
+		// }
+		//
+		// if (item.getParentId() != null &&
+		// item.getParentId().equalsIgnoreCase(DONE_ITEM_ID)) {
+		// startActivity(new Intent(this, DoneListActivity.class));
+		// return;
+		// }
+		//
+		// Intent i = new Intent(this, HTMLActivity.class);
+		// i.putExtra("url", item.getUrl());
+		// i.putExtra("title", item.getText());
+		// startActivity(i);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-
-		case R.id.todo_list_menu_logout: {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setIcon(android.R.drawable.ic_dialog_alert);
-			builder.setTitle("退出系统");
-			builder.setMessage("确认退出系统吗？退出后所有本地保存的数据将被清空！");
-			builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					StorageUtil.deleteDB();
-					StorageUtil.removeSavedInfo();
-					NetworkUtil.setCookieStore(null);
-					finish();
-				}
-			});
-			builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-				}
-			});
-			builder.show();
-
-			break;
-		}
-		default:
-			break;
-		}
-
-		return true;
-
+	/**
+	 * 退出系统
+	 * 
+	 * @param v
+	 */
+	public void exitSystem(View v) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setIcon(android.R.drawable.ic_dialog_alert);
+		builder.setTitle("退出系统");
+		builder.setMessage("确认退出系统吗？退出后所有本地保存的数据将被清空！");
+		builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				StorageUtil.deleteDB();
+				StorageUtil.removeSavedInfo();
+				NetworkUtil.setCookieStore(null);
+				finish();
+			}
+		});
+		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+			}
+		});
+		builder.show();
 	}
 
 	@Override

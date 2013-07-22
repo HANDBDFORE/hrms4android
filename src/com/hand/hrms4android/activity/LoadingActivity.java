@@ -122,7 +122,7 @@ public class LoadingActivity extends ActionBarActivity {
 	}
 
 	private void startFunctionListActivity() {
-		Intent i = new Intent(this, FunctionListFragment.class);
+		Intent i = new Intent(this, FunctionListActivity.class);
 		startActivity(i);
 		this.finish();
 	}

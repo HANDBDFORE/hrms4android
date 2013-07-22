@@ -97,7 +97,7 @@ public class LoginActivity extends ActionBarActivity {
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
-		startActivity(new Intent(this, FunctionListFragment.class));
+		startActivity(new Intent(this, FunctionListActivity.class));
 
 		finish();
 	}

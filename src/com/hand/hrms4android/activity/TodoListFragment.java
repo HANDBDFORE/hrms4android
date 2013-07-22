@@ -4,12 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,14 +23,13 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.adapter.TodoListAdapter;
-import com.hand.hrms4android.listable.item.TodoListItem;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.model.TodoListModel;
 import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
-import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.TempTransfer;
 import com.hand.hrms4android.util.data.IndexPath;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -47,7 +42,6 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	private static final int REQUEST_ACTIVITY_OPINION = TODOLIST_ACTIVITY_BASE + 2;
 
 	private static final int MODEL_TODO = 1;
-	private static final int MODEL_FUNCTION = 2;
 
 	/**
 	 * listview 的 header ,会影响 onItemClick时的position，使用时减去此值
@@ -62,8 +56,6 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	private TodoListAdapter listAdapter;
 	private ActionMode mActionMode;
 	private TodoListModel listModel;
-	private GestureDetector gestureDetector;
-	private OnGestureListener gestureListener;
 
 	private boolean multiChoiceMode;
 
@@ -80,7 +72,6 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 	@Override
@@ -93,6 +84,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
 		buildResource();
 		this.model.load(LoadType.Local, null);
 	}
@@ -219,12 +211,6 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		}
 	}
 
-	/*
-	 * TODO:暂时 (non-Javadoc)
-	 * 
-	 * @see android.support.v4.app.Fragment#onActivityResult(int, int,
-	 * android.content.Intent)
-	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -418,18 +404,6 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	// }
 
 	/**
-	 * @param position
-	 */
-	private void deleteRowAtPosition(int position) {
-		TodoListItem item = listAdapter.getItem(position);
-
-		// 只删除在别处处理的
-		if (item.getStatus().equals(Constrants.APPROVE_RECORD_STATUS_DIFFERENT)) {
-			deleteRowWithItemID(item.getId());
-		}
-	}
-
-	/**
 	 * 以动画形式删除某行
 	 * 
 	 * @param itemID
@@ -467,51 +441,4 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		}
 	}
 
-	// TODO 应该放在主activity
-	// @Override
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// switch (item.getItemId()) {
-	// case R.id.todo_list_menu_search: {
-	//
-	// break;
-	// }
-	//
-	// case R.id.todo_list_menu_settings: {
-	// Intent settingIntent = new Intent(this, SettingsActivity.class);
-	// startActivity(settingIntent);
-	// break;
-	// }
-	//
-	// case R.id.todo_list_menu_logout: {
-	// AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	// builder.setIcon(android.R.drawable.ic_dialog_alert);
-	// builder.setTitle("退出系统");
-	// builder.setMessage("确认退出系统吗？退出后所有本地保存的数据将被清空！");
-	// builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog, int whichButton) {
-	// StorageUtil.deleteDB();
-	// StorageUtil.removeSavedInfo();
-	// finish();
-	// }
-	// });
-	// builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-	// public void onClick(DialogInterface dialog, int whichButton) {
-	// }
-	// });
-	// builder.show();
-	//
-	// break;
-	// }
-	//
-	// case android.R.id.home: {
-	// finish();
-	// break;
-	// }
-	// default:
-	// break;
-	// }
-	//
-	// return true;
-	//
-	// }
 }

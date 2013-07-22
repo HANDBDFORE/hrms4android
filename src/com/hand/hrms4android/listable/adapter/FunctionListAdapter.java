@@ -4,12 +4,12 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -68,13 +68,13 @@ public class FunctionListAdapter extends BaseAdapter {
 		if (row == null) {
 			switch (type) {
 			case TYPE_ITEM: {
-				row = mInflater.inflate(R.layout.function_list_cell, parent, false);
+				row = mInflater.inflate(R.layout.menu_row_item, parent, false);
 				wrapper = new FunctionListCellWrapper(row);
 				break;
 			}
 
 			case TYPE_SEPARATOR: {
-				row = mInflater.inflate(R.layout.function_list_separator, parent, false);
+				row = mInflater.inflate(R.layout.menu_row_category, parent, false);
 				wrapper = new FunctionListCellWrapper(row);
 				break;
 			}
@@ -96,7 +96,8 @@ public class FunctionListAdapter extends BaseAdapter {
 			FunctionItem item = (FunctionItem) record;
 
 			// 设置默认图片
-			wrapper.getImage().setImageResource(R.drawable.picture_placeholder);
+			wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(R.drawable.picture_placeholder, 0, 0, 0);
+			wrapper.getTitle().setText(item.getText());
 			// 然后尝试加载
 			asyncImageManager.prepareLoadImageThread(Integer.valueOf(position), item.getImageUrl(), imageLoadListener);
 			break;
@@ -116,7 +117,6 @@ public class FunctionListAdapter extends BaseAdapter {
 
 	@Override
 	public int getItemViewType(int position) {
-		System.out.println("=================position:"+position);
 		if (getItem(position) instanceof FunctionItem) {
 			return TYPE_ITEM;
 		} else {
@@ -144,7 +144,8 @@ public class FunctionListAdapter extends BaseAdapter {
 			if (row != null) {
 				FunctionListCellWrapper wrapper = (FunctionListCellWrapper) row
 				        .getTag(R.id.function_list_row_tag_wrapper);
-				wrapper.getImage().setImageBitmap(bitmap);
+				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(new BitmapDrawable(bitmap), null, null, null);
+//				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_refresh_dark, 0, 0, 0);
 			}
 		}
 
@@ -161,24 +162,12 @@ public class FunctionListAdapter extends BaseAdapter {
 
 class FunctionListCellWrapper {
 	private View base;
-	private ImageView image;
-	private TextView title;
 
 	public FunctionListCellWrapper(View base) {
 		this.base = base;
 	}
 
-	public ImageView getImage() {
-		if (image == null) {
-			image = (ImageView) base.findViewById(R.id.function_list_cell_image);
-		}
-		return image;
-	}
-
 	public TextView getTitle() {
-		if (title == null) {
-			title = (TextView) base.findViewById(R.id.function_list_cell_title);
-		}
-		return title;
+		return (TextView) base;
 	}
 }
