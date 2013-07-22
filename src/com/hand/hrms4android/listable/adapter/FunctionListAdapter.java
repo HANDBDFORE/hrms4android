@@ -14,7 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hand.hrms4android.R;
-import com.hand.hrms4android.listable.item.FunctionListItem;
+import com.hand.hrms4android.listable.item.FunctionItem;
+import com.hand.hrms4android.listable.item.FunctionSection;
 import com.hand.hrms4android.util.imageLoader.AsyncListImageManager;
 import com.hand.hrms4android.util.imageLoader.ScrollableViewImageLoadListener;
 
@@ -23,12 +24,12 @@ public class FunctionListAdapter extends BaseAdapter {
 	private static final int TYPE_SEPARATOR = 1;
 
 	private LayoutInflater mInflater;
-	private List<FunctionListItem> datas;
+	private List<Object> datas;
 	private ListView mListView;
 	private ImageLoadCompleteListener imageLoadListener;
 	private AsyncListImageManager asyncImageManager;
 
-	public FunctionListAdapter(Context context, List<FunctionListItem> datas, ListView listview) {
+	public FunctionListAdapter(Context context, List<Object> datas, ListView listview) {
 		this.datas = datas;
 		this.mListView = listview;
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -42,7 +43,7 @@ public class FunctionListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public FunctionListItem getItem(int position) {
+	public Object getItem(int position) {
 		return datas.get(position);
 	}
 
@@ -59,12 +60,10 @@ public class FunctionListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		int type = getItemViewType(position);
-		// System.out.println("getView " + position + " " + convertView +
-		// " type = " + type);
 
 		View row = convertView;
 		FunctionListCellWrapper wrapper = null;
-		FunctionListItem record = getItem(position);
+		Object record = getItem(position);
 
 		if (row == null) {
 			switch (type) {
@@ -94,15 +93,18 @@ public class FunctionListAdapter extends BaseAdapter {
 
 		switch (type) {
 		case TYPE_ITEM: {
+			FunctionItem item = (FunctionItem) record;
+
 			// 设置默认图片
 			wrapper.getImage().setImageResource(R.drawable.picture_placeholder);
 			// 然后尝试加载
-			asyncImageManager
-			        .prepareLoadImageThread(Integer.valueOf(position), record.getImageUrl(), imageLoadListener);
+			asyncImageManager.prepareLoadImageThread(Integer.valueOf(position), item.getImageUrl(), imageLoadListener);
+			break;
 		}
 
 		case TYPE_SEPARATOR: {
-			wrapper.getTitle().setText(record.getText());
+			FunctionSection section = (FunctionSection) record;
+			wrapper.getTitle().setText(section.getTitle());
 			break;
 		}
 		default:
@@ -114,12 +116,17 @@ public class FunctionListAdapter extends BaseAdapter {
 
 	@Override
 	public int getItemViewType(int position) {
-		return getItem(position).getFunctionType().equalsIgnoreCase("SECTION") ? TYPE_SEPARATOR : TYPE_ITEM;
+		System.out.println("=================position:"+position);
+		if (getItem(position) instanceof FunctionItem) {
+			return TYPE_ITEM;
+		} else {
+			return TYPE_SEPARATOR;
+		}
 	}
 
 	@Override
 	public boolean isEnabled(int position) {
-		return getItem(position).getFunctionType().equalsIgnoreCase("ITEM");
+		return getItem(position) instanceof FunctionItem;
 	}
 
 	/**
@@ -147,7 +154,7 @@ public class FunctionListAdapter extends BaseAdapter {
 		}
 	}
 
-	public void setDatas(List<FunctionListItem> datas) {
+	public void setDatas(List<Object> datas) {
 		this.datas = datas;
 	}
 }
