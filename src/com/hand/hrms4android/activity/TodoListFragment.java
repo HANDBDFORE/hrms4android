@@ -100,6 +100,8 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		todoListViewWrapper.getRefreshableView().setChoiceMode(ListView.CHOICE_MODE_NONE);
 		todoListViewWrapper.setOnRefreshListener(new PulldownListener());
 
+		
+		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		reloadButton = (ImageButton) root.findViewById(R.id.activity_todo_list_reload_button);
 		reloadButton.setOnClickListener(new OnClickListener() {
 			@Override

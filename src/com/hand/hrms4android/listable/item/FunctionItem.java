@@ -1,6 +1,22 @@
 package com.hand.hrms4android.listable.item;
 
 public class FunctionItem {
+
+	/**
+	 * 待办事项
+	 */
+	public static final String TODO_ITEM_ID = "com.hand.hrms4android.activity.TodoListFragment";
+
+	/**
+	 * 已完成事项
+	 */
+	public static final String DONE_ITEM_ID = "dd";
+
+	/**
+	 * 其他
+	 */
+	public static final String OTHER_ITEM_ID = "com.hand.hrms4android.activity.HTMLFragment";
+
 	private String functionId;
 	private String text;
 	private String imageUrl;

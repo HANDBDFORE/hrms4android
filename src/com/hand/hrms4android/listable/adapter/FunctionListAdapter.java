@@ -59,6 +59,7 @@ public class FunctionListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		System.out.println("getViewgetViewgetViewgetViewgetViewgetViewgetViewgetView");
 		int type = getItemViewType(position);
 
 		View row = convertView;
@@ -156,7 +157,9 @@ public class FunctionListAdapter extends BaseAdapter {
 	}
 
 	public void setDatas(List<Object> datas) {
-		this.datas = datas;
+		this.datas.clear();
+		this.datas.addAll(datas);
+		this.notifyDataSetChanged();
 	}
 }
 

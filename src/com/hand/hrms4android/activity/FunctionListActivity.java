@@ -12,8 +12,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.SeekBar;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -21,6 +23,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.adapter.FunctionListAdapter;
+import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.model.FunctionModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
@@ -29,22 +32,10 @@ import com.hand.hrms4android.util.StorageUtil;
 
 public class FunctionListActivity extends SherlockFragmentActivity implements ModelActivity, OnItemClickListener {
 
-	/**
-	 * 待办事项
-	 */
-	public static final String TODO_ITEM_ID = "todo";
-
-	/**
-	 * 已完成事项
-	 */
-	public static final String DONE_ITEM_ID = "done";
-
-	private static final String STATE_CURRENT_FRAGMENT = "net.simonvt.menudrawer.samples.FragmentSample";
-
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
 
-	private String mCurrentFragmentTag;
+	private String mCurrentFragmentTag = FunctionItem.TODO_ITEM_ID;
 
 	protected MenuDrawer mMenuDrawer;
 
@@ -63,13 +54,15 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, getDrawerPosition(), getDragMode());
 		mMenuDrawer.setMenuView(R.layout.activity_function_list);
-		bindAllViews(mMenuDrawer.getMenuView());
-
-		mFragmentManager = getSupportFragmentManager();
-		// mCurrentFragmentTag = ((Item) mAdapter.getItem(0)).mTitle;
-		attachFragment(mMenuDrawer.getContentContainer().getId(), getFragment(mCurrentFragmentTag), mCurrentFragmentTag);
-		commitTransactions();
-
+		mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_FULLSCREEN);
+		mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
+		mMenuDrawer.setDrawerIndicatorEnabled(true);
+		mMenuDrawer.setOnInterceptMoveEventListener(new MenuDrawer.OnInterceptMoveEventListener() {
+			@Override
+			public boolean isViewDraggable(View v, int dx, int x, int y) {
+				return v instanceof SeekBar;
+			}
+		});
 		mMenuDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
 			@Override
 			public void onDrawerStateChange(int oldState, int newState) {
@@ -83,19 +76,35 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 				// Do nothing
 			}
 		});
+		bindAllViews(mMenuDrawer.getMenuView());
+
+		mFragmentManager = getSupportFragmentManager();
+		// mCurrentFragmentTag = ((Item) mAdapter.getItem(0)).mTitle;
+		attachFragment(mMenuDrawer.getContentContainer().getId(), getFragment(FunctionItem.TODO_ITEM_ID),
+		        FunctionItem.TODO_ITEM_ID);
+		commitTransactions();
 
 		this.functionListModel = new FunctionModel(0, this);
-		functionListModel.load(LoadType.Network, null);
+
+		System.out.println("onCreateonCreateonCreateonCreateonCreateonCreateonCreate");
+		this.functionListModel.load(LoadType.Network, null);
 	}
 
 	private void bindAllViews(View base) {
+
+		List<Object> os = new ArrayList<Object>();
+		os.add(new FunctionItem("", "", "bundle://eee", ""));
+
 		mFunctionList = (ListView) base.findViewById(android.R.id.list);
-		mFunctionListAdapter = new FunctionListAdapter(this, new ArrayList<Object>(), mFunctionList);
+		mFunctionListAdapter = new FunctionListAdapter(this, os, mFunctionList);
 		mFunctionList.setAdapter(mFunctionListAdapter);
+		mFunctionList.setOnItemClickListener(this);
+
+		mFunctionListAdapter.setDatas(new ArrayList<Object>());
 	}
 
 	protected int getDragMode() {
-		return MenuDrawer.MENU_DRAG_WINDOW;
+		return MenuDrawer.MENU_DRAG_CONTENT;
 	}
 
 	protected Position getDrawerPosition() {
@@ -105,7 +114,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	protected FragmentTransaction ensureTransaction() {
 		if (mFragmentTransaction == null) {
 			mFragmentTransaction = mFragmentManager.beginTransaction();
-			mFragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			mFragmentTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
 		}
 
 		return mFragmentTransaction;
@@ -115,10 +124,16 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 		Fragment f = mFragmentManager.findFragmentByTag(tag);
 
 		if (f == null) {
-			// f = SampleFragment.newInstance(tag);
-			return new TodoListFragment();
-		}
 
+			if (tag.equals(FunctionItem.OTHER_ITEM_ID)) {
+				Bundle bundle = new Bundle();
+				bundle.putString("url", "baidu.com");
+				bundle.putString("title", "Hi");
+				return Fragment.instantiate(this, "com.hand.hrms4android.activity.HTMLFragment", bundle);
+			}
+
+			return Fragment.instantiate(this, tag);
+		}
 		return f;
 	}
 
@@ -132,6 +147,19 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 				mFragmentTransaction.add(layout, f, tag);
 			}
 		}
+	}
+
+	private void hideFragment(Fragment current, Fragment target, int layout, String tag) {
+		if (current != target) {
+			ensureTransaction();
+			if (!target.isAdded()) { // 先判断是否被add过
+				mFragmentTransaction.hide(current).add(layout, target, tag); // 隐藏当前的fragment，add下一个到Activity中
+			} else {
+				mFragmentTransaction.hide(current).show(target); // 隐藏当前的fragment，显示下一个
+			}
+		}
+
+		commitTransactions();
 	}
 
 	protected void detachFragment(Fragment f) {
@@ -151,31 +179,27 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	@Override
 	public void modelDidFinishedLoad(Model<? extends Object> model) {
 		List<Object> items = (List<Object>) model.getProcessData();
+
 		mFunctionListAdapter.setDatas(items);
-		mFunctionListAdapter.notifyDataSetChanged();
 
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> listview, View row, int position, long id) {
-		Object item = mFunctionListAdapter.getItem(position);
+		Object o = mFunctionListAdapter.getItem(position);
 
-		// if (item.getParentId() != null &&
-		// item.getParentId().equalsIgnoreCase(TODO_ITEM_ID)) {
-		// startActivity(new Intent(this, TodoListActivity.class));
-		// return;
-		// }
-		//
-		// if (item.getParentId() != null &&
-		// item.getParentId().equalsIgnoreCase(DONE_ITEM_ID)) {
-		// startActivity(new Intent(this, DoneListActivity.class));
-		// return;
-		// }
-		//
-		// Intent i = new Intent(this, HTMLActivity.class);
-		// i.putExtra("url", item.getUrl());
-		// i.putExtra("title", item.getText());
-		// startActivity(i);
+		if (o instanceof FunctionItem) {
+			FunctionItem item = (FunctionItem) o;
+
+			Fragment currentFragment = getFragment(mCurrentFragmentTag);
+			Fragment targetFragment = getFragment(item.getFunctionId());
+			mCurrentFragmentTag = item.getFunctionId();
+
+			hideFragment(currentFragment, targetFragment, mMenuDrawer.getContentContainer().getId(),
+			        item.getFunctionId());
+			commitTransactions();
+		}
+		mMenuDrawer.closeMenu();
 	}
 
 	/**
@@ -201,6 +225,17 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 			}
 		});
 		builder.show();
+	}
+
+	@Override
+	public void onBackPressed() {
+		final int drawerState = mMenuDrawer.getDrawerState();
+		if (drawerState == MenuDrawer.STATE_OPEN || drawerState == MenuDrawer.STATE_OPENING) {
+			mMenuDrawer.closeMenu();
+			return;
+		}
+
+		super.onBackPressed();
 	}
 
 	@Override

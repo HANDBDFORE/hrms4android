@@ -47,6 +47,7 @@ public class AsyncListImageManager {
 	 */
 	public void prepareLoadImageThread(final Integer rowPosition, final String imageUrl,
 	        final ScrollableViewImageLoadListener listener) {
+		
 		Thread workerThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
