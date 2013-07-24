@@ -23,6 +23,7 @@ public final class DataBaseMetadata {
 		public static final String STATUS = "status";
 		public static final String SERVER_MESSAGE = "serverMessage";
 		public static final String ACTION = "action";
+		public static final String ACTION_TYPE = "actionType";
 		public static final String COMMENTS = "comments";
 
 		public static final String LOCALID = "localId";

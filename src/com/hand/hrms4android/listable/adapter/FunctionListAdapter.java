@@ -1,5 +1,7 @@
 package com.hand.hrms4android.listable.adapter;
 
+import static com.hand.hrms4android.listable.item.FunctionItem.OTHER_ITEM_ID;
+
 import java.util.List;
 
 import android.content.Context;
@@ -96,11 +98,18 @@ public class FunctionListAdapter extends BaseAdapter {
 		case TYPE_ITEM: {
 			FunctionItem item = (FunctionItem) record;
 
-			// 设置默认图片
-			wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(R.drawable.picture_placeholder, 0, 0, 0);
+			if (item.getFunctionId().equals(OTHER_ITEM_ID)) {
+				// 设置默认图片
+				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(R.drawable.picture_placeholder, 0, 0, 0);
+				// 然后尝试加载
+				asyncImageManager.prepareLoadImageThread(Integer.valueOf(position), item.getImageUrl(),
+				        imageLoadListener);
+			} else {
+				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(item.getIconRes(), 0, 0, 0);
+			}
+
 			wrapper.getTitle().setText(item.getText());
-			// 然后尝试加载
-			asyncImageManager.prepareLoadImageThread(Integer.valueOf(position), item.getImageUrl(), imageLoadListener);
+
 			break;
 		}
 
@@ -145,8 +154,8 @@ public class FunctionListAdapter extends BaseAdapter {
 			if (row != null) {
 				FunctionListCellWrapper wrapper = (FunctionListCellWrapper) row
 				        .getTag(R.id.function_list_row_tag_wrapper);
-				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(new BitmapDrawable(bitmap), null, null, null);
-//				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_refresh_dark, 0, 0, 0);
+				wrapper.getTitle()
+				        .setCompoundDrawablesWithIntrinsicBounds(new BitmapDrawable(bitmap), null, null, null);
 			}
 		}
 
@@ -161,6 +170,7 @@ public class FunctionListAdapter extends BaseAdapter {
 		this.datas.addAll(datas);
 		this.notifyDataSetChanged();
 	}
+
 }
 
 class FunctionListCellWrapper {

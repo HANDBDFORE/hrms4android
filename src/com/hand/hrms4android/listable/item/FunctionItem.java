@@ -21,16 +21,22 @@ public class FunctionItem {
 	private String text;
 	private String imageUrl;
 	private String url;
+	private int iconRes;
 
 	public FunctionItem() {
 
 	}
 
 	public FunctionItem(String functionId, String text, String imageUrl, String url) {
+		this(functionId, text, imageUrl, url, 0);
+	}
+
+	public FunctionItem(String functionId, String text, String imageUrl, String url, int icoRes) {
 		this.functionId = functionId;
 		this.text = text;
 		this.imageUrl = imageUrl;
 		this.url = url;
+		this.iconRes = icoRes;
 	}
 
 	public String getFunctionId() {
@@ -63,6 +69,14 @@ public class FunctionItem {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public int getIconRes() {
+		return iconRes;
+	}
+
+	public void setIconRes(int iconRes) {
+		this.iconRes = iconRes;
 	}
 
 }

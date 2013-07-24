@@ -1,6 +1,7 @@
 package com.hand.hrms4android.activity;
 
-import java.util.Map;
+import android.app.Dialog;
+import android.os.Bundle;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -11,9 +12,6 @@ import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.util.TempTransfer;
 import com.hand.hrms4android.widget.EmployeeCardDialog;
-
-import android.app.Dialog;
-import android.os.Bundle;
 
 public class BaseReceiptActivity<E> extends HTMLBaseActivity {
 	protected static final int GROUP_ACTION = 1;

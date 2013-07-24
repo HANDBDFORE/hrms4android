@@ -10,10 +10,12 @@ public class Constrants {
 	public static final String SYS_PREFRENCES_ENCRYTED_SESSION_ID = "encryted_session_id";
 	public static final String SYS_PREFRENCES_CONFIG_FILE_DIR_NAME = "config";
 	public static final String SYS_PREFRENCES_PUSH_TOKEN = "push_token";
-	
+
 	public static final String SYS_PREFRENCES_SERVER_BASE_URL = "sys_basic_url";
 	public static final String SYS_PREFRENCES_USERNAME = "username";
+	public static final String SYS_PREFRENCES_USER_DESCRIPTION = "userDescription";
 
 	public static final String SYS_ATTS_DEVICE_TYPE = "Android";
 	public static final String SYS_ATTS_DEVICE_ID = "device_id";
+	
 }

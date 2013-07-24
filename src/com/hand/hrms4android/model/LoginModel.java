@@ -85,6 +85,9 @@ public class LoginModel extends AbstractBaseModel<Void> {
 
 			if (record.has("encryted_session_id"))
 				editor.putString(Constrants.SYS_PREFRENCES_ENCRYTED_SESSION_ID, record.getString("encryted_session_id"));
+			
+			if (record.has(Constrants.SYS_PREFRENCES_USER_DESCRIPTION))
+				editor.putString(Constrants.SYS_PREFRENCES_USER_DESCRIPTION, record.getString(Constrants.SYS_PREFRENCES_USER_DESCRIPTION));
 		} finally {
 			editor.commit();
 		}

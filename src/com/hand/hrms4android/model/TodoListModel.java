@@ -1,17 +1,19 @@
 package com.hand.hrms4android.model;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.hand.hrms4android.activity.ModelActivity;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.dao.TodoListDao;
-import com.hand.hrms4android.exception.AuroraServerFailure;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.exception.PersistanceException;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
@@ -24,8 +26,6 @@ import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.Iterator;
 import com.hand.hrms4android.util.LogUtil;
 import com.hand.hrms4android.util.data.IndexPath;
-import com.loopj.android.http.HDJsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.UMJsonHttpResponseHandler;
 
 public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
@@ -88,8 +88,21 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 			return;
 		}
 
-		// 提交数据的副本
-		final TodoListDomain record = new TodoListDomain(submitRecordsList.get(0));
+		JSONArray submitArray = new JSONArray();
+		for (TodoListDomain sr : submitRecordsList) {
+			JSONObject jsonSubmitRecord = new JSONObject();
+			try {
+				jsonSubmitRecord.put(TodoList.LOCALID, sr.getLocalId());
+				jsonSubmitRecord.put(TodoList.ACTION, sr.getAction());
+				jsonSubmitRecord.put(TodoList.ACTION_TYPE, sr.getActionType());
+				jsonSubmitRecord.put(TodoList.COMMENTS, sr.getComments());
+				jsonSubmitRecord.put(TodoList.SOURCE_SYSTEM_NAME, sr.getSourceSystemName());
+
+				submitArray.put(jsonSubmitRecord);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 
 		try {
 			// 读取地址
@@ -97,55 +110,78 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']",
 			        "value"));
 
-			RequestParams params = new RequestParams();
-			params.put(TodoList.ACTION, record.getAction());
-			params.put(TodoList.COMMENTS, record.getComments());
-			params.put(TodoList.SOURCE_SYSTEM_NAME, record.getSourceSystemName());
-			params.put(TodoList.LOCALID, record.getLocalId());
+			// RequestParams params = new RequestParams();
+			// params.put("postData", submitArray.toString());
 
-			NetworkUtil.post(actionURL, params, new UMJsonHttpResponseHandler() {
-				@Override
-				public void onSuccess(int statusCode, JSONObject response) {
-					// 提交成功！
+			// NetworkUtil.post(actionURL, params, new
+			// UMJsonHttpResponseHandler() {
+			NetworkUtil.post(HrmsApplication.getApplication(), actionURL, new StringEntity(submitArray.toString()),
+			        "application/json", new UMJsonHttpResponseHandler() {
+				        @Override
+				        public void onSuccess(int statusCode, JSONObject response) {
+					        // 提交成功！
+					        // new
+					        // "message": "SUCCESS",
+					        // "status": "S",
+					        // "localId": 25908,
+					        // "sourceSystemName": "HR"
+					        try {
 
-					// 移除内存中数据 TODO 考虑此步骤是否需要，因为是提交完成后重新读取了本地数据
-					// loadAuroraDataset.remove(submitRecord);
+						        JSONArray resultJsonArray = response.getJSONObject("body").getJSONArray("list");
+						        for (int i = 0; i < resultJsonArray.length(); i++) {
+							        // 拿到每条提交记录的返回信息
+							        JSONObject responseRecord = resultJsonArray.getJSONObject(i);
+							        // 处理状态
+							        String responseStatus = responseRecord.getString("status");
 
-					// 删除数据库数据
-					dao.deleteRecord(record.getId());
-					loadAuroraDataset = dao.getAllTodoRecords();
+							        String responseMessage = responseRecord.getString("message");
+							        String responseSourceSystemName = responseRecord.getString("sourceSystemName");
+							        String responseRecordLocalId = responseRecord.getString("localId");
 
-					removeRecordFromSubmitList(record);
+							        TodoListDomain submitRecord = findRecord(submitRecordsList, responseRecordLocalId,
+							                responseSourceSystemName);
 
-					// 通知界面操作成功
-					activity.modelDidFinishedLoad(TodoListModel.this);
-				}
+							        if ("S".equals(responseStatus)) {
+								        // 成功
+								        // 删除数据库数据
+								        dao.deleteRecord(submitRecord.getId());
+							        } else {
+								        // 失败
+								        submitRecord.setServerMessage(responseMessage);
+								        submitRecord.setStatus(Constrants.APPROVE_RECORD_STATUS_ERROR);
+								        // 写本地异常
+								        dao.updateApproveRecordAsError(submitRecord.getId(), responseMessage);
+							        }
+							        // 从待提交列表中移除记录
+							        removeRecordFromSubmitList(submitRecord);
+						        }
+						        // 重新加载数据
+						        loadAuroraDataset = dao.getAllTodoRecords();
+						        // 通知界面可以更新
+						        activity.modelDidFinishedLoad(TodoListModel.this);
 
-				@Override
-				public void onFailure(Throwable error, String content) {
+					        } catch (JSONException e) {
+						        e.printStackTrace();
+						        this.onFailure(new IllegalStateException("服务器返回数据格式不正确"), response.toString());
+						        return;
+					        }
 
-					removeRecordFromSubmitList(record);
+				        }
 
-					if (error instanceof AuroraServerFailure) {
-						// 说明bm返回错误消息
-						// 更新内存中数据 TODO 考虑此步骤是否需要，因为是提交完成后重新读取了本地数据
-						record.setServerMessage(content);
-						record.setStatus(Constrants.APPROVE_RECORD_STATUS_ERROR);
-						// 写本地异常
-						dao.updateApproveRecordAsError(record.getId(), content);
-						// 通知界面可以更新
-						loadAuroraDataset = dao.getAllTodoRecords();
-						activity.modelDidFinishedLoad(TodoListModel.this);
-					} else {
-						// 其他异常，由于审批内容已被保存，所以直接告诉主界面出错
-						loadAuroraDataset = dao.getAllTodoRecords();
-						activity.modelFailedLoad(new Exception("发生意外错误，审批内容已被保存，请稍后重试"), TodoListModel.this);
-					}
-				}
-			});
+				        @Override
+				        public void onFailure(Throwable error, String content) {
+					        // 其他异常，由于审批内容已被保存，所以直接告诉主界面出错
+					        loadAuroraDataset = dao.getAllTodoRecords();
+					        activity.modelFailedLoad(new Exception("发生意外错误，审批内容已被保存，请稍后重试"), TodoListModel.this);
+				        }
+			        });
 
 		} catch (ParseExpressionException e) {
 			activity.modelFailedLoad(new Exception("无法读取指定URL:", e), TodoListModel.this);
+			e.printStackTrace();
+			return;
+		} catch (UnsupportedEncodingException e) {
+			activity.modelFailedLoad(new Exception("字符集不支持", e), TodoListModel.this);
 			e.printStackTrace();
 			return;
 		}
@@ -168,146 +204,92 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 			return;
 		}
 
-		NetworkUtil.post(service, null, new UMJsonHttpResponseHandler() {
-
-			@Override
-			public void onSuccess(int statusCode, JSONObject response) {
-				//
-				try {
-					JSONArray serverResponseDataset = response.getJSONObject("body").getJSONArray("list");
-					// 返回空数据
-					if (serverResponseDataset.length() == 0) {
-						dao.markAllRecordsAsBeingApproved();
-						// 从数据库读取更新后的全部数据，传给界面
-						loadAuroraDataset = dao.getAllTodoRecords();
-
-						// 通知界面开始更新
-						activity.modelDidFinishedLoad(TodoListModel.this);
-						return;
-					}
-
-					List<TodoListDomain> serverTodoRecords = new ArrayList<TodoListDomain>();
-					for (int i = 0; i < serverResponseDataset.length(); i++) {
-						serverTodoRecords.add(new TodoListDomain(serverResponseDataset.getJSONObject(i)));
-					}
-					// 把本地特征列加入返回数据
-					// status，serverMessage,action,comments
-
-					// // 五列
-
-					// 先检测是否有新记录
-					// 读取本地所有已存储的数据主键
-					List<TodoListDomain> localRecords = dao.getAllTodoRecords();
-
-					// 比较数据，找出新记录 声明一个存放新数据的数组
-					List<TodoListDomain> newRecords = getAllNewRecords(serverTodoRecords, localRecords);
-
-					// 存数据表
-					dao.insertTodoListRowData(newRecords);
-
-					// 比较数据，找出已经被处理的记录
-					List<String> dirtyLocalRecordPKs = getAllLocalDirtyRecordPKs(serverTodoRecords, localRecords);
-					// 将已经处理的记录在数据库中更新
-					dao.markRecordAsBeingApproved(dirtyLocalRecordPKs);
-
-				} catch (PersistanceException e) {
-					activity.modelFailedLoad(e, TodoListModel.this);
-					e.printStackTrace();
-					return;
-				} catch (JSONException e) {
-					activity.modelFailedLoad(e, TodoListModel.this);
-					e.printStackTrace();
-					return;
-				}
-
-				// 从数据库读取更新后的全部数据，传给界面
-				loadAuroraDataset = dao.getAllTodoRecords();
-
-				// 通知界面开始更新
-				activity.modelDidFinishedLoad(TodoListModel.this);
+		List<TodoListDomain> localData = dao.queryLocalLogicalId();
+		JSONArray submitJsonArray = new JSONArray();
+		StringEntity requestEntity = null;
+		try {
+			for (TodoListDomain localRecord : localData) {
+				JSONObject record = new JSONObject();
+				record.put(TodoList.LOCALID, localRecord.getLocalId());
+				record.put(TodoList.SOURCE_SYSTEM_NAME, localRecord.getSourceSystemName());
+				submitJsonArray.put(record);
 			}
-
-			@Override
-			public void onFailure(Throwable error, String content) {
-				LogUtil.error(this, "request", "onFailure:" + content);
-				if (error instanceof IOException) {
-					error = new IOException("通讯失败");
-				}
-				activity.modelFailedLoad(new Exception(error.getMessage()), TodoListModel.this);
-			}
-
-		});
-	}
-
-	/**
-	 * 找出服务器新增数据
-	 * 
-	 * @param source
-	 * @param localPKs
-	 * @param pkFiledName
-	 * @return
-	 */
-	private List<TodoListDomain> getAllNewRecords(List<TodoListDomain> source, List<TodoListDomain> localRecords) {
-		List<TodoListDomain> newRecords = new ArrayList<TodoListDomain>();
-
-		for (int i = 0; i < source.size(); i++) {
-			boolean foundSame = false;
-			TodoListDomain serverRecord = source.get(i);
-
-			// 循环本地，看是否能找到相同项
-			for (TodoListDomain local : localRecords) {
-				if (serverRecord.getLocalId().equals(local.getLocalId())
-				        && serverRecord.getSourceSystemName().equalsIgnoreCase(local.getSourceSystemName())) {
-					// 找到相同列
-					foundSame = true;
-					break;
-				}
-			}
-			if (!foundSame) {
-				// 没找到相同项，说明新数据
-				serverRecord.setStatus(Constrants.APPROVE_RECORD_STATUS_NORMAL);
-				// 加入新数据集合
-				newRecords.add(0, serverRecord);
-			}
+			requestEntity = new StringEntity(submitJsonArray.toString());
+		} catch (JSONException e) {
+			activity.modelFailedLoad(e, TodoListModel.this);
+			e.printStackTrace();
+			return;
+		} catch (UnsupportedEncodingException e) {
+			activity.modelFailedLoad(new IllegalArgumentException("字符集不支持"), TodoListModel.this);
+			e.printStackTrace();
+			return;
 		}
 
-		return newRecords;
-	}
+		NetworkUtil.post(HrmsApplication.getApplication(), service, requestEntity, "application/json",
+		        new UMJsonHttpResponseHandler() {
 
-	/**
-	 * 找已经被处理的数据
-	 * 
-	 * @param source
-	 * @param localPKs
-	 * @param pkFiledName
-	 * @return
-	 */
-	private List<String> getAllLocalDirtyRecordPKs(List<TodoListDomain> source, List<TodoListDomain> localRecords) {
-		List<String> dirtyRecords = new ArrayList<String>();
+			        @Override
+			        public void onSuccess(int statusCode, JSONObject response) {
+				        //
+				        try {
+					        JSONObject responseCategory = response.getJSONObject("body");
 
-		for (TodoListDomain local : localRecords) {
-			boolean foundSame = false;
-			for (TodoListDomain serverRecord : source) {
-				if (serverRecord.getLocalId().equals(local.getLocalId())
-				        && serverRecord.getSourceSystemName().equalsIgnoreCase(local.getSourceSystemName())) {
-					// 找到相同项
-					foundSame = true;
-					break;
-				}
-			}
-			if (!foundSame) {
-				// 没有找到相同项，说明已被处理
-				dirtyRecords.add(local.getId());
-			}
-		}
+					        if (responseCategory.has("new")) {
+						        JSONArray newJsonRecords = responseCategory.getJSONArray("new");
 
-		return dirtyRecords;
+						        List<TodoListDomain> serverTodoNewRecords = new ArrayList<TodoListDomain>();
+						        for (int i = 0; i < newJsonRecords.length(); i++) {
+							        serverTodoNewRecords.add(new TodoListDomain(newJsonRecords.getJSONObject(i)));
+						        }
+
+						        // 存数据表
+						        dao.insertTodoListRowData(serverTodoNewRecords);
+					        }
+
+					        // 删除旧数据
+					        if (responseCategory.has("delete")) {
+						        JSONArray deleteJsonRecords = responseCategory.getJSONArray("delete");
+						        for (int i = 0; i < deleteJsonRecords.length(); i++) {
+							        JSONObject o = deleteJsonRecords.getJSONObject(i);
+							        dao.deleteRecordByLogicalID(o.getString(TodoList.LOCALID),
+							                o.getString(TodoList.SOURCE_SYSTEM_NAME));
+						        }
+					        }
+
+				        } catch (PersistanceException e) {
+					        activity.modelFailedLoad(e, TodoListModel.this);
+					        e.printStackTrace();
+					        return;
+				        } catch (JSONException e) {
+					        activity.modelFailedLoad(e, TodoListModel.this);
+					        e.printStackTrace();
+					        return;
+				        }
+
+				        // 从数据库读取更新后的全部数据，传给界面
+				        loadAuroraDataset = dao.getAllTodoRecords();
+
+				        // 通知界面开始更新
+				        activity.modelDidFinishedLoad(TodoListModel.this);
+			        }
+
+			        @Override
+			        public void onFailure(Throwable error, String content) {
+				        LogUtil.error(this, "request", "onFailure:" + content);
+				        if (error instanceof IOException) {
+					        error = new IOException("通讯失败");
+				        }
+				        activity.modelFailedLoad(new Exception(error.getMessage()), TodoListModel.this);
+			        }
+
+		        });
 	}
 
 	/**
 	 * 是否需要加载更多信息
 	 * 
-	 * @return
+	 * 
+	 * @return 如果是第一次进入程序，或者有需要提交的数据，返回true，否则false
 	 */
 	public boolean needLoadOnceMore() {
 		if (firstLoadFromInternet) {
@@ -329,13 +311,22 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 	private void removeRecordFromSubmitList(TodoListDomain record) {
 		TodoListDomain target = null;
 		for (TodoListDomain submiting : submitRecordsList) {
-			if (submiting.getId().equals(record.getId())) {
+			if (submiting.getId() == record.getId()) {
 				target = submiting;
 				break;
 			}
 		}
 
 		submitRecordsList.remove(target);
+	}
+
+	private TodoListDomain findRecord(List<TodoListDomain> source, String localId, String sourceSystemName) {
+		for (TodoListDomain record : source) {
+			if ((record.getLocalId().equals(localId)) && sourceSystemName.equals(record.getSourceSystemName())) {
+				return record;
+			}
+		}
+		return null;
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////
@@ -356,6 +347,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 					// 找到目标
 					// 加入附加信息
 					record.setAction(options.get(TodoList.ACTION));
+					record.setActionType(options.get(TodoList.ACTION_TYPE));
 					record.setComments(options.get(TodoList.COMMENTS));
 					// 放入拷贝数据
 					this.submitRecordsList.add(new TodoListDomain(record));

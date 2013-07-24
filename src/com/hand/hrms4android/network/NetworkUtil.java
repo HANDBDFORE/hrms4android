@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.client.CookieStore;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.webkit.CookieManager;
@@ -82,6 +84,25 @@ public class NetworkUtil {
 		}
 
 		client.post(getAbsoluteUrl(url), params, responseHandler);
+	}
+
+	public static void post(Context ctx, String url, HttpEntity entity, String contentType,
+	        AsyncHttpResponseHandler responseHandler) {
+		AsyncHttpClient client = new AsyncHttpClient();
+
+		client.setCookieStore(cookieStore);
+
+		String token = mPreferences.getString("token", "");
+		if (token.length() > 0) {
+			addHeader("token", token);
+			addClientHeaders(client, headers);
+		}
+
+		if (entity != null) {
+			LogUtil.debug(NetworkUtil.class, "send", entity.toString());
+		}
+
+		client.post(ctx, getAbsoluteUrl(url), entity, contentType, responseHandler);
 	}
 
 	/**

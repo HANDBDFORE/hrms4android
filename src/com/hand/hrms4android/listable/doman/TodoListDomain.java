@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 public class TodoListDomain {
 	private String id;
-	private String status, serverMessage, action, comments;
+	private String status, serverMessage, action, actionType, comments;
 
 	private String localId;
 	private String item1;
@@ -23,17 +23,19 @@ public class TodoListDomain {
 	 * "item4" : "TestWorkflow", "localId" : 0, "sourceSystemName" : "HR" }
 	 */
 	public TodoListDomain(JSONObject json) throws JSONException {
-		this("-1", "", "", "", "", json.getString("localId"), json.getString("item1"), json.getString("item2"), json
-		        .getString("item3"), json.getString("item4"), json.getString("sourceSystemName"));
+		this("-1", "", "", "", "", "", json.getString("localId"), json.getString("item1"), json.getString("item2"),
+		        json.getString("item3"), json.getString("item4"), json.getString("sourceSystemName"));
 	}
 
-	public TodoListDomain(String id, String status, String serverMessage, String action, String comments,
-	        String localId, String item1, String item2, String item3, String item4, String sourceSystemName) {
+	public TodoListDomain(String id, String status, String serverMessage, String action, String actionType,
+	        String comments, String localId, String item1, String item2, String item3, String item4,
+	        String sourceSystemName) {
 		super();
 		this.id = id;
 		this.status = status;
 		this.serverMessage = serverMessage;
 		this.action = action;
+		this.actionType = actionType;
 		this.comments = comments;
 		this.localId = localId;
 		this.item1 = item1;
@@ -44,9 +46,9 @@ public class TodoListDomain {
 	}
 
 	public TodoListDomain(TodoListDomain old) {
-		this(old.getId(), old.getStatus(), old.getServerMessage(), old.getAction(), old.getComments(),
-		        old.getLocalId(), old.getItem1(), old.getItem2(), old.getItem3(), old.getItem4(), old
-		                .getSourceSystemName());
+		this(old.getId(), old.getStatus(), old.getServerMessage(), old.getAction(), old.getActionType(), old
+		        .getComments(), old.getLocalId(), old.getItem1(), old.getItem2(), old.getItem3(), old.getItem4(), old
+		        .getSourceSystemName());
 	}
 
 	public String getId() {
@@ -79,6 +81,14 @@ public class TodoListDomain {
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	public String getActionType() {
+		return actionType;
+	}
+
+	public void setActionType(String actionType) {
+		this.actionType = actionType;
 	}
 
 	public String getComments() {

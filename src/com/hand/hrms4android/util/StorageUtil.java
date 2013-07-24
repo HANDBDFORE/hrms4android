@@ -71,6 +71,7 @@ public class StorageUtil {
 		editor.remove(Constrants.SYS_PREFRENCES_ENCRYTED_SESSION_ID);
 //		editor.remove(Constrants.SYS_PREFRENCES_PUSH_TOKEN);
 		editor.remove(Constrants.SYS_PREFRENCES_USERNAME);
+		editor.remove(Constrants.SYS_PREFRENCES_USER_DESCRIPTION);
 		editor.commit();
 	}
 

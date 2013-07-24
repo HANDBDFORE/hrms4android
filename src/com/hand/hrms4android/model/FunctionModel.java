@@ -1,6 +1,6 @@
 package com.hand.hrms4android.model;
 
-import static com.hand.hrms4android.listable.item.FunctionItem.OTHER_ITEM_ID;
+import static com.hand.hrms4android.listable.item.FunctionItem.DONE_ITEM_ID;
 import static com.hand.hrms4android.listable.item.FunctionItem.TODO_ITEM_ID;
 
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.hand.hrms4android.R;
 import com.hand.hrms4android.activity.ModelActivity;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.item.FunctionItem;
@@ -33,7 +34,6 @@ public class FunctionModel extends AbstractListModel<Object> {
 
 	@Override
 	public void load(LoadType loadType, Object param) {
-		System.out.println("000000000000000000000000000000000000");
 		try {
 			String queryUrl = configReader
 			        .getAttr(new Expression(
@@ -71,8 +71,8 @@ public class FunctionModel extends AbstractListModel<Object> {
 		item.clear();
 
 		item.add(new FunctionSection("工作流"));
-		item.add(new FunctionItem(TODO_ITEM_ID, "待办事项", "bundle://todo_unread.png", ""));
-		item.add(new FunctionItem(OTHER_ITEM_ID, "已审批", "bundle://todo_unread.png", ""));
+		item.add(new FunctionItem(TODO_ITEM_ID, "待办事项", "bundle://envelope_info.png", "",R.drawable.envelope_info));
+		item.add(new FunctionItem(DONE_ITEM_ID, "已审批", "bundle://cancel_red.png", "",R.drawable.envelope_open_checkmark));
 		return item;
 	}
 

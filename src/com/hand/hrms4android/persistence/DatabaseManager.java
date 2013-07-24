@@ -52,9 +52,9 @@ public class DatabaseManager extends SQLiteOpenHelper implements DataManage {
 		// 建代办列表的 列名表
 		db.execSQL("CREATE TABLE  " + TodoList.TABLENAME + "  ( " + TodoList.ID + " INTEGER PRIMARY KEY, "
 		        + TodoList.STATUS + "  TEXT , " + TodoList.SERVER_MESSAGE + "  TEXT , " + TodoList.ACTION + "  TEXT , "
-		        + TodoList.COMMENTS + "  TEXT , " + TodoList.LOCALID + "  TEXT , " + TodoList.ITEM1 + "  TEXT , "
-		        + TodoList.ITEM2 + "  TEXT , " + TodoList.ITEM3 + "  TEXT , " + TodoList.ITEM4 + "  TEXT , "
-		        + TodoList.SOURCE_SYSTEM_NAME + " TEXT )");
+		        + TodoList.ACTION_TYPE + " TEXT, " + TodoList.COMMENTS + "  TEXT , " + TodoList.LOCALID + "  TEXT , "
+		        + TodoList.ITEM1 + "  TEXT , " + TodoList.ITEM2 + "  TEXT , " + TodoList.ITEM3 + "  TEXT , "
+		        + TodoList.ITEM4 + "  TEXT , " + TodoList.SOURCE_SYSTEM_NAME + " TEXT )");
 
 		// 审批动作表
 		db.execSQL("CREATE TABLE  " + DataBaseMetadata.TableActions.TABLENAME + "  ( "

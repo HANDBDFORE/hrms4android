@@ -9,17 +9,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.SeekBar;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.adapter.FunctionListAdapter;
@@ -28,6 +30,7 @@ import com.hand.hrms4android.model.FunctionModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.network.NetworkUtil;
+import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.StorageUtil;
 
 public class FunctionListActivity extends SherlockFragmentActivity implements ModelActivity, OnItemClickListener {
@@ -38,11 +41,10 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	private String mCurrentFragmentTag = FunctionItem.TODO_ITEM_ID;
 
 	protected MenuDrawer mMenuDrawer;
+	private TextView userTextView;
 
-	protected FunctionListAdapter mFunctionListAdapter;
-	protected ListView mFunctionList;
-
-	private int mActivePosition = 0;
+	private FunctionListAdapter mFunctionListAdapter;
+	private ListView mFunctionList;
 
 	private Model functionListModel;
 
@@ -92,11 +94,12 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 	private void bindAllViews(View base) {
 
-		List<Object> os = new ArrayList<Object>();
-		os.add(new FunctionItem("", "", "bundle://eee", ""));
+		userTextView = (TextView) base.findViewById(R.id.function_activity_user);
+		userTextView.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(
+		        Constrants.SYS_PREFRENCES_USER_DESCRIPTION, ""));
 
 		mFunctionList = (ListView) base.findViewById(android.R.id.list);
-		mFunctionListAdapter = new FunctionListAdapter(this, os, mFunctionList);
+		mFunctionListAdapter = new FunctionListAdapter(this, new ArrayList<Object>(), mFunctionList);
 		mFunctionList.setAdapter(mFunctionListAdapter);
 		mFunctionList.setOnItemClickListener(this);
 
@@ -179,9 +182,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	@Override
 	public void modelDidFinishedLoad(Model<? extends Object> model) {
 		List<Object> items = (List<Object>) model.getProcessData();
-
 		mFunctionListAdapter.setDatas(items);
-
 	}
 
 	@Override
@@ -237,6 +238,16 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 		super.onBackPressed();
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+        case android.R.id.home:
+            mMenuDrawer.toggleMenu();
+            return true;
+    }
+	    return super.onOptionsItemSelected(item);
+	}
 
 	@Override
 	public void modelFailedLoad(Exception e, Model<? extends Object> model) {
@@ -248,11 +259,6 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	public void setModel(Model<? extends Object> model) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

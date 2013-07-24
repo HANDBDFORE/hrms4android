@@ -203,6 +203,7 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 		protected Intent prepareIntent(ApproveAction action) {
 			Intent intent = new Intent();
 			intent.putExtra(TodoList.ACTION, action.action);
+			intent.putExtra(TodoList.ACTION_TYPE, action.actionType);
 			intent.putExtra(ApproveOpinionActivity.EXTRA_TITLE, action.actionTitle);
 			return intent;
 		}

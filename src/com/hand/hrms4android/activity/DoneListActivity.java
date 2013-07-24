@@ -1,7 +1,5 @@
 package com.hand.hrms4android.activity;
 
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 
 import android.content.Intent;

@@ -10,9 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -23,7 +20,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.adapter.TodoListAdapter;
 import com.hand.hrms4android.model.Model;
@@ -59,16 +55,6 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 
 	private boolean multiChoiceMode;
 
-	/**
-	 * 待办事项
-	 */
-	public static final String TODO_ITEM_ID = "todo";
-
-	/**
-	 * 已完成事项
-	 */
-	public static final String DONE_ITEM_ID = "done";
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -100,7 +86,6 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		todoListViewWrapper.getRefreshableView().setChoiceMode(ListView.CHOICE_MODE_NONE);
 		todoListViewWrapper.setOnRefreshListener(new PulldownListener());
 
-		
 		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		reloadButton = (ImageButton) root.findViewById(R.id.activity_todo_list_reload_button);
 		reloadButton.setOnClickListener(new OnClickListener() {
@@ -225,6 +210,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 				Map<String, String> options = new HashMap<String, String>();
 
 				options.put(TodoList.ACTION, data.getStringExtra(TodoList.ACTION));
+				options.put(TodoList.ACTION_TYPE, data.getStringExtra(TodoList.ACTION_TYPE));
 				options.put(TodoList.COMMENTS, data.getStringExtra(TodoList.COMMENTS));
 				options.put(TodoList.EMPLOYEE_ID, data.getStringExtra(TodoList.EMPLOYEE_ID));
 
@@ -278,6 +264,9 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		return listAdapter.getSelectedRowCount();
 	}
 
+	/**
+	 * 显示列表组件
+	 */
 	private void showList() {
 		todoListViewWrapper.setVisibility(View.VISIBLE);
 		todoListViewWrapper.bringToFront();
@@ -329,10 +318,10 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 
 				if (item.getItemId() == MENU_ID_APPROVE) {
 					// 同意
-					opinionIntent.putExtra(TodoList.ACTION, "Y");
+					opinionIntent.putExtra(TodoList.ACTION_TYPE, "approve");
 				} else if (item.getItemId() == MENU_ID_DENY) {
 					// 拒绝
-					opinionIntent.putExtra(TodoList.ACTION, "N");
+					opinionIntent.putExtra(TodoList.ACTION_TYPE, "reject");
 				}
 				opinionIntent.putExtra(ApproveOpinionActivity.EXTRA_TITLE, item.getTitle());
 				// 弹出意见
@@ -360,86 +349,6 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		@Override
 		public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 			listModel.load(LoadType.Network, null);
-		}
-	}
-
-	// private class GestureRecogniser extends SimpleOnGestureListener {
-	// private static final int SWIPE_MIN_DISTANCE = 80;
-	// private static final int SWIPE_MAX_OFF_PATH = 250;
-	// private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-	//
-	// @Override
-	// public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-	// float velocityY) {
-	//
-	// if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-	// return false;
-	// // right to left swipe
-	// if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) >
-	// SWIPE_THRESHOLD_VELOCITY
-	// && (Math.abs(velocityX) < Math.abs(velocityY))) {
-	//
-	// return true;
-	// }
-	// // 左到右滑动
-	// else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE &&
-	// Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY
-	// && (Math.abs(velocityX - 80) > Math.abs(velocityY))) {
-	// // int position =
-	// // todoListViewWrapper.getRefreshableView().pointToPosition((int)
-	// // e1.getX(),
-	// // (int) e1.getY());
-	// int position =
-	// getCorrectRowPosition(todoListViewWrapper.getRefreshableView().pointToPosition(
-	// (int) e1.getX(), (int) e1.getY()));
-	// if (position >= 0) {
-	// // 删除行
-	// // next(null, position);
-	// deleteRowAtPosition(position);
-	// return true;
-	// } else {
-	// return false;
-	// }
-	// }
-	// return false;
-	// }
-	// }
-
-	/**
-	 * 以动画形式删除某行
-	 * 
-	 * @param itemID
-	 */
-	private void deleteRowWithItemID(final long itemID) {
-
-		// 读取动画
-		Animation anim = AnimationUtils.loadAnimation(getSherlockActivity(), android.R.anim.slide_out_right);
-		anim.setDuration(300);
-		anim.setAnimationListener(new AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
-
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				// 删除本地数据
-				listModel.removeRowByID(String.valueOf(itemID));
-				// 通知更新
-				listAdapter.reFetchData();
-			}
-		});
-		int childViewCount = todoListViewWrapper.getRefreshableView().getChildCount();
-		for (int i = 0; i < childViewCount; i++) {
-			View row = todoListViewWrapper.getRefreshableView().getChildAt(i);
-			Integer id = (Integer) row.getTag(R.id.todo_list_row_tag_id);
-			if (id != null && (id.intValue() == itemID)) {
-				row.startAnimation(anim);
-			}
 		}
 	}
 
