@@ -100,6 +100,7 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 
 		case R.id.approve_detail_action_deliver: {
 			Intent i = item.getIntent();
+			i.putExtra("sourceSystemName", listModel.currentItem().getSourceSystemName());
 			i.setClass(this, DeliverActivity.class);
 			startActivityForResult(i, REQUEST_ACTIVITY_DELIVER);
 			return true;
@@ -253,7 +254,6 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 			item.setIcon(R.drawable.ic_menu_cc);
 			Intent intent = prepareIntent(action);
-			intent.putExtra(TodoList.ACTION, "D");
 			item.setIntent(intent);
 			return item;
 		}

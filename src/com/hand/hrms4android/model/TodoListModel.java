@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,6 +98,12 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 				jsonSubmitRecord.put(TodoList.ACTION_TYPE, sr.getActionType());
 				jsonSubmitRecord.put(TodoList.COMMENTS, sr.getComments());
 				jsonSubmitRecord.put(TodoList.SOURCE_SYSTEM_NAME, sr.getSourceSystemName());
+
+				if (!StringUtils.isEmpty(sr.getDeliveree())) {
+					JSONObject otherParamsJson = new JSONObject();
+					otherParamsJson.put(TodoList.DELIVEREE, sr.getDeliveree());
+					jsonSubmitRecord.put("otherParams", otherParamsJson);
+				}
 
 				submitArray.put(jsonSubmitRecord);
 			} catch (JSONException e) {
@@ -349,6 +356,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 					record.setAction(options.get(TodoList.ACTION));
 					record.setActionType(options.get(TodoList.ACTION_TYPE));
 					record.setComments(options.get(TodoList.COMMENTS));
+					record.setDeliveree(options.get(TodoList.DELIVEREE));
 					// 放入拷贝数据
 					this.submitRecordsList.add(new TodoListDomain(record));
 

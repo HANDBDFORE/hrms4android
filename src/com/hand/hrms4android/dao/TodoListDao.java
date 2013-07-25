@@ -132,6 +132,7 @@ public class TodoListDao {
 			final int index_ITEM3 = index++;
 			final int index_ITEM4 = index++;
 			final int index_SOURCE_SYSTEM_NAME = index++;
+			final int index_deliveree = index++;
 
 			@Override
 			public void onQuerySuccess(Cursor cursor) {
@@ -142,7 +143,7 @@ public class TodoListDao {
 						        .getString(index_ACTION_TYPE), cursor.getString(index_COMMENTS), cursor
 						        .getString(index_LOCALID), cursor.getString(index_ITEM1),
 						        cursor.getString(index_ITEM2), cursor.getString(index_ITEM3), cursor
-						                .getString(index_ITEM4), cursor.getString(index_SOURCE_SYSTEM_NAME)));
+						                .getString(index_ITEM4), cursor.getString(index_SOURCE_SYSTEM_NAME),cursor.getString(index_deliveree)));
 					} while (cursor.moveToNext());
 
 				}
@@ -154,7 +155,7 @@ public class TodoListDao {
 		String sql = "select " + TodoList.ID + ", " + TodoList.STATUS + ", " + TodoList.SERVER_MESSAGE + ", "
 		        + TodoList.ACTION + ", " + TodoList.ACTION_TYPE + ", " + TodoList.COMMENTS + ", " + TodoList.LOCALID
 		        + ", " + TodoList.ITEM1 + ", " + TodoList.ITEM2 + ", " + TodoList.ITEM3 + ", " + TodoList.ITEM4 + ", "
-		        + TodoList.SOURCE_SYSTEM_NAME + "  from " + TodoList.TABLENAME;
+		        + TodoList.SOURCE_SYSTEM_NAME + ", "+TodoList.DELIVEREE+"  from " + TodoList.TABLENAME;
 		dataManager.query(sql, null, getDictionaryCallback);
 		return datas;
 	}
@@ -186,9 +187,8 @@ public class TodoListDao {
 		updateValues.put(TodoList.ACTION_TYPE, record.getActionType());
 		// 意见
 		updateValues.put(TodoList.COMMENTS, record.getComments());
-		// TODO 转交？
 		// 转交id
-		// updateValues.put(TodoList.EMPLOYEE_ID, 0);
+		 updateValues.put(TodoList.DELIVEREE, record.getDeliveree());
 		// 状态
 		updateValues.put(TodoList.STATUS, Constrants.APPROVE_RECORD_STATUS_WAITING);
 

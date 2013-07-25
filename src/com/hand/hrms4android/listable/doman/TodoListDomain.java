@@ -13,6 +13,7 @@ public class TodoListDomain {
 	private String item3;
 	private String item4;
 	private String sourceSystemName;
+	private String deliveree;
 
 	public TodoListDomain() {
 	}
@@ -24,12 +25,12 @@ public class TodoListDomain {
 	 */
 	public TodoListDomain(JSONObject json) throws JSONException {
 		this("-1", "", "", "", "", "", json.getString("localId"), json.getString("item1"), json.getString("item2"),
-		        json.getString("item3"), json.getString("item4"), json.getString("sourceSystemName"));
+		        json.getString("item3"), json.getString("item4"), json.getString("sourceSystemName"), "");
 	}
 
 	public TodoListDomain(String id, String status, String serverMessage, String action, String actionType,
 	        String comments, String localId, String item1, String item2, String item3, String item4,
-	        String sourceSystemName) {
+	        String sourceSystemName, String deliveree) {
 		super();
 		this.id = id;
 		this.status = status;
@@ -43,12 +44,13 @@ public class TodoListDomain {
 		this.item3 = item3;
 		this.item4 = item4;
 		this.sourceSystemName = sourceSystemName;
+		this.deliveree = deliveree;
 	}
 
 	public TodoListDomain(TodoListDomain old) {
 		this(old.getId(), old.getStatus(), old.getServerMessage(), old.getAction(), old.getActionType(), old
 		        .getComments(), old.getLocalId(), old.getItem1(), old.getItem2(), old.getItem3(), old.getItem4(), old
-		        .getSourceSystemName());
+		        .getSourceSystemName(),old.getDeliveree());
 	}
 
 	public String getId() {
@@ -145,6 +147,14 @@ public class TodoListDomain {
 
 	public void setSourceSystemName(String sourceSystemName) {
 		this.sourceSystemName = sourceSystemName;
+	}
+
+	public String getDeliveree() {
+		return deliveree;
+	}
+
+	public void setDeliveree(String deliveree) {
+		this.deliveree = deliveree;
 	}
 
 }

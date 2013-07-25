@@ -71,6 +71,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
+		getSherlockActivity().setTitle(R.string.title_activity_todo_list);
 		buildResource();
 		this.model.load(LoadType.Local, null);
 	}
@@ -212,7 +213,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 				options.put(TodoList.ACTION, data.getStringExtra(TodoList.ACTION));
 				options.put(TodoList.ACTION_TYPE, data.getStringExtra(TodoList.ACTION_TYPE));
 				options.put(TodoList.COMMENTS, data.getStringExtra(TodoList.COMMENTS));
-				options.put(TodoList.EMPLOYEE_ID, data.getStringExtra(TodoList.EMPLOYEE_ID));
+				options.put(TodoList.DELIVEREE, data.getStringExtra(TodoList.DELIVEREE));
 
 				if (requestCode == REQUEST_ACTIVITY_DETAIL) {
 					listModel.addRecordToSubmitQueue(options, data.getStringExtra(TodoList.ID));

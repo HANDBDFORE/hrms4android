@@ -36,7 +36,7 @@ public final class DataBaseMetadata {
 		/**
 		 * 转交人
 		 */
-		public static final String EMPLOYEE_ID = "employee_id";
+		public static final String DELIVEREE = "deliveree";
 	}
 
 }

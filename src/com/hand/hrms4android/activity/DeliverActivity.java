@@ -1,7 +1,6 @@
 package com.hand.hrms4android.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,35 +22,19 @@ import android.widget.SimpleAdapter;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
-import com.hand.hrms4android.exception.ParseException;
-import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.model.DeliverModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
-import com.hand.hrms4android.parser.ConfigReader;
-import com.hand.hrms4android.parser.Expression;
-import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
-import com.hand.hrms4android.util.PlaceHolderReplacer;
 import com.hand.hrms4android.util.PlatformUtil;
 
 public class DeliverActivity extends ActionBarActivity {
 	private static final int[] adapter_to = { android.R.id.text1, android.R.id.text2 };
 
-	private static String[] adapter_from_place_holder;
+	private static final String[] adapter_from_place_holder;
 
 	static {
-		ConfigReader configReader = XmlConfigReader.getInstance();
-		adapter_from_place_holder = new String[2];
-		try {
-			adapter_from_place_holder[0] = configReader.getAttr(new Expression(
-			        "/config/application/activity[@name='deliver_activity']/view/autocomplete_title", "text"));
-			adapter_from_place_holder[1] = configReader.getAttr(new Expression(
-			        "/config/application/activity[@name='deliver_activity']/view/autocomplete_sub_title", "text"));
-		} catch (ParseExpressionException e) {
-			adapter_from_place_holder[0] = "";
-			adapter_from_place_holder[1] = "";
-		}
+		adapter_from_place_holder = new String[] { "name", "description" };
 	}
 
 	private Animation shake;
@@ -59,6 +42,7 @@ public class DeliverActivity extends ActionBarActivity {
 	private AutoCompleteTextView deliverTo;
 	private EditText comment;
 	private SimpleAdapter autoCompleteAdapter;
+	private String sourceSystemName;
 
 	private Map<String, String> selectedItemData;
 
@@ -66,6 +50,8 @@ public class DeliverActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deliver);
+
+		sourceSystemName = getIntent().getStringExtra("sourceSystemName");
 
 		bindAllViews();
 		buildResources();
@@ -104,13 +90,8 @@ public class DeliverActivity extends ActionBarActivity {
 	@Override
 	public void modelDidFinishedLoad(Model model) {
 
-		try {
-			autoCompleteAdapter = new SimpleAdapter(this,
-			        convertAuroraMapToAutoComplete((List<Map<String, String>>) model.getProcessData()),
-			        android.R.layout.simple_list_item_2, adapter_from_place_holder, adapter_to);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		autoCompleteAdapter = new SimpleAdapter(this, (List<Map<String, String>>) model.getProcessData(),
+		        android.R.layout.simple_list_item_2, adapter_from_place_holder, adapter_to);
 
 		deliverTo.setAdapter(autoCompleteAdapter);
 		autoCompleteAdapter.notifyDataSetChanged();
@@ -129,7 +110,7 @@ public class DeliverActivity extends ActionBarActivity {
 		@Override
 		public void afterTextChanged(Editable s) {
 			DeliverActivity.super.invalidateOptionsMenu();
-			model.load(LoadType.Network, s.toString());
+			model.load(LoadType.Network, new String[]{sourceSystemName,s.toString()});
 		}
 	}
 
@@ -173,7 +154,7 @@ public class DeliverActivity extends ActionBarActivity {
 
 		case R.id.approve_opinion_ok: {
 			String comments = comment.getText().toString();
-			String employeeId = selectedItemData.get("employee_id");
+			String employeeId = selectedItemData.get("realEmployeeId");
 
 			// 检查
 			if (StringUtils.isEmpty(comments)) {
@@ -184,7 +165,7 @@ public class DeliverActivity extends ActionBarActivity {
 
 			Intent i = new Intent(getIntent());
 			i.putExtra(TodoList.COMMENTS, comments);
-			i.putExtra(TodoList.EMPLOYEE_ID, employeeId);
+			i.putExtra(TodoList.DELIVEREE, employeeId);
 			setResult(RESULT_OK, i);
 			finish();
 			break;
@@ -203,21 +184,4 @@ public class DeliverActivity extends ActionBarActivity {
 
 		return true;
 	}
-
-	private List<Map<String, String>> convertAuroraMapToAutoComplete(List<Map<String, String>> auroraMap)
-	        throws ParseException {
-		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
-
-		for (Map<String, String> aurora : auroraMap) {
-			String titleValue = PlaceHolderReplacer.replaceForValue(aurora, adapter_from_place_holder[0]);
-			String subTitleValue = PlaceHolderReplacer.replaceForValue(aurora, adapter_from_place_holder[1]);
-
-			Map<String, String> line = new HashMap<String, String>(aurora);
-			line.put(adapter_from_place_holder[0], titleValue);
-			line.put(adapter_from_place_holder[1], subTitleValue);
-			result.add(line);
-		}
-		return result;
-	}
-
 }
