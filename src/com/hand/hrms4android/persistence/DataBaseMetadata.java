@@ -31,6 +31,7 @@ public final class DataBaseMetadata {
 		public static final String ITEM2 = "item2";
 		public static final String ITEM3 = "item3";
 		public static final String ITEM4 = "item4";
+		public static final String SCREENNAME = "screenName";
 		public static final String SOURCE_SYSTEM_NAME = "sourceSystemName";
 
 		/**

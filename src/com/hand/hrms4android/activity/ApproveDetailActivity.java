@@ -32,17 +32,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 
 	@Override
 	protected void afterSuperOnCreateFinish(Bundle savedInstanceState) {
-		try {
-			urlKeyName = configReader
-			        .getAttr(new Expression(
-			                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='todo_detail_url']",
-			                "value"));
 
-			loadResources(listModel.currentItem());
-		} catch (ParseExpressionException e) {
-			e.printStackTrace();
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+		loadResources(listModel.currentItem());
 	}
 
 	@Override
@@ -145,8 +136,13 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 	}
 
 	private String getAbsolutePageUrl(TodoListDomain record) {
-		StringBuilder sb = new StringBuilder(urlKeyName);
-		sb.append("?");
+		StringBuilder sb = new StringBuilder(record.getScreenName());
+		if (record.getScreenName().contains("?")) {
+			sb.append("&");
+		} else {
+			sb.append("?");
+		}
+
 		sb.append("sourceSystemName=" + URLEncoder.encode(record.getSourceSystemName()));
 		sb.append("&");
 		sb.append("localId=" + URLEncoder.encode(record.getLocalId()));

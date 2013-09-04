@@ -27,7 +27,7 @@
     <!-- ///// 转交语言 //// -->
     <string name="activity_diliver_prompt_to">转交给</string>
     <!-- ///// 功能语言 //// -->
-    <string name="title_activity_function_list">功能列表</string>
+    <string name="title_activity_function_list">移动商务</string>
     <string name="title_activity_html"></string>
 
 </resources>

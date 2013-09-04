@@ -28,7 +28,7 @@ public abstract class AbstractPageableModel<ListDataType> extends AbstractListMo
 	@Override
 	public void next() {
 		int row = currentSelectedIndex.getRow();
-		if (row < loadAuroraDataset.size()) {
+		if (row < getSize()) {
 			currentSelectedIndex.setRow(++row);
 		}
 	}
@@ -36,7 +36,7 @@ public abstract class AbstractPageableModel<ListDataType> extends AbstractListMo
 	@Override
 	public boolean hasNext() {
 		int row = currentSelectedIndex.getRow();
-		if ((++row) >= loadAuroraDataset.size()) {
+		if ((++row) >= getSize()) {
 			return false;
 		}
 		return true;
@@ -44,10 +44,10 @@ public abstract class AbstractPageableModel<ListDataType> extends AbstractListMo
 
 	@Override
 	public ListDataType currentItem() {
-		if (currentSelectedIndex.getRow() >= loadAuroraDataset.size()) {
+		if (currentSelectedIndex.getRow() >= getSize()) {
 			return null;
 		}
-		return loadAuroraDataset.get(currentSelectedIndex.getRow());
+		return getItemAtIndex(currentSelectedIndex.getRow());
 	}
 
 	@Override
@@ -75,4 +75,19 @@ public abstract class AbstractPageableModel<ListDataType> extends AbstractListMo
 	public void setRecordAsSelected(IndexPath selectedIndex) {
 		this.currentSelectedIndex = new IndexPath(selectedIndex);
 	}
+
+	/**
+	 * @return
+	 */
+	protected int getSize() {
+		return loadAuroraDataset.size();
+	}
+
+	/**
+	 * @return
+	 */
+	protected ListDataType getItemAtIndex(int index) {
+		return loadAuroraDataset.get(index);
+	}
+
 }

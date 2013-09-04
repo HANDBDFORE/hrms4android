@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.hand.hrms4android.listable.doman.TodoListDomain;
 
-public class TodoListItemFactory implements ItemFactory<TodoListItem> {
+public class TodoListItemFactory implements ItemFactory<TodoListItem,TodoListDomain> {
 
 	public TodoListItemFactory() {
 	}

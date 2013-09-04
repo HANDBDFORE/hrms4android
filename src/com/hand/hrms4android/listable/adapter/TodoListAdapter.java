@@ -25,7 +25,7 @@ public class TodoListAdapter extends BaseAdapter {
 	private List<String> selectedRecordIDs;
 	private AbstractPageableModel<TodoListDomain> model;
 	private List<TodoListItem> items;
-	private ItemFactory<TodoListItem> itemFactory;
+	private ItemFactory<TodoListItem,TodoListDomain> itemFactory;
 	private Context context;
 
 	public TodoListAdapter(Context context, AbstractPageableModel<TodoListDomain> model) {

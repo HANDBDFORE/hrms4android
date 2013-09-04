@@ -172,8 +172,8 @@ public class LoginActivity extends ActionBarActivity {
 	private RequestParams generateLoginParams(String username, String password) {
 		// 拼参数
 		RequestParams params = new RequestParams();
-		params.put("username", username);
-		params.put("password", password);
+		params.put("user_name", username);
+		params.put("user_password", password);
 
 		// 设备系统类型
 		params.put("device_type", Constrants.SYS_ATTS_DEVICE_TYPE);

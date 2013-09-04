@@ -1,7 +1,5 @@
 package com.hand.hrms4android.activity;
 
-import org.apache.commons.lang3.StringUtils;
-
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,9 +15,10 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.network.NetworkUtil;
 
-public class HTMLFragment extends SherlockFragment {
+public class HTMLFragment extends SherlockFragment implements OnFragmentSelectListener{
 
 	protected WebView contentWebView;
 	protected ProgressBar loadingProgress;
@@ -45,13 +44,16 @@ public class HTMLFragment extends SherlockFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		String url = getArguments().getString("url");
-		contentWebView.loadUrl(NetworkUtil.getAbsoluteUrl(url.replace("${base_url}", "")));
-		String title = getArguments().getString("title");
-		if (!StringUtils.isEmpty(title)) {
-			getSherlockActivity().setTitle(title);
-		}
+		load(url);
 	}
 
+	/**
+	 * @param url
+	 */
+    protected void load(String url) {
+	    contentWebView.loadUrl(NetworkUtil.getAbsoluteUrl(url.replace("${base_url}", "")));
+    }
+	
 	private class ContentWebClient extends WebViewClient {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -99,4 +101,15 @@ public class HTMLFragment extends SherlockFragment {
 			loadingProgress.setVisibility(View.GONE);
 		}
 	}
+
+	@Override
+    public void onSelected(Object source) {
+	    if (source instanceof FunctionItem) {
+//	        load(((FunctionItem) source).getUrl());
+	        getArguments().putString("url", ((FunctionItem) source).getUrl());
+	        if (contentWebView!=null) {
+	            load(((FunctionItem) source).getUrl());
+            }
+        }
+    }
 }

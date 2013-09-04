@@ -48,6 +48,7 @@ public class TodoListDao {
 			cv.put(TodoList.ITEM2, record.getItem2());
 			cv.put(TodoList.ITEM3, record.getItem3());
 			cv.put(TodoList.ITEM4, record.getItem4());
+			cv.put(TodoList.SCREENNAME, record.getScreenName());
 			cv.put(TodoList.SOURCE_SYSTEM_NAME, record.getSourceSystemName());
 			record.setId(String.valueOf(dataManager.insert(TodoList.TABLENAME, null, cv)));
 			affectiveRows += 1;
@@ -102,9 +103,8 @@ public class TodoListDao {
 		};
 
 		// 找出所有列
-		String sql = "select " + TodoList.LOCALID + ", " + TodoList.SOURCE_SYSTEM_NAME + "  from " + TodoList.TABLENAME
-		        + " where " + TodoList.STATUS + " !=? ";
-		dataManager.query(sql, new String[] { Constrants.APPROVE_RECORD_STATUS_WAITING }, getDictionaryCallback);
+		String sql = "select " + TodoList.LOCALID + ", " + TodoList.SOURCE_SYSTEM_NAME + "  from " + TodoList.TABLENAME;
+		dataManager.query(sql, null, getDictionaryCallback);
 		return datas;
 	}
 
@@ -131,6 +131,7 @@ public class TodoListDao {
 			final int index_ITEM2 = index++;
 			final int index_ITEM3 = index++;
 			final int index_ITEM4 = index++;
+			final int index_screenName = index++;
 			final int index_SOURCE_SYSTEM_NAME = index++;
 			final int index_deliveree = index++;
 
@@ -143,7 +144,8 @@ public class TodoListDao {
 						        .getString(index_ACTION_TYPE), cursor.getString(index_COMMENTS), cursor
 						        .getString(index_LOCALID), cursor.getString(index_ITEM1),
 						        cursor.getString(index_ITEM2), cursor.getString(index_ITEM3), cursor
-						                .getString(index_ITEM4), cursor.getString(index_SOURCE_SYSTEM_NAME),cursor.getString(index_deliveree)));
+						                .getString(index_ITEM4), cursor.getString(index_screenName), cursor
+						                .getString(index_SOURCE_SYSTEM_NAME), cursor.getString(index_deliveree)));
 					} while (cursor.moveToNext());
 
 				}
@@ -155,7 +157,8 @@ public class TodoListDao {
 		String sql = "select " + TodoList.ID + ", " + TodoList.STATUS + ", " + TodoList.SERVER_MESSAGE + ", "
 		        + TodoList.ACTION + ", " + TodoList.ACTION_TYPE + ", " + TodoList.COMMENTS + ", " + TodoList.LOCALID
 		        + ", " + TodoList.ITEM1 + ", " + TodoList.ITEM2 + ", " + TodoList.ITEM3 + ", " + TodoList.ITEM4 + ", "
-		        + TodoList.SOURCE_SYSTEM_NAME + ", "+TodoList.DELIVEREE+"  from " + TodoList.TABLENAME;
+		        + TodoList.SCREENNAME + "," + TodoList.SOURCE_SYSTEM_NAME + ", " + TodoList.DELIVEREE + "  from "
+		        + TodoList.TABLENAME;
 		dataManager.query(sql, null, getDictionaryCallback);
 		return datas;
 	}
@@ -188,7 +191,7 @@ public class TodoListDao {
 		// 意见
 		updateValues.put(TodoList.COMMENTS, record.getComments());
 		// 转交id
-		 updateValues.put(TodoList.DELIVEREE, record.getDeliveree());
+		updateValues.put(TodoList.DELIVEREE, record.getDeliveree());
 		// 状态
 		updateValues.put(TodoList.STATUS, Constrants.APPROVE_RECORD_STATUS_WAITING);
 
@@ -212,7 +215,7 @@ public class TodoListDao {
 
 		return affectiveRows;
 	}
-	
+
 	/**
 	 * 删除行
 	 * 
@@ -220,8 +223,9 @@ public class TodoListDao {
 	 *            物理id
 	 * @return 成功的行数
 	 */
-	public int deleteRecordByLogicalID(String localId,String sourceSystemName) {
-		return dataManager.delete(TodoList.TABLENAME, TodoList.LOCALID + "=? and "+TodoList.SOURCE_SYSTEM_NAME+" =?", new String[] { localId,sourceSystemName });
+	public int deleteRecordByLogicalID(String localId, String sourceSystemName) {
+		return dataManager.delete(TodoList.TABLENAME, TodoList.LOCALID + "=? and " + TodoList.SOURCE_SYSTEM_NAME
+		        + " =?", new String[] { localId, sourceSystemName });
 	}
 
 }

@@ -54,8 +54,8 @@ public class BaseReceiptActivity<E> extends HTMLBaseActivity {
 			displayEmployeeName = getEmployeeCardParams().displayName;
 		}
 
-		menu.add(GROUP_ACTION, R.id.approve_detail_employee, GROUP_ACTION - 1, displayEmployeeName).setShowAsAction(
-		        MenuItem.SHOW_AS_ACTION_ALWAYS);
+//		menu.add(GROUP_ACTION, R.id.approve_detail_employee, GROUP_ACTION - 1, displayEmployeeName).setShowAsAction(
+//		        MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		int toolIndex = GROUP_TOOLS;
 		menu.add(GROUP_TOOLS, R.id.approve_detail_tool_previous, toolIndex++, "上一条").setShowAsAction(

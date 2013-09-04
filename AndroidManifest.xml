@@ -40,14 +40,6 @@
             android:theme="@style/Theme.Sherlock.Light" >
         </activity>
         <activity
-            android:name="com.hand.hrms4android.activity.TodoListActivity"
-            android:label="@string/title_activity_todo_list" >
-        </activity>
-        <activity
-            android:name="com.hand.hrms4android.activity.DoneListActivity"
-            android:label="@string/title_activity_done_list" >
-        </activity>
-        <activity
             android:name="com.hand.hrms4android.activity.ApproveDetailActivity"
             android:label="明细"
             android:uiOptions="splitActionBarWhenNarrow" >

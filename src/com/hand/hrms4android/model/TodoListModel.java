@@ -27,6 +27,7 @@ import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.Iterator;
 import com.hand.hrms4android.util.LogUtil;
 import com.hand.hrms4android.util.data.IndexPath;
+import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.UMJsonHttpResponseHandler;
 
 public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
@@ -117,78 +118,75 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 			        "/config/application/activity[@name='todo_list_activity']/request/url[@name='action_submit_url']",
 			        "value"));
 
-			// RequestParams params = new RequestParams();
-			// params.put("postData", submitArray.toString());
+			RequestParams params = new RequestParams();
+			params.put("actions", submitArray.toString());
 
 			// NetworkUtil.post(actionURL, params, new
 			// UMJsonHttpResponseHandler() {
-			NetworkUtil.post(HrmsApplication.getApplication(), actionURL, new StringEntity(submitArray.toString()),
-			        "application/json", new UMJsonHttpResponseHandler() {
-				        @Override
-				        public void onSuccess(int statusCode, JSONObject response) {
-					        // 提交成功！
-					        // new
-					        // "message": "SUCCESS",
-					        // "status": "S",
-					        // "localId": 25908,
-					        // "sourceSystemName": "HR"
-					        try {
+			NetworkUtil.post(actionURL, params, new UMJsonHttpResponseHandler() {
+				@Override
+				public void onSuccess(int statusCode, JSONObject response) {
+					// 提交成功！
+					// new
+					// "message": "SUCCESS",
+					// "status": "S",
+					// "localId": 25908,
+					// "sourceSystemName": "HR"
+					try {
 
-						        JSONArray resultJsonArray = response.getJSONObject("body").getJSONArray("list");
-						        for (int i = 0; i < resultJsonArray.length(); i++) {
-							        // 拿到每条提交记录的返回信息
-							        JSONObject responseRecord = resultJsonArray.getJSONObject(i);
-							        // 处理状态
-							        String responseStatus = responseRecord.getString("status");
+						JSONArray resultJsonArray = response.getJSONObject("body").getJSONArray("list");
+						for (int i = 0; i < resultJsonArray.length(); i++) {
+							// 拿到每条提交记录的返回信息
+							JSONObject responseRecord = resultJsonArray.getJSONObject(i);
+							// 处理状态
+							String responseStatus = responseRecord.getString("status");
+							String responseMessage = null;
+							if (responseRecord.has("message")) {
+								responseMessage = responseRecord.getString("message");
+							}
+							String responseSourceSystemName = responseRecord.getString("sourceSystemName");
+							String responseRecordLocalId = responseRecord.getString("localId");
 
-							        String responseMessage = responseRecord.getString("message");
-							        String responseSourceSystemName = responseRecord.getString("sourceSystemName");
-							        String responseRecordLocalId = responseRecord.getString("localId");
+							TodoListDomain submitRecord = findRecord(submitRecordsList, responseRecordLocalId,
+							        responseSourceSystemName);
 
-							        TodoListDomain submitRecord = findRecord(submitRecordsList, responseRecordLocalId,
-							                responseSourceSystemName);
+							if ("S".equals(responseStatus)) {
+								// 成功
+								// 删除数据库数据
+								dao.deleteRecord(submitRecord.getId());
+							} else {
+								// 失败
+								submitRecord.setServerMessage(responseMessage);
+								submitRecord.setStatus(Constrants.APPROVE_RECORD_STATUS_ERROR);
+								// 写本地异常
+								dao.updateApproveRecordAsError(submitRecord.getId(), responseMessage);
+							}
+							// 从待提交列表中移除记录
+							removeRecordFromSubmitList(submitRecord);
+						}
+						// 重新加载数据
+						loadAuroraDataset = dao.getAllTodoRecords();
+						// 通知界面可以更新
+						activity.modelDidFinishedLoad(TodoListModel.this);
 
-							        if ("S".equals(responseStatus)) {
-								        // 成功
-								        // 删除数据库数据
-								        dao.deleteRecord(submitRecord.getId());
-							        } else {
-								        // 失败
-								        submitRecord.setServerMessage(responseMessage);
-								        submitRecord.setStatus(Constrants.APPROVE_RECORD_STATUS_ERROR);
-								        // 写本地异常
-								        dao.updateApproveRecordAsError(submitRecord.getId(), responseMessage);
-							        }
-							        // 从待提交列表中移除记录
-							        removeRecordFromSubmitList(submitRecord);
-						        }
-						        // 重新加载数据
-						        loadAuroraDataset = dao.getAllTodoRecords();
-						        // 通知界面可以更新
-						        activity.modelDidFinishedLoad(TodoListModel.this);
+					} catch (JSONException e) {
+						e.printStackTrace();
+						this.onFailure(new IllegalStateException("服务器返回数据格式不正确"), response.toString());
+						return;
+					}
 
-					        } catch (JSONException e) {
-						        e.printStackTrace();
-						        this.onFailure(new IllegalStateException("服务器返回数据格式不正确"), response.toString());
-						        return;
-					        }
+				}
 
-				        }
-
-				        @Override
-				        public void onFailure(Throwable error, String content) {
-					        // 其他异常，由于审批内容已被保存，所以直接告诉主界面出错
-					        loadAuroraDataset = dao.getAllTodoRecords();
-					        activity.modelFailedLoad(new Exception("发生意外错误，审批内容已被保存，请稍后重试"), TodoListModel.this);
-				        }
-			        });
+				@Override
+				public void onFailure(Throwable error, String content) {
+					// 其他异常，由于审批内容已被保存，所以直接告诉主界面出错
+					loadAuroraDataset = dao.getAllTodoRecords();
+					activity.modelFailedLoad(new Exception("发生意外错误，审批内容已被保存，请稍后重试"), TodoListModel.this);
+				}
+			});
 
 		} catch (ParseExpressionException e) {
 			activity.modelFailedLoad(new Exception("无法读取指定URL:", e), TodoListModel.this);
-			e.printStackTrace();
-			return;
-		} catch (UnsupportedEncodingException e) {
-			activity.modelFailedLoad(new Exception("字符集不支持", e), TodoListModel.this);
 			e.printStackTrace();
 			return;
 		}
@@ -232,64 +230,67 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 			return;
 		}
 
-		NetworkUtil.post(HrmsApplication.getApplication(), service, requestEntity, "application/json",
-		        new UMJsonHttpResponseHandler() {
+		RequestParams params = new RequestParams();
+		params.put("localIds", submitJsonArray.toString());
+		NetworkUtil.post(service, params, new UMJsonHttpResponseHandler() {
 
-			        @Override
-			        public void onSuccess(int statusCode, JSONObject response) {
-				        //
-				        try {
-					        JSONObject responseCategory = response.getJSONObject("body");
+			@Override
+			public void onSuccess(int statusCode, JSONObject response) {
+				//
+				try {
+					JSONObject responseCategory = response.getJSONObject("body");
+					
+					// 删除旧数据
+					if (responseCategory.has("delete")) {
+						JSONArray deleteJsonRecords = responseCategory.getJSONArray("delete");
+						for (int i = 0; i < deleteJsonRecords.length(); i++) {
+							JSONObject o = deleteJsonRecords.getJSONObject(i);
+							dao.deleteRecordByLogicalID(o.getString(TodoList.LOCALID),
+							        o.getString(TodoList.SOURCE_SYSTEM_NAME));
+						}
+					}
 
-					        if (responseCategory.has("new")) {
-						        JSONArray newJsonRecords = responseCategory.getJSONArray("new");
+					if (responseCategory.has("new")) {
+						JSONArray newJsonRecords = responseCategory.getJSONArray("new");
 
-						        List<TodoListDomain> serverTodoNewRecords = new ArrayList<TodoListDomain>();
-						        for (int i = 0; i < newJsonRecords.length(); i++) {
-							        serverTodoNewRecords.add(new TodoListDomain(newJsonRecords.getJSONObject(i)));
-						        }
+						List<TodoListDomain> serverTodoNewRecords = new ArrayList<TodoListDomain>();
+						for (int i = 0; i < newJsonRecords.length(); i++) {
+							serverTodoNewRecords.add(new TodoListDomain(newJsonRecords.getJSONObject(i)));
+						}
 
-						        // 存数据表
-						        dao.insertTodoListRowData(serverTodoNewRecords);
-					        }
+						// 存数据表
+						dao.insertTodoListRowData(serverTodoNewRecords);
+					}
 
-					        // 删除旧数据
-					        if (responseCategory.has("delete")) {
-						        JSONArray deleteJsonRecords = responseCategory.getJSONArray("delete");
-						        for (int i = 0; i < deleteJsonRecords.length(); i++) {
-							        JSONObject o = deleteJsonRecords.getJSONObject(i);
-							        dao.deleteRecordByLogicalID(o.getString(TodoList.LOCALID),
-							                o.getString(TodoList.SOURCE_SYSTEM_NAME));
-						        }
-					        }
+					
 
-				        } catch (PersistanceException e) {
-					        activity.modelFailedLoad(e, TodoListModel.this);
-					        e.printStackTrace();
-					        return;
-				        } catch (JSONException e) {
-					        activity.modelFailedLoad(e, TodoListModel.this);
-					        e.printStackTrace();
-					        return;
-				        }
+				} catch (PersistanceException e) {
+					activity.modelFailedLoad(e, TodoListModel.this);
+					e.printStackTrace();
+					return;
+				} catch (JSONException e) {
+					activity.modelFailedLoad(e, TodoListModel.this);
+					e.printStackTrace();
+					return;
+				}
 
-				        // 从数据库读取更新后的全部数据，传给界面
-				        loadAuroraDataset = dao.getAllTodoRecords();
+				// 从数据库读取更新后的全部数据，传给界面
+				loadAuroraDataset = dao.getAllTodoRecords();
 
-				        // 通知界面开始更新
-				        activity.modelDidFinishedLoad(TodoListModel.this);
-			        }
+				// 通知界面开始更新
+				activity.modelDidFinishedLoad(TodoListModel.this);
+			}
 
-			        @Override
-			        public void onFailure(Throwable error, String content) {
-				        LogUtil.error(this, "request", "onFailure:" + content);
-				        if (error instanceof IOException) {
-					        error = new IOException("通讯失败");
-				        }
-				        activity.modelFailedLoad(new Exception(error.getMessage()), TodoListModel.this);
-			        }
+			@Override
+			public void onFailure(Throwable error, String content) {
+				LogUtil.error(this, "request", "onFailure:" + content);
+				if (error instanceof IOException) {
+					error = new IOException("通讯失败");
+				}
+				activity.modelFailedLoad(new Exception(error.getMessage()), TodoListModel.this);
+			}
 
-		        });
+		});
 	}
 
 	/**

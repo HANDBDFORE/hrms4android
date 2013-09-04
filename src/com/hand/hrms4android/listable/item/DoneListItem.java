@@ -6,8 +6,8 @@ public class DoneListItem extends TextListItem {
 	public DoneListItem() {
 	}
 
-	public DoneListItem(String title, String titleRight, String subTitle, String information, String screenName) {
-		super(title, titleRight, subTitle, information);
+	public DoneListItem(String item1, String item2, String item3, String item4, String screenName) {
+		super(item1, item2, item3, item4);
 		this.screenName = screenName;
 	}
 

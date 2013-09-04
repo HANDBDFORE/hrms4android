@@ -10,7 +10,7 @@ public class FunctionItem {
 	/**
 	 * 已完成事项
 	 */
-	public static final String DONE_ITEM_ID = "dd";
+	public static final String DONE_ITEM_ID = "com.hand.hrms4android.activity.DoneListFragment";
 
 	/**
 	 * 其他

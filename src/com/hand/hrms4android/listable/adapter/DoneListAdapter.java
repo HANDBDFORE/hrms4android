@@ -1,49 +1,22 @@
 package com.hand.hrms4android.listable.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.hand.hrms4android.R;
-import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.listable.item.DoneListItem;
-import com.hand.hrms4android.listable.item.DoneListItemFactory;
-import com.hand.hrms4android.listable.item.ItemFactory;
-import com.hand.hrms4android.model.AbstractPageableModel;
 
-public class DoneListAdapter extends BaseAdapter {
-	private AbstractPageableModel<TodoListDomain> model;
+public class DoneListAdapter extends ArrayAdapter<DoneListItem> {
 	private LayoutInflater mInflater;
-	private ItemFactory<DoneListItem> itemFactory;
-	private List<DoneListItem> items;
 
-	public DoneListAdapter(Context context, AbstractPageableModel<TodoListDomain> model) {
-		this.model = model;
+	public DoneListAdapter(Context context) {
+		super(context, 0);
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		items = new ArrayList<DoneListItem>();
-		itemFactory = new DoneListItemFactory();
 
-	}
-
-	@Override
-	public int getCount() {
-		return items.size();
-	}
-
-	@Override
-	public DoneListItem getItem(int position) {
-		return items.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return items.get(position).getId();
 	}
 
 	@Override
@@ -66,12 +39,6 @@ public class DoneListAdapter extends BaseAdapter {
 		wrapper.getInformationTextView().setText(item.getInformation());
 
 		return row;
-	}
-
-	public void reFetchData() {
-		List<DoneListItem> newItems = itemFactory.getItemList(model.getProcessData());
-		this.items = newItems;
-		this.notifyDataSetChanged();
 	}
 
 }

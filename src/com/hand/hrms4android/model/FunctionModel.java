@@ -1,6 +1,7 @@
 package com.hand.hrms4android.model;
 
 import static com.hand.hrms4android.listable.item.FunctionItem.DONE_ITEM_ID;
+import static com.hand.hrms4android.listable.item.FunctionItem.OTHER_ITEM_ID;
 import static com.hand.hrms4android.listable.item.FunctionItem.TODO_ITEM_ID;
 
 import java.util.ArrayList;
@@ -71,8 +72,9 @@ public class FunctionModel extends AbstractListModel<Object> {
 		item.clear();
 
 		item.add(new FunctionSection("工作流"));
-		item.add(new FunctionItem(TODO_ITEM_ID, "待办事项", "bundle://envelope_info.png", "",R.drawable.envelope_info));
-		item.add(new FunctionItem(DONE_ITEM_ID, "已审批", "bundle://cancel_red.png", "",R.drawable.envelope_open_checkmark));
+		item.add(new FunctionItem(TODO_ITEM_ID, "待办事项", "bundle://envelope_info.png", "", R.drawable.envelope_info));
+		item.add(new FunctionItem(DONE_ITEM_ID, "已审批", "bundle://cancel_red.png", "",
+		        R.drawable.envelope_open_checkmark));
 		return item;
 	}
 
@@ -87,8 +89,8 @@ public class FunctionModel extends AbstractListModel<Object> {
 			JSONArray items = sectionJson.getJSONArray("items");
 			for (int j = 0; j < items.length(); j++) {
 				JSONObject itemJson = items.getJSONObject(j);
-				listItems.add(new FunctionItem(itemJson.getString("functionType"), itemJson.getString("title"),
-				        itemJson.getString("image_url"), itemJson.getString("url")));
+				listItems.add(new FunctionItem(OTHER_ITEM_ID, itemJson.getString("title"), itemJson
+				        .getString("image_url"), itemJson.getString("url")));
 			}
 		}
 		return listItems;

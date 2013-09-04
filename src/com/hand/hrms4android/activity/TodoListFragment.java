@@ -57,6 +57,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 
 	@Override
 	public void onAttach(Activity activity) {
+		System.out.println("eeeeeeeeeeeeee");
 		super.onAttach(activity);
 	}
 
@@ -70,9 +71,8 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
-		getSherlockActivity().setTitle(R.string.title_activity_todo_list);
 		buildResource();
+		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
 		this.model.load(LoadType.Local, null);
 	}
 

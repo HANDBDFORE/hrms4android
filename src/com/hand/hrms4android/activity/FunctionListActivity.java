@@ -1,5 +1,7 @@
 package com.hand.hrms4android.activity;
 
+import static com.hand.hrms4android.listable.item.FunctionItem.TODO_ITEM_ID;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +9,6 @@ import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -38,13 +40,14 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
 
-	private String mCurrentFragmentTag = FunctionItem.TODO_ITEM_ID;
-
 	protected MenuDrawer mMenuDrawer;
 	private TextView userTextView;
 
 	private FunctionListAdapter mFunctionListAdapter;
 	private ListView mFunctionList;
+
+	private FunctionItem currentFunctionItem = new FunctionItem(TODO_ITEM_ID, "待办事项", "bundle://envelope_info.png", "",
+	        R.drawable.envelope_info);
 
 	private Model functionListModel;
 
@@ -56,7 +59,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, getDrawerPosition(), getDragMode());
 		mMenuDrawer.setMenuView(R.layout.activity_function_list);
-		mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_FULLSCREEN);
+		mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
 		mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
 		mMenuDrawer.setDrawerIndicatorEnabled(true);
 		mMenuDrawer.setOnInterceptMoveEventListener(new MenuDrawer.OnInterceptMoveEventListener() {
@@ -82,7 +85,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 		mFragmentManager = getSupportFragmentManager();
 		// mCurrentFragmentTag = ((Item) mAdapter.getItem(0)).mTitle;
-		attachFragment(mMenuDrawer.getContentContainer().getId(), getFragment(FunctionItem.TODO_ITEM_ID),
+		attachFragment(mMenuDrawer.getContentContainer().getId(), getFragment(currentFunctionItem),
 		        FunctionItem.TODO_ITEM_ID);
 		commitTransactions();
 
@@ -96,7 +99,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 		userTextView = (TextView) base.findViewById(R.id.function_activity_user);
 		userTextView.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(
-		        Constrants.SYS_PREFRENCES_USER_DESCRIPTION, ""));
+		        Constrants.SYS_PREFRENCES_USERNAME, ""));
 
 		mFunctionList = (ListView) base.findViewById(android.R.id.list);
 		mFunctionListAdapter = new FunctionListAdapter(this, new ArrayList<Object>(), mFunctionList);
@@ -123,19 +126,19 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 		return mFragmentTransaction;
 	}
 
-	private Fragment getFragment(String tag) {
-		Fragment f = mFragmentManager.findFragmentByTag(tag);
+	private Fragment getFragment(FunctionItem function) {
+		Fragment f = mFragmentManager.findFragmentByTag(function.getFunctionId());
 
 		if (f == null) {
 
-			if (tag.equals(FunctionItem.OTHER_ITEM_ID)) {
+			if (function.getFunctionId().equals(FunctionItem.OTHER_ITEM_ID)) {
 				Bundle bundle = new Bundle();
-				bundle.putString("url", "baidu.com");
-				bundle.putString("title", "Hi");
+				bundle.putString("url", function.getUrl());
+				bundle.putString("title", function.getText());
 				return Fragment.instantiate(this, "com.hand.hrms4android.activity.HTMLFragment", bundle);
 			}
 
-			return Fragment.instantiate(this, tag);
+			return Fragment.instantiate(this, function.getFunctionId());
 		}
 		return f;
 	}
@@ -188,17 +191,20 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	@Override
 	public void onItemClick(AdapterView<?> listview, View row, int position, long id) {
 		Object o = mFunctionListAdapter.getItem(position);
-
 		if (o instanceof FunctionItem) {
 			FunctionItem item = (FunctionItem) o;
-
-			Fragment currentFragment = getFragment(mCurrentFragmentTag);
-			Fragment targetFragment = getFragment(item.getFunctionId());
-			mCurrentFragmentTag = item.getFunctionId();
+			Fragment currentFragment = getFragment(currentFunctionItem);
+			Fragment targetFragment = getFragment(item);
+			currentFunctionItem = item;
 
 			hideFragment(currentFragment, targetFragment, mMenuDrawer.getContentContainer().getId(),
 			        item.getFunctionId());
 			commitTransactions();
+
+			if (targetFragment instanceof OnFragmentSelectListener) {
+				((OnFragmentSelectListener) targetFragment).onSelected(o);
+			}
+
 		}
 		mMenuDrawer.closeMenu();
 	}
@@ -231,33 +237,31 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	@Override
 	public void onBackPressed() {
 		final int drawerState = mMenuDrawer.getDrawerState();
-		if (drawerState == MenuDrawer.STATE_OPEN || drawerState == MenuDrawer.STATE_OPENING) {
-			mMenuDrawer.closeMenu();
+		if (drawerState == MenuDrawer.STATE_CLOSED || drawerState == MenuDrawer.STATE_CLOSING) {
+			mMenuDrawer.openMenu();
 			return;
 		}
 
 		super.onBackPressed();
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-        case android.R.id.home:
-            mMenuDrawer.toggleMenu();
-            return true;
-    }
-	    return super.onOptionsItemSelected(item);
+		case android.R.id.home:
+			mMenuDrawer.toggleMenu();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void modelFailedLoad(Exception e, Model<? extends Object> model) {
-		// TODO Auto-generated method stub
-
+		Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void setModel(Model<? extends Object> model) {
-		// TODO Auto-generated method stub
 
 	}
 

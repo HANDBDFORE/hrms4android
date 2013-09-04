@@ -43,21 +43,16 @@ public class XmlConfigReader implements ConfigReader {
 		xmlInputSource = new InputSource(inputStream);
 	}
 
-	public static XmlConfigReader createInstanceByInputStream(InputStream inputStream) {
+	public static XmlConfigReader getInstance() {
 		if (configReader == null) {
+
+			File dir = HrmsApplication.getApplication().getDir(Constrants.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
+			        Context.MODE_PRIVATE);
 			try {
-				configReader = new XmlConfigReader(inputStream);
+				configReader = new XmlConfigReader(new File(dir, "android-backend-config.xml"));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-		}
-
-		return configReader;
-	}
-
-	public static XmlConfigReader getInstance() {
-		if (configReader == null) {
-			throw new RuntimeException("must call createInstanceByInputStream before use this class");
 		}
 		return configReader;
 	}
@@ -72,9 +67,6 @@ public class XmlConfigReader implements ConfigReader {
 		XPath xpath = XPathFactory.newInstance().newXPath();
 		InputStream configFileInputStream = null;
 		try {
-			// TODO 重构
-//			configFileInputStream = HrmsApplication.getApplication().getAssets().open("android-backend-config.xml");
-//			xmlInputSource = new InputSource(configFileInputStream);
 
 			File dir = HrmsApplication.getApplication().getDir(Constrants.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
 			        Context.MODE_PRIVATE);

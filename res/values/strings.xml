@@ -28,7 +28,7 @@
     <string name="activity_diliver_prompt_to">deliver to</string>
 
     <!-- ///// 功能语言 //// -->
-    <string name="title_activity_function_list">Functions</string>
+    <string name="title_activity_function_list">移动商务</string>
     <string name="title_activity_html"></string>
     <string name="title_activity_done_list">DoneListActivity</string>
     <string name="hello_world">Hello world!</string>

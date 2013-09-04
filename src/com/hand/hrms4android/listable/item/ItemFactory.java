@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.hand.hrms4android.listable.doman.TodoListDomain;
 
-public interface ItemFactory<E extends BaseListItem> {
-	E getItem(TodoListDomain record);
+public interface ItemFactory<E extends BaseListItem,S> {
+	E getItem(S record);
 
-	List<E> getItemList(List<TodoListDomain> dataset);
+	List<E> getItemList(List<S> dataset);
 }

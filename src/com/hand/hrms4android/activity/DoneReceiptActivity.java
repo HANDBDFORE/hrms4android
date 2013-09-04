@@ -2,33 +2,19 @@ package com.hand.hrms4android.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.exception.ParseExpressionException;
-import com.hand.hrms4android.listable.doman.DoneListDomain;
+import com.hand.hrms4android.listable.item.DoneListItem;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.Expression;
 
-public class DoneReceiptActivity extends BaseReceiptActivity<DoneListDomain> {
-
-	private String urlKeyName;
+public class DoneReceiptActivity extends BaseReceiptActivity<DoneListItem> {
 
 	@Override
 	protected void afterSuperOnCreateFinish(Bundle savedInstanceState) {
 		super.afterSuperOnCreateFinish(savedInstanceState);
-
-		try {
-			urlKeyName = configReader
-			        .getAttr(new Expression(
-			                "/config/application/activity[@name='todo_list_activity']/request/url[@name='todo_list_query_url']/detail_page_url_column",
-			                "name"));
-
-			loadResources(getAbsolutePageUrl(listModel.currentItem()));
-		} catch (ParseExpressionException e) {
-			e.printStackTrace();
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+		loadResources(getAbsolutePageUrl(listModel.currentItem()));
 	}
 
 	@Override
@@ -39,8 +25,10 @@ public class DoneReceiptActivity extends BaseReceiptActivity<DoneListDomain> {
 			        .getAttr(new Expression(
 			                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='employee_card_url']",
 			                "value"));
-			//TODO
-//			info.cardInfoUrl = PlaceHolderReplacer.replaceForValue(listModel.currentItem(), configUrl);
+			// TODO
+			// info.cardInfoUrl =
+			// PlaceHolderReplacer.replaceForValue(listModel.currentItem(),
+			// configUrl);
 			info.cardInfoUrl = "";
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
@@ -50,7 +38,9 @@ public class DoneReceiptActivity extends BaseReceiptActivity<DoneListDomain> {
 		try {
 			String actionItemTextKeyName = configReader.getAttr(new Expression(
 			        "/config/application/activity[@name='approve_detail_activity']/view/employee_action_item", "text"));
-//			info.displayName = PlaceHolderReplacer.replaceForValue(listModel.currentItem(), actionItemTextKeyName);
+			// info.displayName =
+			// PlaceHolderReplacer.replaceForValue(listModel.currentItem(),
+			// actionItemTextKeyName);
 			info.displayName = "";
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
@@ -64,8 +54,8 @@ public class DoneReceiptActivity extends BaseReceiptActivity<DoneListDomain> {
 		loadResources(getAbsolutePageUrl(listModel.currentItem()));
 	}
 
-	private String getAbsolutePageUrl(DoneListDomain record) {
-		return NetworkUtil.getAbsoluteUrl(urlKeyName);
+	private String getAbsolutePageUrl(DoneListItem record) {
+		return NetworkUtil.getAbsoluteUrl(record.getScreenName());
 	}
 
 	private void loadResources(String absoluteUrl) {

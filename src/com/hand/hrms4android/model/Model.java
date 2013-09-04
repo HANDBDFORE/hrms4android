@@ -3,7 +3,7 @@ package com.hand.hrms4android.model;
 public interface Model<E extends Object> {
 
 	public enum LoadType {
-		Local, Network, LocalAndNetwork
+		Local, Network, LocalAndNetwork,NetworkMore
 	};
 
 	void load(LoadType loadType, Object param);
