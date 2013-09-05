@@ -5,9 +5,6 @@ import static com.hand.hrms4android.listable.item.FunctionItem.OTHER_ITEM_ID;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +15,6 @@ import android.widget.TextView;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.listable.item.FunctionSection;
-import com.hand.hrms4android.util.imageLoader.AsyncListImageManager;
-import com.hand.hrms4android.util.imageLoader.ScrollableViewImageLoadListener;
 
 public class FunctionListAdapter extends BaseAdapter {
 	private static final int TYPE_ITEM = 0;
@@ -28,15 +23,11 @@ public class FunctionListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private List<Object> datas;
 	private ListView mListView;
-	private ImageLoadCompleteListener imageLoadListener;
-	private AsyncListImageManager asyncImageManager;
 
 	public FunctionListAdapter(Context context, List<Object> datas, ListView listview) {
 		this.datas = datas;
 		this.mListView = listview;
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageLoadListener = new ImageLoadCompleteListener();
-		asyncImageManager = new AsyncListImageManager();
 	}
 
 	@Override
@@ -100,10 +91,7 @@ public class FunctionListAdapter extends BaseAdapter {
 
 			if (item.getFunctionId().equals(OTHER_ITEM_ID)) {
 				// 设置默认图片
-				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(R.drawable.picture_placeholder, 0, 0, 0);
-				// 然后尝试加载
-				asyncImageManager.prepareLoadImageThread(Integer.valueOf(position), item.getImageUrl(),
-				        imageLoadListener);
+				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(R.drawable.hd_ic_other, 0, 0, 0);
 			} else {
 				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(item.getIconRes(), 0, 0, 0);
 			}
@@ -137,32 +125,6 @@ public class FunctionListAdapter extends BaseAdapter {
 	@Override
 	public boolean isEnabled(int position) {
 		return getItem(position) instanceof FunctionItem;
-	}
-
-	/**
-	 * [简要描述]: [详细描述]:
-	 * 
-	 * @author [Emerson]
-	 * 
-	 * @version [版本号,Aug 22, 2012]
-	 */
-	private class ImageLoadCompleteListener implements ScrollableViewImageLoadListener {
-		@Override
-		public void onImageLoad(Integer rowPosition, Bitmap bitmap) {
-			// 找到图像所在行
-			View row = mListView.findViewWithTag(rowPosition);
-			if (row != null) {
-				FunctionListCellWrapper wrapper = (FunctionListCellWrapper) row
-				        .getTag(R.id.function_list_row_tag_wrapper);
-				wrapper.getTitle()
-				        .setCompoundDrawablesWithIntrinsicBounds(new BitmapDrawable(bitmap), null, null, null);
-			}
-		}
-
-		@Override
-		public void onError(Integer rowPosition) {
-			Log.d("onImageLoad", "onError! " + rowPosition);
-		}
 	}
 
 	public void setDatas(List<Object> datas) {

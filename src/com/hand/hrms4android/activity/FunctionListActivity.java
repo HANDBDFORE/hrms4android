@@ -1,6 +1,6 @@
 package com.hand.hrms4android.activity;
 
-import static com.hand.hrms4android.listable.item.FunctionItem.TODO_ITEM_ID;
+import static com.hand.hrms4android.listable.item.FunctionItem.todoItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +46,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	private FunctionListAdapter mFunctionListAdapter;
 	private ListView mFunctionList;
 
-	private FunctionItem currentFunctionItem = new FunctionItem(TODO_ITEM_ID, "待办事项", "bundle://envelope_info.png", "",
-	        R.drawable.envelope_info);
+	private FunctionItem currentFunctionItem = todoItem;
 
 	private Model functionListModel;
 

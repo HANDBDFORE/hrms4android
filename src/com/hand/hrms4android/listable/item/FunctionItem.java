@@ -1,5 +1,7 @@
 package com.hand.hrms4android.listable.item;
 
+import com.hand.hrms4android.R;
+
 public class FunctionItem {
 
 	/**
@@ -16,6 +18,11 @@ public class FunctionItem {
 	 * 其他
 	 */
 	public static final String OTHER_ITEM_ID = "com.hand.hrms4android.activity.HTMLFragment";
+
+	public static final FunctionItem todoItem = new FunctionItem(TODO_ITEM_ID, "待办事项", "bundle://envelope_info.png",
+	        "", R.drawable.hd_ic_todo);
+	public static final FunctionItem doneItem = new FunctionItem(DONE_ITEM_ID, "已审批", "bundle://cancel_red.png", "",
+	        R.drawable.hd_ic_done);
 
 	private String functionId;
 	private String text;
