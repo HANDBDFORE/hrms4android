@@ -22,22 +22,20 @@
     <!-- ================= end ====================== -->
     <application
         android:name="com.hand.hrms4android.application.HrmsApplication"
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock.Light" >
+        android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name="com.hand.hrms4android.activity.LoadingActivity"
             android:launchMode="singleTop" >
-             <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.hand.hrms4android.activity.LoginActivity"
-            android:theme="@style/Theme.Sherlock.Light" >
+        <activity android:name="com.hand.hrms4android.activity.LoginActivity" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.ApproveDetailActivity"
@@ -51,7 +49,7 @@
         <activity
             android:name="com.hand.hrms4android.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.Sherlock" >
+            android:theme="@style/Theme.AppCompat" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.DeliverActivity"
@@ -90,9 +88,15 @@
         </activity>
 
         <!-- =========================配置的第三方参数属性====================== -->
-		<meta-data android:name="appid" android:value="Ytk0ePKK6k65cRd8BGRN17" />
-		<meta-data android:name="appkey" android:value="tYaDvmhEbj8VTgQYZaEJP4" />
-		<meta-data android:name="appsecret" android:value="e1f4ZVg35n8tywU9XvBmm" />
+        <meta-data
+            android:name="appid"
+            android:value="Ytk0ePKK6k65cRd8BGRN17" />
+        <meta-data
+            android:name="appkey"
+            android:value="tYaDvmhEbj8VTgQYZaEJP4" />
+        <meta-data
+            android:name="appsecret"
+            android:value="e1f4ZVg35n8tywU9XvBmm" />
 
         <activity
             android:name="com.igexin.sdk.SdkActivity"

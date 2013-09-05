@@ -1,4 +1,4 @@
-package com.hand.hrms4android.activity;
+package com.hand.hrms4android.app;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -17,15 +19,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.activity.FunctionListActivity;
+import com.hand.hrms4android.activity.LoginActivity;
+import com.hand.hrms4android.activity.SettingsActivity;
+import com.hand.hrms4android.core.HDAbstractActivityController;
+import com.hand.hrms4android.core.HDAbstractModel;
+import com.hand.hrms4android.core.Model;
+import com.hand.hrms4android.core.Model.LoadType;
 import com.hand.hrms4android.exception.ParseException;
-import com.hand.hrms4android.model.AbstractBaseModel;
-import com.hand.hrms4android.model.AutoLoginModel;
-import com.hand.hrms4android.model.LoadingModel;
-import com.hand.hrms4android.model.Model;
-import com.hand.hrms4android.model.Model.LoadType;
+import com.hand.hrms4android.model.refactor.AutoLoginModel;
+import com.hand.hrms4android.model.refactor.LoadingModel;
 import com.hand.hrms4android.util.Constrants;
 
-public class LoadingActivity extends ActionBarActivity {
+public class LoadingActivity extends HDAbstractActivityController {
 
 	private static final int MODEL_LOADING = 0;
 	private static final int MODEL_AUTO_LOGIN = 1;
@@ -37,13 +43,13 @@ public class LoadingActivity extends ActionBarActivity {
 	private TextView informationTextView;
 	private ImageView alertImage;
 
-	private AbstractBaseModel<Void> autoLoginModel;
+	private HDAbstractModel autoLoginModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading);
-		bindAllViews(); 
+		bindAllViews();
 
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		model = new LoadingModel(MODEL_LOADING, this);
@@ -58,13 +64,13 @@ public class LoadingActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_loading, menu);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_loading, menu);
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_settings) {
 			startSettingsActivity();
 		}
@@ -95,15 +101,16 @@ public class LoadingActivity extends ActionBarActivity {
 	public void modelDidFinishedLoad(Model model) {
 		if (model.getModelId() == MODEL_LOADING) {
 
-			//TODO 自动登录
-//			if (mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN, "").length() != 0) {
-//				autoLoginModel.load(LoadType.Network, getAutoLoginParams());
-//				return;
-//			}
-//
-//			else {
-				startLoginActivity();
-//			}
+			// TODO 自动登录
+			// if (mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN,
+			// "").length() != 0) {
+			// autoLoginModel.load(LoadType.Network, getAutoLoginParams());
+			// return;
+			// }
+			//
+			// else {
+			startLoginActivity();
+			// }
 
 		}
 
@@ -131,15 +138,15 @@ public class LoadingActivity extends ActionBarActivity {
 	private Map<String, String> getAutoLoginParams() {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(Constrants.SYS_PREFRENCES_TOKEN, mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN, ""));
-		
+
 		String device_token = mPreferences.getString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, "");
 		params.put("device_type", Constrants.SYS_ATTS_DEVICE_TYPE);
-		params.put(Constrants.SYS_ATTS_DEVICE_ID, ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
-				.getDeviceId());
-		
-		if (device_token.length()!=0) {
+		params.put(Constrants.SYS_ATTS_DEVICE_ID,
+		        ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId());
+
+		if (device_token.length() != 0) {
 			params.put("device_token", device_token);
-        }
+		}
 		return params;
 	}
 
@@ -216,4 +223,5 @@ public class LoadingActivity extends ActionBarActivity {
 		reloadButton.setVisibility(View.INVISIBLE);
 		alertImage.setVisibility(View.INVISIBLE);
 	}
+
 }

@@ -1,10 +1,11 @@
-package com.hand.hrms4android.model;
+package com.hand.hrms4android.model.refactor;
 
 import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.hand.hrms4android.activity.ModelActivity;
+import com.hand.hrms4android.core.HDAbstractModel;
+import com.hand.hrms4android.core.ModelViewController;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.ConfigReader;
@@ -13,12 +14,12 @@ import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.UMJsonHttpResponseHandler;
 
-public class AutoLoginModel extends AbstractBaseModel<Void> {
+public class AutoLoginModel extends HDAbstractModel {
 
 	private ConfigReader configReader;
 
-	public AutoLoginModel(int id, ModelActivity activity) {
-		super(id, activity);
+	public AutoLoginModel(int id, ModelViewController controller) {
+		super(id, controller);
 		configReader = XmlConfigReader.getInstance();
 	}
 
@@ -36,22 +37,27 @@ public class AutoLoginModel extends AbstractBaseModel<Void> {
 			                "value"));
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
-			activity.modelFailedLoad(new Exception("Cannot get url from config file! "), this);
+			controller.modelFailedLoad(new Exception("Cannot get url from config file! "), this);
 			return;
 		}
 
 		NetworkUtil.post(service, params, new UMJsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, JSONObject response) {
-				activity.modelDidFinishedLoad(AutoLoginModel.this);
+				controller.modelDidFinishedLoad(AutoLoginModel.this);
 			}
 
 			@Override
 			public void onFailure(Throwable error, String content) {
-				activity.modelFailedLoad(new Exception(error.getMessage()), AutoLoginModel.this);
+				controller.modelFailedLoad(new Exception(error.getMessage()), AutoLoginModel.this);
 			}
 
 		});
+	}
+
+	@Override
+	public <T> T getProcessData() {
+		throw new UnsupportedOperationException("不支持");
 	}
 
 }
