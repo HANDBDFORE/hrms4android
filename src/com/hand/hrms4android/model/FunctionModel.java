@@ -71,9 +71,53 @@ public class FunctionModel extends AbstractListModel<Object> {
 
 		item.clear();
 
-		item.add(new FunctionSection("工作流"));
-		item.add(todoItem);
-		item.add(doneItem);
+		// ++++++++++++++++++是否显示工作流标题
+		boolean display = true;
+		try {
+			display = Boolean.parseBoolean(configReader.getAttr(new Expression(
+			        "/config/application/activity[@name='function_list_activity']/view/workflow_item_section",
+			        "display")));
+		} catch (ParseExpressionException e) {
+			e.printStackTrace();
+			// 如果没有找到这一项，说明是老版本，应该显示
+			display = true;
+		}
+
+		if (display) {
+			item.add(new FunctionSection("工作流"));
+		}
+		// ++++++++++++++++++
+
+		// ++++++++++++++++++是否显示待办事项
+		display = true;
+		try {
+			display = Boolean.parseBoolean(configReader.getAttr(new Expression(
+			        "/config/application/activity[@name='function_list_activity']/view/todo_item", "display")));
+		} catch (ParseExpressionException e) {
+			e.printStackTrace();
+			// 如果没有找到这一项，说明是老版本，应该显示
+			display = true;
+		}
+
+		if (display) {
+			item.add(todoItem);
+		}
+
+		// ++++++++++++++++++是否显示完成事项
+		display = true;
+		try {
+			display = Boolean.parseBoolean(configReader.getAttr(new Expression(
+			        "/config/application/activity[@name='function_list_activity']/view/done_item", "display")));
+		} catch (ParseExpressionException e) {
+			e.printStackTrace();
+			// 如果没有找到这一项，说明是老版本，应该显示
+			display = true;
+		}
+
+		if (display) {
+			item.add(doneItem);
+		}
+		
 		return item;
 	}
 

@@ -82,17 +82,15 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 		});
 		bindAllViews(mMenuDrawer.getMenuView());
 
-		mFragmentManager = getSupportFragmentManager();
-		// mCurrentFragmentTag = ((Item) mAdapter.getItem(0)).mTitle;
-		attachFragment(mMenuDrawer.getContentContainer().getId(), getFragment(currentFunctionItem),
-		        FunctionItem.TODO_ITEM_ID);
-		commitTransactions();
+		
 
 		this.functionListModel = new FunctionModel(0, this);
 
 		System.out.println("onCreateonCreateonCreateonCreateonCreateonCreateonCreate");
 		this.functionListModel.load(LoadType.Network, null);
 	}
+
+	
 
 	private void bindAllViews(View base) {
 
@@ -182,10 +180,33 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	}
 
 	@Override
-	public void modelDidFinishedLoad(Model<? extends Object> model) {
+	public void modelDidFinishedLoad(Model model) {
 		List<Object> items = (List<Object>) model.getProcessData();
 		mFunctionListAdapter.setDatas(items);
+		selectFragment(items);
 	}
+	
+	/**
+	 * 
+	 */
+    private void selectFragment(List<Object> items) {
+	    //
+    	
+    	for (int i = 0; i < items.size(); i++) {
+	        Object o=items.get(i);
+	        if (o instanceof FunctionItem) {
+	        	//列表中第一个不是section的数据项
+	        	currentFunctionItem = (FunctionItem) o;
+	        	break;
+            }
+        }
+    	
+		mFragmentManager = getSupportFragmentManager();
+		// mCurrentFragmentTag = ((Item) mAdapter.getItem(0)).mTitle;
+		attachFragment(mMenuDrawer.getContentContainer().getId(), getFragment(currentFunctionItem),
+		        FunctionItem.TODO_ITEM_ID);
+		commitTransactions();
+    }
 
 	@Override
 	public void onItemClick(AdapterView<?> listview, View row, int position, long id) {

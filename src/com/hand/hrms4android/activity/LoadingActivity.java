@@ -95,15 +95,15 @@ public class LoadingActivity extends ActionBarActivity {
 	public void modelDidFinishedLoad(Model model) {
 		if (model.getModelId() == MODEL_LOADING) {
 
-			//TODO 自动登录
-//			if (mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN, "").length() != 0) {
-//				autoLoginModel.load(LoadType.Network, getAutoLoginParams());
-//				return;
-//			}
-//
-//			else {
+//			TODO 自动登录
+			if (mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN, "").length() != 0) {
+				autoLoginModel.load(LoadType.Network, getAutoLoginParams());
+				return;
+			}
+
+			else {
 				startLoginActivity();
-//			}
+			}
 
 		}
 
