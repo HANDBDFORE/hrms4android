@@ -1,4 +1,4 @@
-package com.hand.hrms4android.activity;
+package com.hand.hrms4android.app;
 
 import java.net.URLEncoder;
 import java.util.List;
@@ -6,24 +6,21 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
-import com.hand.hrms4android.exception.ParseExpressionException;
+import com.hand.hrms4android.core.Model;
+import com.hand.hrms4android.core.Model.LoadType;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.model.ApproveDetailActionModel;
-import com.hand.hrms4android.model.Model;
-import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.network.NetworkUtil;
-import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 import com.hand.hrms4android.pojo.ApproveAction;
 import com.hand.hrms4android.util.Constrants;
 
-public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
+public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain>{
 	private static final int REQUEST_ACTIVITY_OPINION = 1;
 	private static final int REQUEST_ACTIVITY_DELIVER = 2;
 
@@ -58,9 +55,10 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
-		actions = (List<ApproveAction>) model.getProcessData();
+		actions =  model.getProcessData();
 		super.invalidateOptionsMenu();
 	}
+	
 
 	@Override
 	protected void onPageableOptionsItemSelected(MenuItem item) {
@@ -103,37 +101,38 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	protected EmployeeCardInfo getEmployeeCardParams() {
-		EmployeeCardInfo info = new EmployeeCardInfo();
-		try {
-			String configUrl = configReader
-			        .getAttr(new Expression(
-			                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='employee_card_url']",
-			                "value"));
-			// info.cardInfoUrl =
-			// PlaceHolderReplacer.replaceForValue(listModel.currentItem(),
-			// configUrl);
-			info.cardInfoUrl = "";
-		} catch (ParseExpressionException e) {
-			e.printStackTrace();
-			info.cardInfoUrl = "";
-		}
-
-		try {
-			String actionItemTextKeyName = configReader.getAttr(new Expression(
-			        "/config/application/activity[@name='approve_detail_activity']/view/employee_action_item", "text"));
-			// info.displayName =
-			// PlaceHolderReplacer.replaceForValue(listModel.currentItem(),
-			// actionItemTextKeyName);
-			// TODO 决定是否需要
-			info.displayName = "";
-		} catch (ParseExpressionException e) {
-			e.printStackTrace();
-			info.displayName = "";
-		}
-		return info;
-	}
+	//FIXME 取消此功能
+//	@Override
+//	protected EmployeeCardInfo getEmployeeCardParams() {
+//		EmployeeCardInfo info = new EmployeeCardInfo();
+//		try {
+//			String configUrl = configReader
+//			        .getAttr(new Expression(
+//			                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='employee_card_url']",
+//			                "value"));
+//			// info.cardInfoUrl =
+//			// PlaceHolderReplacer.replaceForValue(listModel.currentItem(),
+//			// configUrl);
+//			info.cardInfoUrl = "";
+//		} catch (ParseExpressionException e) {
+//			e.printStackTrace();
+//			info.cardInfoUrl = "";
+//		}
+//
+//		try {
+//			String actionItemTextKeyName = configReader.getAttr(new Expression(
+//			        "/config/application/activity[@name='approve_detail_activity']/view/employee_action_item", "text"));
+//			// info.displayName =
+//			// PlaceHolderReplacer.replaceForValue(listModel.currentItem(),
+//			// actionItemTextKeyName);
+//			// TODO 决定是否需要
+//			info.displayName = "";
+//		} catch (ParseExpressionException e) {
+//			e.printStackTrace();
+//			info.displayName = "";
+//		}
+//		return info;
+//	}
 
 	private String getAbsolutePageUrl(TodoListDomain record) {
 		StringBuilder sb = new StringBuilder(record.getScreenName());
@@ -215,7 +214,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 		MenuItem generateMenuItem(int index, Menu menu) {
 			MenuItem item = null;
 			item = menu.add(GROUP_ACTION, R.id.approve_detail_action, index, action.actionTitle);
-			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			//FIXME 按钮
+//			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 			item.setIcon(R.drawable.ic_approve_agree);
 			item.setIntent(prepareIntent(action));
 			return item;
@@ -231,7 +231,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 		MenuItem generateMenuItem(int index, Menu menu) {
 			MenuItem item = null;
 			item = menu.add(GROUP_ACTION, R.id.approve_detail_action, index, action.actionTitle);
-			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			//FIXME 按钮
+//			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 			item.setIcon(R.drawable.ic_approve_refuse);
 			item.setIntent(prepareIntent(action));
 			return item;
@@ -247,7 +248,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 		MenuItem generateMenuItem(int index, Menu menu) {
 			MenuItem item = null;
 			item = menu.add(GROUP_ACTION, R.id.approve_detail_action_deliver, index, action.actionTitle);
-			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			//FIXME 按钮
+//			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 			item.setIcon(R.drawable.ic_menu_cc);
 			Intent intent = prepareIntent(action);
 			item.setIntent(intent);
@@ -264,10 +266,12 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 		MenuItem generateMenuItem(int index, Menu menu) {
 			MenuItem item = null;
 			item = menu.add(GROUP_ACTION, R.id.approve_detail_action, index, action.actionTitle);
-			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			//FIXME 按钮
+//			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 			item.setIcon(R.drawable.ic_compose);
 			item.setIntent(prepareIntent(action));
 			return item;
 		}
 	}
+
 }

@@ -6,7 +6,11 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -17,13 +21,13 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.app.ApproveDetailActivity;
+import com.hand.hrms4android.app.ApproveOpinionActivity;
+import com.hand.hrms4android.core.HDAbsRefreshableListFragmentController;
+import com.hand.hrms4android.core.Model;
+import com.hand.hrms4android.core.Model.LoadType;
 import com.hand.hrms4android.listable.adapter.TodoListAdapter;
-import com.hand.hrms4android.model.Model;
-import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.model.TodoListModel;
 import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 import com.hand.hrms4android.util.TempTransfer;
@@ -32,7 +36,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-public class TodoListFragment extends BaseSherlockFragment implements OnItemClickListener, OnItemLongClickListener {
+public class TodoListFragment extends HDAbsRefreshableListFragmentController implements OnItemClickListener, OnItemLongClickListener {
 	private static final int TODOLIST_ACTIVITY_BASE = 10;
 	private static final int REQUEST_ACTIVITY_DETAIL = TODOLIST_ACTIVITY_BASE + 1;
 	private static final int REQUEST_ACTIVITY_OPINION = TODOLIST_ACTIVITY_BASE + 2;
@@ -48,6 +52,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	private ImageButton reloadButton;
 	private TextView reloadText;
 
+	private ActionBarActivity actionBarActivity;
 	private ActionMode.Callback actionModeCallback;
 	private TodoListAdapter listAdapter;
 	private ActionMode mActionMode;
@@ -57,7 +62,11 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 
 	@Override
 	public void onAttach(Activity activity) {
-		System.out.println("eeeeeeeeeeeeee");
+		if(activity instanceof ActionBarActivity){
+			actionBarActivity = (ActionBarActivity)activity;
+		}else{
+			throw new RuntimeException("请使用 ActionBarActivity");
+		}
 		super.onAttach(activity);
 	}
 
@@ -72,7 +81,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		buildResource();
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
+		actionBarActivity.setSupportProgressBarIndeterminateVisibility(true);
 		this.model.load(LoadType.Local, null);
 	}
 
@@ -87,14 +96,14 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		todoListViewWrapper.getRefreshableView().setChoiceMode(ListView.CHOICE_MODE_NONE);
 		todoListViewWrapper.setOnRefreshListener(new PulldownListener());
 
-		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		actionBarActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		reloadButton = (ImageButton) root.findViewById(R.id.activity_todo_list_reload_button);
 		reloadButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				model.load(LoadType.Network, null);
 				reloadButton.setEnabled(false);
-				getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
+				actionBarActivity.setSupportProgressBarIndeterminateVisibility(true);
 			}
 		});
 		reloadText = (TextView) root.findViewById(R.id.activity_todo_list_reload_text);
@@ -102,14 +111,14 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	}
 
 	private void buildResource() {
-		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		actionBarActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		listModel = new TodoListModel(MODEL_TODO, this);
 		this.model = listModel;
 
 		actionModeCallback = new ActionModeOfApproveCallback();
 		mActionMode = null;
 
-		listAdapter = new TodoListAdapter(getSherlockActivity(), listModel);
+		listAdapter = new TodoListAdapter(this.getActivity(), listModel);
 		todoListViewWrapper.setAdapter(listAdapter);
 
 	}
@@ -126,10 +135,10 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		}
 
 		if (listModel.needLoadOnceMore()) {
-			getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
+			actionBarActivity.setSupportProgressBarIndeterminateVisibility(true);
 			listModel.load(LoadType.Network, null);
 		} else {
-			getSherlockActivity().setSupportProgressBarIndeterminateVisibility(false);
+			actionBarActivity.setSupportProgressBarIndeterminateVisibility(false);
 			todoListViewWrapper.onRefreshComplete();
 		}
 
@@ -137,7 +146,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 
 	@Override
 	public void modelFailedLoad(Exception e, Model model) {
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(false);
+		actionBarActivity.setSupportProgressBarIndeterminateVisibility(false);
 		todoListViewWrapper.onRefreshComplete();
 
 		// 如果没有数据，显示重试按钮
@@ -151,7 +160,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		// 启动多选
-		mActionMode = getSherlockActivity().startActionMode(actionModeCallback);
+		mActionMode = actionBarActivity.startSupportActionMode(actionModeCallback);
 		mActionMode.setTitle("批量审批");
 		multiChoiceMode = true;
 
@@ -189,7 +198,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		// 非多选状态
 		else {
 			// 启动明细页面
-			Intent intent = new Intent(getSherlockActivity(), ApproveDetailActivity.class);
+			Intent intent = new Intent(getActivity(), ApproveDetailActivity.class);
 			listModel.setRecordAsSelected(new IndexPath(0, getCorrectRowPosition(position)));
 
 			// 因为此model不是可序列化，因此不能以extra形式传送
@@ -206,7 +215,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		// 如果是从 明细页面 或者是 意见页
 		if ((requestCode == REQUEST_ACTIVITY_DETAIL) || (requestCode == REQUEST_ACTIVITY_OPINION)) {
 			// 确定提交动作
-			if (resultCode == getSherlockActivity().RESULT_OK) {
+			if (resultCode == Activity.RESULT_OK) {
 				// 参数
 				Map<String, String> options = new HashMap<String, String>();
 
@@ -297,12 +306,13 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			menu.add(0, MENU_ID_APPROVE, 0, R.string.activity_todo_list_actionitem_approve)
-			        .setIcon(R.drawable.ic_approve_agree_dark).setTitle("同意")
-			        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-			menu.add(0, MENU_ID_DENY, 1, R.string.activity_todo_list_actionitem_deny)
-			        .setIcon(R.drawable.ic_approve_refuse_dark).setTitle("拒绝")
-			        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			//TODO 分析如何做到
+//			menu.add(0, MENU_ID_APPROVE, 0, R.string.activity_todo_list_actionitem_approve)
+//			        .setIcon(R.drawable.ic_approve_agree_dark).setTitle("同意")
+//			        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//			menu.add(0, MENU_ID_DENY, 1, R.string.activity_todo_list_actionitem_deny)
+//			        .setIcon(R.drawable.ic_approve_refuse_dark).setTitle("拒绝")
+//			        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 			return true;
 		}
 
@@ -315,7 +325,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if ((item.getItemId() == MENU_ID_APPROVE) || (item.getItemId() == MENU_ID_DENY)) {
 
-				Intent opinionIntent = new Intent(getSherlockActivity(), ApproveOpinionActivity.class);
+				Intent opinionIntent = new Intent(getActivity(), ApproveOpinionActivity.class);
 
 				if (item.getItemId() == MENU_ID_APPROVE) {
 					// 同意
@@ -352,5 +362,11 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 			listModel.load(LoadType.Network, null);
 		}
 	}
+
+	@Override
+    protected int pulldownViewId() {
+	    // TODO Auto-generated method stub
+	    return 0;
+    }
 
 }

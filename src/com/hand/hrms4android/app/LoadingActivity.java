@@ -20,15 +20,14 @@ import android.widget.Toast;
 
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.activity.FunctionListActivity;
-import com.hand.hrms4android.activity.LoginActivity;
 import com.hand.hrms4android.activity.SettingsActivity;
 import com.hand.hrms4android.core.HDAbstractActivityController;
 import com.hand.hrms4android.core.HDAbstractModel;
 import com.hand.hrms4android.core.Model;
 import com.hand.hrms4android.core.Model.LoadType;
 import com.hand.hrms4android.exception.ParseException;
-import com.hand.hrms4android.model.refactor.AutoLoginModel;
-import com.hand.hrms4android.model.refactor.LoadingModel;
+import com.hand.hrms4android.model.AutoLoginModel;
+import com.hand.hrms4android.model.LoadingModel;
 import com.hand.hrms4android.util.Constrants;
 
 public class LoadingActivity extends HDAbstractActivityController {

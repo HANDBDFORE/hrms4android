@@ -2,6 +2,7 @@ package com.hand.hrms4android.core;
 
 import com.android.volley.RequestQueue;
 import com.hand.hrms4android.network.RequestManager;
+import com.hand.hrms4android.util.LogUtil;
 
 public abstract class HDAbstractModel implements Model {
 	private int modelId;
@@ -9,6 +10,8 @@ public abstract class HDAbstractModel implements Model {
 
 	protected boolean loading;
 	protected RequestQueue requestQueue;
+	
+	protected final Object requestTag = this.getClass();
 
 	public HDAbstractModel(int modelId, ModelViewController controller) {
 		this.modelId = modelId;
@@ -54,6 +57,11 @@ public abstract class HDAbstractModel implements Model {
 	@Override
 	public void onLoadingEnd() {
 		loading = false;
+	}
+
+	protected void handleError(Throwable e) {
+		controller.modelFailedLoad(new RuntimeException(e), this);
+		LogUtil.error(this, requestTag.getClass().getName(), e.getMessage());
 	}
 
 }

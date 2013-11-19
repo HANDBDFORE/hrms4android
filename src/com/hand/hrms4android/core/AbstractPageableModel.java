@@ -1,16 +1,18 @@
-package com.hand.hrms4android.model;
+package com.hand.hrms4android.core;
 
-import com.hand.hrms4android.activity.ModelActivity;
+import java.util.List;
+
 import com.hand.hrms4android.util.Aggregate;
 import com.hand.hrms4android.util.Iterator;
 import com.hand.hrms4android.util.data.IndexPath;
 
-public abstract class AbstractPageableModel<ListDataType> extends AbstractListModel<ListDataType> implements
+public abstract class AbstractPageableModel<ListDataType> extends HDAbstractModel implements
         Iterator<ListDataType>, Aggregate<ListDataType> {
 
 	protected IndexPath currentSelectedIndex;
+	protected List<ListDataType> data;
 
-	public AbstractPageableModel(int id, ModelActivity activity) {
+	public AbstractPageableModel(int id, ModelViewController activity) {
 		super(id, activity);
 		this.currentSelectedIndex = new IndexPath(0, 0);
 	}
@@ -80,14 +82,14 @@ public abstract class AbstractPageableModel<ListDataType> extends AbstractListMo
 	 * @return
 	 */
 	protected int getSize() {
-		return loadAuroraDataset.size();
+		return data.size();
 	}
 
 	/**
 	 * @return
 	 */
 	protected ListDataType getItemAtIndex(int index) {
-		return loadAuroraDataset.get(index);
+		return data.get(index);
 	}
 
 }

@@ -37,5 +37,9 @@
     <string name="title_activity_done_receipt">DoneReceiptActivity</string>
     <string name="title_activity_approve_detai">ApproveDetaiActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    
+    <!-- ///// 功能语言 //// -->
+    <string name="drawer_open">TestActivity</string>
+    <string name="drawer_close">TestActivity</string>
 
 </resources>

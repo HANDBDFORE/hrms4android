@@ -1,9 +1,12 @@
 package com.hand.hrms4android.activity;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +16,25 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.network.NetworkUtil;
 
-public class HTMLFragment extends SherlockFragment implements OnFragmentSelectListener{
+public class HTMLFragment extends Fragment implements OnFragmentSelectListener{
 
 	protected WebView contentWebView;
 	protected ProgressBar loadingProgress;
+	private ActionBarActivity actionBarActivity;
+	
+	@Override
+	public void onAttach(Activity activity) {
+	    super.onAttach(activity);
+	    if (activity instanceof ActionBarActivity) {
+	    	actionBarActivity = (ActionBarActivity)activity;
+        }else{
+        	throw new RuntimeException("请外层使用ActionBarActivity及子类");
+        }
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,7 +50,7 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 		webSettings.setJavaScriptEnabled(true);
 
 		loadingProgress = (ProgressBar) root.findViewById(R.id.html_base_activity_loading_progress);
-		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		actionBarActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -88,7 +101,7 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 				try {
 					startActivity(sendIntent);
 				} catch (ActivityNotFoundException e) {
-					Toast.makeText(getSherlockActivity(), "没有找到邮件客户端", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "没有找到邮件客户端", Toast.LENGTH_SHORT).show();
 				}
 				return true;
 			}

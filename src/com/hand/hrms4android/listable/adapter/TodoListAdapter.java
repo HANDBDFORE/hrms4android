@@ -12,23 +12,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.core.HDAbstractModel;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.listable.item.ItemFactory;
 import com.hand.hrms4android.listable.item.TodoListItem;
 import com.hand.hrms4android.listable.item.TodoListItemFactory;
-import com.hand.hrms4android.model.AbstractPageableModel;
 import com.hand.hrms4android.util.Constrants;
 
 public class TodoListAdapter extends BaseAdapter {
 
 	private LayoutInflater mLayoutInflater;
 	private List<String> selectedRecordIDs;
-	private AbstractPageableModel<TodoListDomain> model;
+	private HDAbstractModel model;
 	private List<TodoListItem> items;
 	private ItemFactory<TodoListItem,TodoListDomain> itemFactory;
 	private Context context;
 
-	public TodoListAdapter(Context context, AbstractPageableModel<TodoListDomain> model) {
+	public TodoListAdapter(Context context, HDAbstractModel model) {
 		this.context = context;
 		mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		selectedRecordIDs = new LinkedList<String>();
@@ -39,7 +39,7 @@ public class TodoListAdapter extends BaseAdapter {
 		// 转换显示值
 		if (model != null && model.getProcessData() != null) {
 
-			items = itemFactory.getItemList(model.getProcessData());
+			items = itemFactory.getItemList((List<TodoListDomain>) model.getProcessData());
 		}
 	}
 
@@ -74,7 +74,7 @@ public class TodoListAdapter extends BaseAdapter {
 		}
 
 		// 判断该行对应数值的状态
-		String recordLocalStatus = model.getProcessData().get(position).getStatus();
+		String recordLocalStatus = ((List<TodoListItem>) model.getProcessData()).get(position).getStatus();
 		if (recordLocalStatus.equals(Constrants.APPROVE_RECORD_STATUS_ERROR)) {
 			// 说明是出错项
 			wrapper.getErrorMessageTextView().setVisibility(View.VISIBLE);
@@ -153,14 +153,14 @@ public class TodoListAdapter extends BaseAdapter {
 	 */
 	public void reFetchData() {
 		if (this.model != null) {
-			this.items = itemFactory.getItemList(model.getProcessData());
+			this.items = itemFactory.getItemList((List<TodoListDomain>) model.getProcessData());
 		}
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public boolean isEnabled(int position) {
-		String localStatus = model.getProcessData().get(position).getStatus();
+		String localStatus = ((List<TodoListItem>) model.getProcessData()).get(position).getStatus();
 		if ((localStatus.equals(Constrants.APPROVE_RECORD_STATUS_WAITING))
 		        || (localStatus.equals(Constrants.APPROVE_RECORD_STATUS_DIFFERENT))) {
 			return false;

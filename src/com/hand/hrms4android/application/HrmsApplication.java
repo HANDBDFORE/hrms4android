@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.hand.hrms4android.network.RequestManager;
 import com.hand.hrms4android.util.PlatformUtil;
 import com.igexin.slavesdk.MessageManager;
 
@@ -40,6 +41,8 @@ public class HrmsApplication extends Application {
 		}
 		// 推送
 		MessageManager.getInstance().initialize(instance);
+		
+		RequestManager.init(this);
 
 	}
 

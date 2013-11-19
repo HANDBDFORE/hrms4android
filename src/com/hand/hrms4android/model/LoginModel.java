@@ -7,32 +7,41 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import com.hand.hrms4android.activity.ModelActivity;
+import com.android.volley.Request;
+import com.android.volley.Request.Method;
+import com.android.volley.Response;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
 import com.hand.hrms4android.application.HrmsApplication;
+import com.hand.hrms4android.core.HDAbstractModel;
+import com.hand.hrms4android.core.Model;
+import com.hand.hrms4android.core.ModelViewController;
 import com.hand.hrms4android.exception.ParseExpressionException;
+import com.hand.hrms4android.network.HDJsonObjectRequest;
+import com.hand.hrms4android.network.HDRequest;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.LogUtil;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.UMJsonHttpResponseHandler;
 
-public class LoginModel extends AbstractBaseModel<Void> {
+public class LoginModel extends HDAbstractModel {
 	private ConfigReader configReader;
 
 	public LoginModel(int id) {
 		this(id, null);
 	}
 
-	public LoginModel(int id, ModelActivity activity) {
+	public LoginModel(int id, ModelViewController activity) {
 		super(id, activity);
 		configReader = XmlConfigReader.getInstance();
 	}
 
 	@Override
 	public void load(Model.LoadType loadType, Object param) {
+		super.load(loadType, param);
+
 		String service = "";
 		try {
 			service = configReader.getAttr(new Expression(
@@ -40,34 +49,71 @@ public class LoginModel extends AbstractBaseModel<Void> {
 			        "value"));
 		} catch (ParseExpressionException e) {
 			e.printStackTrace();
-			activity.modelFailedLoad(new Exception("Cannot get url from config file! "), this);
+			controller.modelFailedLoad(new Exception("Cannot get url from config file! "), this);
 			return;
 		}
 
 		NetworkUtil.removeAllCookies();
 
-		NetworkUtil.post(service, (RequestParams) param, new UMJsonHttpResponseHandler() {
+		requestQueue.add(genRequest(this, param, service));
 
+		// NetworkUtil.post(service, (RequestParams) param, new
+		// UMJsonHttpResponseHandler() {
+		//
+		// @Override
+		// public void onSuccess(int statusCode, JSONObject response) {
+		// // 存储相关数据
+		// try {
+		// LoginModel.this.storeSomething(response.getJSONObject("body"));
+		// } catch (JSONException e) {
+		// e.printStackTrace();
+		// activity.modelFailedLoad(new Exception("error data"),
+		// LoginModel.this);
+		// }
+		//
+		// // 通知Activity已完成加载
+		// LoginModel.this.activity.modelDidFinishedLoad(LoginModel.this);
+		// }
+		//
+		// @Override
+		// public void onFailure(Throwable error, String content) {
+		// LogUtil.error(this, "request", "onFailure:" + content);
+		// activity.modelFailedLoad(new Exception(error), LoginModel.this);
+		// }
+		// });
+	}
+
+	private Request<JSONObject> genRequest(Object tag, Object param, String url) {
+		Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
 			@Override
-			public void onSuccess(int statusCode, JSONObject response) {
-				// 存储相关数据
+			public void onResponse(JSONObject response) {
+				onLoadingEnd();
 				try {
-					LoginModel.this.storeSomething(response.getJSONObject("body"));
+					// 存储相关数据
+					storeSomething(response);
+					// 通知Activity已完成加载
+					controller.modelDidFinishedLoad(LoginModel.this);
 				} catch (JSONException e) {
+					LogUtil.error(this, "request", "onFailure:" + response);
+					controller.modelFailedLoad(e, LoginModel.this);
 					e.printStackTrace();
-					activity.modelFailedLoad(new Exception("error data"), LoginModel.this);
 				}
-
-				// 通知Activity已完成加载
-				LoginModel.this.activity.modelDidFinishedLoad(LoginModel.this);
 			}
-
+		};
+		ErrorListener errorListener = new ErrorListener() {
 			@Override
-			public void onFailure(Throwable error, String content) {
-				LogUtil.error(this, "request", "onFailure:" + content);
-				activity.modelFailedLoad(new Exception(error), LoginModel.this);
+			public void onErrorResponse(VolleyError error) {
+				onLoadingEnd();
+				controller.modelFailedLoad(error, LoginModel.this);
 			}
-		});
+		};
+
+		HDRequest<JSONObject> request = new HDJsonObjectRequest(controller.getContext(), Method.POST,
+		        NetworkUtil.getAbsoluteUrl(url), param, listener, errorListener);
+
+		request.setTag(tag);
+
+		return request;
 	}
 
 	/**
@@ -85,9 +131,10 @@ public class LoginModel extends AbstractBaseModel<Void> {
 
 			if (record.has("encryted_session_id"))
 				editor.putString(Constrants.SYS_PREFRENCES_ENCRYTED_SESSION_ID, record.getString("encryted_session_id"));
-			
+
 			if (record.has(Constrants.SYS_PREFRENCES_USER_DESCRIPTION))
-				editor.putString(Constrants.SYS_PREFRENCES_USER_DESCRIPTION, record.getString(Constrants.SYS_PREFRENCES_USER_DESCRIPTION));
+				editor.putString(Constrants.SYS_PREFRENCES_USER_DESCRIPTION,
+				        record.getString(Constrants.SYS_PREFRENCES_USER_DESCRIPTION));
 		} finally {
 			editor.commit();
 		}
@@ -95,8 +142,8 @@ public class LoginModel extends AbstractBaseModel<Void> {
 	}
 
 	@Override
-	public int getModelId() {
-		return 0;
+	public <T> T getProcessData() {
+		return null;
 	}
 
 }

@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -12,10 +13,10 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.core.HDAbstractActivityController;
 
-public class HTMLBaseActivity extends ActionBarActivity {
+public abstract class HTMLBaseActivity extends HDAbstractActivityController {
 	protected WebView contentWebView;
 	protected ProgressBar loadingProgress;
 

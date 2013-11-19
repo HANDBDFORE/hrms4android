@@ -23,6 +23,7 @@ public abstract class HDAbsRefreshableListFragmentController extends HDAbstractF
 	 * 单屏
 	 */
 	protected boolean isSinglePanel;
+	
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {

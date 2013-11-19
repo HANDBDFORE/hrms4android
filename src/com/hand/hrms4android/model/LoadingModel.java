@@ -1,4 +1,4 @@
-package com.hand.hrms4android.model.refactor;
+package com.hand.hrms4android.model;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,7 +33,7 @@ public class LoadingModel extends HDAbstractModel {
 		requestQueue.add(genRequest(this, url));
 	}
 
-	private Request genRequest(Object tag, String url) {
+	private Request<String> genRequest(Object tag, String url) {
 		Response.Listener<String> listener = new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {

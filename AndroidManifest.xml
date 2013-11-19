@@ -27,7 +27,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
-            android:name="com.hand.hrms4android.activity.LoadingActivity"
+            android:name="com.hand.hrms4android.app.LoadingActivity"
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,15 +35,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.hand.hrms4android.activity.LoginActivity" >
+        <activity android:name="com.hand.hrms4android.app.LoginActivity" >
         </activity>
         <activity
-            android:name="com.hand.hrms4android.activity.ApproveDetailActivity"
+            android:name="com.hand.hrms4android.app.ApproveDetailActivity"
             android:label="明细"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity
-            android:name="com.hand.hrms4android.activity.ApproveOpinionActivity"
+            android:name="com.hand.hrms4android.app.ApproveOpinionActivity"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity
@@ -52,7 +52,7 @@
             android:theme="@style/Theme.AppCompat" >
         </activity>
         <activity
-            android:name="com.hand.hrms4android.activity.DeliverActivity"
+            android:name="com.hand.hrms4android.app.DeliverActivity"
             android:label="@string/title_activity_deliver"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
@@ -65,12 +65,12 @@
             android:label="@string/title_activity_html" >
         </activity>
         <activity
-            android:name="com.hand.hrms4android.activity.BaseReceiptActivity"
+            android:name="com.hand.hrms4android.app.BaseReceiptActivity"
             android:label="@string/title_activity_receipt_base"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity
-            android:name="com.hand.hrms4android.activity.DoneReceiptActivity"
+            android:name="com.hand.hrms4android.app.DoneReceiptActivity"
             android:label="@string/title_activity_done_receipt"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>

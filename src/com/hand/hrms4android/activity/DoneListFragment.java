@@ -7,18 +7,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.app.DoneReceiptActivity;
+import com.hand.hrms4android.core.AbstractPageableModel;
+import com.hand.hrms4android.core.HDAbsRefreshableListFragmentController;
+import com.hand.hrms4android.core.Model;
+import com.hand.hrms4android.core.Model.LoadType;
 import com.hand.hrms4android.listable.adapter.DoneListAdapter;
 import com.hand.hrms4android.listable.item.DoneListItem;
-import com.hand.hrms4android.model.AbstractPageableModel;
 import com.hand.hrms4android.model.DoneListModel;
-import com.hand.hrms4android.model.Model;
-import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.util.TempTransfer;
 import com.hand.hrms4android.util.data.IndexPath;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -26,7 +27,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-public class DoneListFragment extends BaseSherlockFragment implements OnItemClickListener {
+public class DoneListFragment extends HDAbsRefreshableListFragmentController {
 	private PullToRefreshListView listViewWrapper;
 	private ListView doneList;
 
@@ -35,6 +36,8 @@ public class DoneListFragment extends BaseSherlockFragment implements OnItemClic
 
 	private DoneListAdapter listAdapter;
 	private AbstractPageableModel<DoneListItem> doneModel;
+	
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,7 +47,6 @@ public class DoneListFragment extends BaseSherlockFragment implements OnItemClic
 	}
 
 	private void buildViews(View base, Bundle savedInstanceState) {
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
 		listViewWrapper = (PullToRefreshListView) base.findViewById(R.id.activity_done_listviewwrapper);
 		listViewWrapper.setMode(Mode.BOTH); // mode refresh for top and
 		listViewWrapper.setShowIndicator(false); // disable indicator
@@ -58,7 +60,6 @@ public class DoneListFragment extends BaseSherlockFragment implements OnItemClic
 			public void onClick(View v) {
 				model.load(LoadType.Network, null);
 				reloadButton.setEnabled(false);
-				getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
 			}
 		});
 		reloadText = (TextView) base.findViewById(R.id.activity_done_list_reload_text);
@@ -82,13 +83,11 @@ public class DoneListFragment extends BaseSherlockFragment implements OnItemClic
 	 */
 	private void load(LoadType type) {
 		model.load(type, null);
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(true);
 
 	}
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(false);
 
 		listViewWrapper.onRefreshComplete();
 
@@ -100,9 +99,8 @@ public class DoneListFragment extends BaseSherlockFragment implements OnItemClic
 	}
 
 	@Override
-	public void modelFailedLoad(Exception e, Model<? extends Object> model) {
+	public void modelFailedLoad(Exception e, Model model) {
 		super.modelFailedLoad(e, model);
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(false);
 		listViewWrapper.onRefreshComplete();
 	}
 
@@ -128,7 +126,8 @@ public class DoneListFragment extends BaseSherlockFragment implements OnItemClic
 			if (refreshView.getCurrentMode() == Mode.PULL_FROM_START) {
 				load(LoadType.Network);
 			} else {
-				load(LoadType.NetworkMore);
+				//FIXME 分页
+//				load(LoadType.NetworkMore);
 			}
 
 		}
@@ -153,5 +152,11 @@ public class DoneListFragment extends BaseSherlockFragment implements OnItemClic
 		reloadText.setText(message);
 		reloadText.bringToFront();
 	}
+
+	@Override
+    protected int pulldownViewId() {
+	    // TODO Auto-generated method stub
+	    return 0;
+    }
 
 }

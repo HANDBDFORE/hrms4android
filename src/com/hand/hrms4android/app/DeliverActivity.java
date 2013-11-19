@@ -1,4 +1,4 @@
-package com.hand.hrms4android.activity;
+package com.hand.hrms4android.app;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,16 +22,15 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SimpleAdapter;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.core.HDAbstractActivityController;
+import com.hand.hrms4android.core.Model;
+import com.hand.hrms4android.core.Model.LoadType;
 import com.hand.hrms4android.model.DeliverModel;
-import com.hand.hrms4android.model.Model;
-import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 import com.hand.hrms4android.util.PlatformUtil;
 
-public class DeliverActivity extends ActionBarActivity {
+public class DeliverActivity extends HDAbstractActivityController {
 	private static final int[] adapter_to = { android.R.id.text1, android.R.id.text2 };
 
 	private static final String[] adapter_from_place_holder;
@@ -129,8 +131,9 @@ public class DeliverActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, R.id.approve_opinion_ok, 0, "送出").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		menu.add(0, R.id.approve_opinion_cancel, 1, "取消").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		//FIXME 按钮
+//		menu.add(0, R.id.approve_opinion_ok, 0, "送出").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//		menu.add(0, R.id.approve_opinion_cancel, 1, "取消").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 
@@ -184,4 +187,5 @@ public class DeliverActivity extends ActionBarActivity {
 
 		return true;
 	}
+
 }

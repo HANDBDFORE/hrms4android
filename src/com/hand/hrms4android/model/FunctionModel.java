@@ -12,23 +12,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
 import com.hand.hrms4android.R;
-import com.hand.hrms4android.activity.ModelActivity;
+import com.hand.hrms4android.core.HDAbstractModel;
+import com.hand.hrms4android.core.ModelViewController;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.listable.item.FunctionSection;
+import com.hand.hrms4android.network.HDJsonObjectRequest;
+import com.hand.hrms4android.network.HDRequest;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
-import com.loopj.android.http.UMJsonHttpResponseHandler;
+import com.hand.hrms4android.util.LogUtil;
 
-public class FunctionModel extends AbstractListModel<Object> {
+public class FunctionModel extends HDAbstractModel {
 
 	private List<Object> items;
 	private ConfigReader configReader;
 
-	public FunctionModel(int id, ModelActivity activity) {
+	public FunctionModel(int id, ModelViewController activity) {
 		super(id, activity);
 		configReader = XmlConfigReader.getInstance();
 	}
@@ -41,27 +49,62 @@ public class FunctionModel extends AbstractListModel<Object> {
 			                "/config/application/activity[@name='function_list_activity']/request/url[@name='function_query_url']",
 			                "value"));
 
-			NetworkUtil.post(queryUrl, null, new UMJsonHttpResponseHandler() {
-
-				@Override
-				public void onSuccess(int statusCode, JSONObject response) {
-					items = buildFixedItems(items);
-
-					JSONArray sections = null;
-					try {
-						sections = response.getJSONObject("body").getJSONArray("list");
-						items.addAll(buildItems(sections));
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-
-					activity.modelDidFinishedLoad(FunctionModel.this);
-				}
-			});
+//			NetworkUtil.post(queryUrl, null, new UMJsonHttpResponseHandler() {
+//
+//				@Override
+//				public void onSuccess(int statusCode, JSONObject response) {
+//					items = buildFixedItems(items);
+//
+//					JSONArray sections = null;
+//					try {
+//						sections = response.getJSONObject("body").getJSONArray("list");
+//						items.addAll(buildItems(sections));
+//					} catch (JSONException e) {
+//						e.printStackTrace();
+//					}
+//
+//					activity.modelDidFinishedLoad(FunctionModel.this);
+//				}
+//			});
+			
+			requestQueue.add(genRequest(this, param, NetworkUtil.getAbsoluteUrl(queryUrl)));
 		} catch (ParseExpressionException e1) {
-			e1.printStackTrace();
-			activity.modelFailedLoad(e1, FunctionModel.this);
+			handleError(e1);
 		}
+	}
+	
+	private Request<JSONObject> genRequest(Object tag, Object param, String url) {
+		Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				onLoadingEnd();
+				items = buildFixedItems(items);
+
+				JSONArray sections = null;
+				try {
+					sections = response.getJSONObject("body").getJSONArray("list");
+					items.addAll(buildItems(sections));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+				controller.modelDidFinishedLoad(FunctionModel.this);
+			}
+		};
+		ErrorListener errorListener = new ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				onLoadingEnd();
+				handleError(error);
+			}
+		};
+
+		HDRequest<JSONObject> request = new HDJsonObjectRequest(controller.getContext(), Method.POST,
+		        NetworkUtil.getAbsoluteUrl(url), param, listener, errorListener);
+
+		request.setTag(tag);
+
+		return request;
 	}
 
 	private List<Object> buildFixedItems(List<Object> item) {

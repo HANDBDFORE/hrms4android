@@ -1,15 +1,16 @@
-package com.hand.hrms4android.activity;
+package com.hand.hrms4android.app;
 
 import org.apache.commons.lang3.StringUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 
@@ -42,8 +43,9 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, R.id.approve_opinion_ok, 0, "确定").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		menu.add(0, R.id.approve_opinion_cancel, 1, "取消").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		//FIXME 按钮
+//		menu.add(0, R.id.approve_opinion_ok, 0, "确定").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//		menu.add(0, R.id.approve_opinion_cancel, 1, "取消").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 

@@ -1,19 +1,20 @@
-package com.hand.hrms4android.activity;
+package com.hand.hrms4android.app;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
-import com.hand.hrms4android.model.AbstractPageableModel;
+import com.hand.hrms4android.activity.HTMLBaseActivity;
+import com.hand.hrms4android.core.AbstractPageableModel;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.util.TempTransfer;
 import com.hand.hrms4android.widget.EmployeeCardDialog;
 
-public class BaseReceiptActivity<E> extends HTMLBaseActivity {
+public abstract class BaseReceiptActivity<E> extends HTMLBaseActivity{
 	protected static final int GROUP_ACTION = 1;
 	protected static final int GROUP_TOOLS = 101;
 
@@ -58,10 +59,12 @@ public class BaseReceiptActivity<E> extends HTMLBaseActivity {
 //		        MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		int toolIndex = GROUP_TOOLS;
-		menu.add(GROUP_TOOLS, R.id.approve_detail_tool_previous, toolIndex++, "上一条").setShowAsAction(
-		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		menu.add(GROUP_TOOLS, R.id.approve_detail_tool_next, toolIndex, "下一条").setShowAsAction(
-		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		
+		//FIXME 做按钮
+//		menu.add(GROUP_TOOLS, R.id.approve_detail_tool_previous, toolIndex++, "上一条").setShowAsAction(
+//		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//		menu.add(GROUP_TOOLS, R.id.approve_detail_tool_next, toolIndex, "下一条").setShowAsAction(
+//		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -121,5 +124,6 @@ public class BaseReceiptActivity<E> extends HTMLBaseActivity {
 		}
 
 	}
+
 
 }

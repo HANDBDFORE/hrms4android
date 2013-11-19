@@ -1,6 +1,8 @@
-package com.hand.hrms4android.activity;
+package com.hand.hrms4android.app;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,6 +13,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -23,18 +27,20 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.activity.FunctionListActivity;
+import com.hand.hrms4android.activity.SettingsActivity;
+import com.hand.hrms4android.core.HDAbstractActivityController;
+import com.hand.hrms4android.core.Model;
 import com.hand.hrms4android.exception.AuroraServerFailure;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.model.LoginModel;
-import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.parser.ConfigReader;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.StorageUtil;
-import com.loopj.android.http.RequestParams;
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends HDAbstractActivityController {
 
 	private static final int ACTIVITY_SETTINGS = 1;
 
@@ -98,7 +104,6 @@ public class LoginActivity extends ActionBarActivity {
 	@Override
 	public void modelDidFinishedLoad(Model model) {
 		startActivity(new Intent(this, FunctionListActivity.class));
-
 		finish();
 	}
 
@@ -157,7 +162,7 @@ public class LoginActivity extends ActionBarActivity {
 		editor.putString(Constrants.SYS_PREFRENCES_USERNAME, username);
 		editor.commit();
 
-		RequestParams params = generateLoginParams(username, password);
+		Map<String, Object> params = generateLoginParams(username, password);
 
 		model.load(Model.LoadType.Network, params);
 	}
@@ -169,9 +174,9 @@ public class LoginActivity extends ActionBarActivity {
 	 * @param password
 	 * @return 组装好的参数
 	 */
-	private RequestParams generateLoginParams(String username, String password) {
+	private Map<String, Object> generateLoginParams(String username, String password) {
 		// 拼参数
-		RequestParams params = new RequestParams();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("user_name", username);
 		params.put("user_password", password);
 
@@ -190,15 +195,14 @@ public class LoginActivity extends ActionBarActivity {
 		return params;
 	}
 
+	
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_login, menu);
-
-		return true;
+	public boolean onCreateOptionsMenu(Menu menu) {
+		this.getMenuInflater().inflate(R.menu.activity_login, menu);
+	    return super.onCreateOptionsMenu(menu);
 	}
-
 	@Override
-	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.menu_settings) {
 			Intent i = new Intent(this, SettingsActivity.class);
 			startActivityForResult(i, ACTIVITY_SETTINGS);

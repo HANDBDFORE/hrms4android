@@ -5,16 +5,19 @@ import static com.hand.hrms4android.listable.item.FunctionItem.todoItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.simonvt.menudrawer.MenuDrawer;
-import net.simonvt.menudrawer.Position;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -22,25 +25,24 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.core.HDAbstractActivityController;
+import com.hand.hrms4android.core.Model;
+import com.hand.hrms4android.core.Model.LoadType;
 import com.hand.hrms4android.listable.adapter.FunctionListAdapter;
 import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.model.FunctionModel;
-import com.hand.hrms4android.model.Model;
-import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.StorageUtil;
 
-public class FunctionListActivity extends SherlockFragmentActivity implements ModelActivity, OnItemClickListener {
+public class FunctionListActivity extends HDAbstractActivityController implements OnItemClickListener {
 
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
 
-	protected MenuDrawer mMenuDrawer;
+	protected DrawerLayout mDrawerLayout;
+	private ActionBarDrawerToggle mDrawerToggle;
 	private TextView userTextView;
 
 	private FunctionListAdapter mFunctionListAdapter;
@@ -56,36 +58,35 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 		super.onCreate(arg0);
 		getSupportActionBar();
 
-		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, getDrawerPosition(), getDragMode());
-		mMenuDrawer.setMenuView(R.layout.activity_function_list);
-		mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
-		mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
-		mMenuDrawer.setDrawerIndicatorEnabled(true);
-		mMenuDrawer.setOnInterceptMoveEventListener(new MenuDrawer.OnInterceptMoveEventListener() {
-			@Override
-			public boolean isViewDraggable(View v, int dx, int x, int y) {
-				return v instanceof SeekBar;
-			}
-		});
-		mMenuDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
-			@Override
-			public void onDrawerStateChange(int oldState, int newState) {
-				if (newState == MenuDrawer.STATE_CLOSED) {
-					commitTransactions();
-				}
+		setContentView(R.layout.activity_function_list);
+
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+		mDrawerLayout, /* DrawerLayout object */
+		R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+		R.string.drawer_open, /* "open drawer" description */
+		R.string.drawer_close /* "close drawer" description */
+		) {
+
+			/** Called when a drawer has settled in a completely closed state. */
+			public void onDrawerClosed(View view) {
+				commitTransactions();
 			}
 
-			@Override
-			public void onDrawerSlide(float openRatio, int offsetPixels) {
-				// Do nothing
+			/** Called when a drawer has settled in a completely open state. */
+			public void onDrawerOpened(View drawerView) {
+				commitTransactions();
 			}
-		});
-		bindAllViews(mMenuDrawer.getMenuView());
+		};
+		// Set the drawer toggle as the DrawerListener
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		bindAllViews();
 
 		mFragmentManager = getSupportFragmentManager();
 		// mCurrentFragmentTag = ((Item) mAdapter.getItem(0)).mTitle;
-		attachFragment(mMenuDrawer.getContentContainer().getId(), getFragment(currentFunctionItem),
-		        FunctionItem.TODO_ITEM_ID);
+		attachFragment(R.id.content_frame, getFragment(currentFunctionItem), FunctionItem.TODO_ITEM_ID);
 		commitTransactions();
 
 		this.functionListModel = new FunctionModel(0, this);
@@ -94,27 +95,23 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 		this.functionListModel.load(LoadType.Network, null);
 	}
 
-	private void bindAllViews(View base) {
+	private void bindAllViews() {
 
-		userTextView = (TextView) base.findViewById(R.id.function_activity_user);
+		userTextView = (TextView) findViewById(R.id.function_activity_user);
 		userTextView.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(
 		        Constrants.SYS_PREFRENCES_USERNAME, ""));
 
-		mFunctionList = (ListView) base.findViewById(android.R.id.list);
+		mFunctionList = (ListView) findViewById(android.R.id.list);
 		mFunctionListAdapter = new FunctionListAdapter(this, new ArrayList<Object>(), mFunctionList);
 		mFunctionList.setAdapter(mFunctionListAdapter);
 		mFunctionList.setOnItemClickListener(this);
 
 		mFunctionListAdapter.setDatas(new ArrayList<Object>());
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 	}
 
-	protected int getDragMode() {
-		return MenuDrawer.MENU_DRAG_CONTENT;
-	}
-
-	protected Position getDrawerPosition() {
-		return Position.LEFT;
-	}
 
 	protected FragmentTransaction ensureTransaction() {
 		if (mFragmentTransaction == null) {
@@ -182,8 +179,8 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	}
 
 	@Override
-	public void modelDidFinishedLoad(Model<? extends Object> model) {
-		List<Object> items = (List<Object>) model.getProcessData();
+	public void modelDidFinishedLoad(Model model) {
+		List<Object> items = model.getProcessData();
 		mFunctionListAdapter.setDatas(items);
 	}
 
@@ -196,7 +193,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 			Fragment targetFragment = getFragment(item);
 			currentFunctionItem = item;
 
-			hideFragment(currentFragment, targetFragment, mMenuDrawer.getContentContainer().getId(),
+			hideFragment(currentFragment, targetFragment,R.id.content_frame,
 			        item.getFunctionId());
 			commitTransactions();
 
@@ -205,7 +202,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 			}
 
 		}
-		mMenuDrawer.closeMenu();
+		mDrawerLayout.closeDrawer(mFunctionList);
 	}
 
 	/**
@@ -235,11 +232,14 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 	@Override
 	public void onBackPressed() {
-		final int drawerState = mMenuDrawer.getDrawerState();
-		if (drawerState == MenuDrawer.STATE_CLOSED || drawerState == MenuDrawer.STATE_CLOSING) {
-			mMenuDrawer.openMenu();
-			return;
-		}
+		boolean isOpen=mDrawerLayout.isDrawerOpen(mFunctionList);
+		if (!isOpen) {
+			mDrawerLayout.openDrawer(mFunctionList);
+        }
+//		if (drawerState == MenuDrawer.STATE_CLOSED || drawerState == MenuDrawer.STATE_CLOSING) {
+//			mDrawerLayout.openMenu();
+//			return;
+//		}
 
 		super.onBackPressed();
 	}
@@ -248,20 +248,15 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			mMenuDrawer.toggleMenu();
+			boolean isOpen=mDrawerLayout.isDrawerOpen(mFunctionList);
+			if (isOpen) {
+				mDrawerLayout.closeDrawer(mFunctionList);
+	        }else{
+	        	mDrawerLayout.openDrawer(mFunctionList);
+	        }
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void modelFailedLoad(Exception e, Model<? extends Object> model) {
-		Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
-	public void setModel(Model<? extends Object> model) {
-
 	}
 
 }

@@ -2,12 +2,8 @@ package com.hand.hrms4android.network;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import org.apache.http.HttpEntity;
 import org.apache.http.client.CookieStore;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.webkit.CookieManager;
@@ -16,9 +12,6 @@ import android.webkit.CookieSyncManager;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.util.Constrants;
 import com.hand.hrms4android.util.LogUtil;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 public class NetworkUtil {
 	private static SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(HrmsApplication
@@ -36,72 +29,6 @@ public class NetworkUtil {
 
 	private static CookieStore cookieStore = null;
 
-	/**
-	 * 以get方式请求
-	 * 
-	 * @param url
-	 *            除了基础地址之外的部分
-	 * @param params
-	 * @param responseHandler
-	 *            回调
-	 */
-	public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-
-		AsyncHttpClient client = new AsyncHttpClient();
-		client.setCookieStore(cookieStore);
-		String token = mPreferences.getString("token", "");
-		if (token.length() > 0) {
-			addHeader("token", token);
-		}
-		client = addClientHeaders(client, headers);
-		client.get(getAbsoluteUrl(url), params, responseHandler);
-	}
-
-	/**
-	 * 以post方式提交数据（非文件）
-	 * 
-	 * @param url
-	 *            除了基础地址之外的部分
-	 * @param params
-	 * @param responseHandler
-	 *            回调
-	 */
-	public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-		AsyncHttpClient client = new AsyncHttpClient();
-
-		client.setCookieStore(cookieStore);
-
-		String token = mPreferences.getString("token", "");
-		if (token.length() > 0) {
-			addHeader("token", token);
-			addClientHeaders(client, headers);
-		}
-
-		if (params != null) {
-			LogUtil.debug(NetworkUtil.class, "send", params.toString());
-		}
-
-		client.post(getAbsoluteUrl(url), params, responseHandler);
-	}
-
-	public static void post(Context ctx, String url, HttpEntity entity, String contentType,
-	        AsyncHttpResponseHandler responseHandler) {
-		AsyncHttpClient client = new AsyncHttpClient();
-
-		client.setCookieStore(cookieStore);
-
-		String token = mPreferences.getString("token", "");
-		if (token.length() > 0) {
-			addHeader("token", token);
-			addClientHeaders(client, headers);
-		}
-
-		if (entity != null) {
-			LogUtil.debug(NetworkUtil.class, "send", entity.toString());
-		}
-
-		client.post(ctx, getAbsoluteUrl(url), entity, contentType, responseHandler);
-	}
 
 	/**
 	 * 转换路径
@@ -128,13 +55,6 @@ public class NetworkUtil {
 		return base;
 	}
 
-	private static AsyncHttpClient addClientHeaders(AsyncHttpClient client, Map<String, String> headers) {
-		Set<String> keys = headers.keySet();
-		for (String key : keys) {
-			client.addHeader(key, headers.get(key));
-		}
-		return client;
-	}
 
 	public static void addHeader(String key, String value) {
 		headers.put(key, value);
