@@ -12,6 +12,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.hand.hrms4android.application.HrmsApplication;
+import com.hand.hrms4android.util.LogUtil;
 
 public abstract class HDRequest<T> extends Request<T> {
 
@@ -24,6 +25,7 @@ public abstract class HDRequest<T> extends Request<T> {
 
 	@Override
 	protected Response<T> parseNetworkResponse(NetworkResponse response) {
+		HrmsApplication.getApplication().updateCoockies(response.headers);
 			return parseResponse(response);
 
 	}
@@ -35,10 +37,11 @@ public abstract class HDRequest<T> extends Request<T> {
 			headers = new HashMap<String, String>();
 		}
 
-		headers.put("Accept", "application/json");
+		headers.put("Accept", "application/json;charset=UTF-8");
 
 		HrmsApplication.getApplication().addSessionCookie(headers);
 
+		LogUtil.info(this, "headers", headers.toString());
 		return headers;
 	}
 

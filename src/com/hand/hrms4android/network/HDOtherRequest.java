@@ -1,6 +1,9 @@
 package com.hand.hrms4android.network;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,34 +11,42 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.gson.Gson;
 import com.hand.hrms4android.app.LoginActivity;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.core.HDRequestException;
 import com.hand.hrms4android.util.LogUtil;
 
-public class HDJsonObjectRequest extends HDJsonRequest<JSONObject> {
+public class HDOtherRequest extends HDRequest<JSONObject>{
+	private final Listener<JSONObject> mListener;
+	private final Map<String, String> params;
 
-	public HDJsonObjectRequest(Context context, int method, String url, JSONObject jsonRequest,
-			Listener<JSONObject> listener, ErrorListener errorListener) {
-		super(context, method, url, jsonRequest.toString(), listener, errorListener);
-	}
-
-	public HDJsonObjectRequest(Context context, int method, String url, Object param, Listener<JSONObject> listener,
-			ErrorListener errorListener) {
-		super(context, method, url, new Gson().toJson(param), listener, errorListener);
-		System.out.println(new Gson().toJson(param));
-	}
+	public HDOtherRequest(Context context, int method, String url, Map<String, String> params, Listener<JSONObject> listener,
+            ErrorListener errorListener) {
+		super(context, method, url, errorListener);
+		mListener = listener;
+		
+	    this.params = params==null?new HashMap<String, String>():new HashMap<String, String>(params);
+	    LogUtil.info(this, "send", this.params.toString());
+    }
 	
+	public HDOtherRequest(Context context, int method, String url, Listener<JSONObject> listener,
+	        ErrorListener errorListener) {
+		super(context, method, url, errorListener);
+		mListener = listener;
+		params = new HashMap<String, String>();
+		
+	}
 
 	@Override
 	protected Response<JSONObject> parseResponse(NetworkResponse response) {
+		
 		try {
 			String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 			LogUtil.info(this, "",jsonString);
@@ -46,7 +57,7 @@ public class HDJsonObjectRequest extends HDJsonRequest<JSONObject> {
 			
 			// 正常处理
 			if ("ok".equals(status)) {
-				
+				HrmsApplication.getApplication().updateCoockies(response.headers);
 				return Response.success(responseJson, HttpHeaderParser.parseCacheHeaders(response));
 			}
 
@@ -71,6 +82,26 @@ public class HDJsonObjectRequest extends HDJsonRequest<JSONObject> {
 			return Response.error(new ParseError(je));
 		}
 	}
+	
+	@Override
+	protected Map<String, String> getParams() throws AuthFailureError {
+		return params;
+	}
 
+	@Override
+    protected void deliverResponse(JSONObject response) {
+		mListener.onResponse(response);
+    }
+	
+	@Override
+	public Map<String, String> getHeaders() throws AuthFailureError {
+		Map<String, String> headers = super.getHeaders();
+		if (headers == null || headers.equals(Collections.emptyMap())) {
+			headers = new HashMap<String, String>();
+		}
+
+		headers.put("Accept", "application/json");
+		return headers;
+	}
 
 }

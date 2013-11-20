@@ -20,6 +20,7 @@ import com.hand.hrms4android.dao.ActionsDao;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.network.HDJsonObjectRequest;
+import com.hand.hrms4android.network.HDOtherRequest;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.network.RequestManager;
 import com.hand.hrms4android.parser.ConfigReader;
@@ -55,7 +56,7 @@ public class ApproveDetailActionModel extends HDAbstractModel {
 				                "/config/application/activity[@name='approve_detail_activity']/request/url[@name='action_query_url']",
 				                "value"));
 
-				Map<String, Object> p = new HashMap<String, Object>();
+				Map<String, String> p = new HashMap<String, String>();
 				p.put("localId", record.getLocalId());
 				p.put("sourceSystemName", record.getSourceSystemName());
 				
@@ -104,7 +105,7 @@ public class ApproveDetailActionModel extends HDAbstractModel {
 		}
 	}
 	
-	private Request<JSONObject> genSubmitRequest(Object tag, Object params, String url,final TodoListDomain record) {
+	private Request<JSONObject> genSubmitRequest(Object tag, Map<String, String>  params, String url,final TodoListDomain record) {
 		Listener<JSONObject> listener = new Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
@@ -138,7 +139,7 @@ public class ApproveDetailActionModel extends HDAbstractModel {
 			}
 		};
 
-		Request<JSONObject> request = new HDJsonObjectRequest(controller.getContext(), Method.GET, url, params, listener, errorListener);
+		Request<JSONObject> request = new HDOtherRequest(controller.getContext(), Method.POST, url, params, listener, errorListener);
 		request.setTag(tag);
 
 		return request;

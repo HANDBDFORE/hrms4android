@@ -36,7 +36,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-public class TodoListFragment extends HDAbsRefreshableListFragmentController implements OnItemClickListener, OnItemLongClickListener {
+public class TodoListFragment extends HDAbsRefreshableListFragmentController {
 	private static final int TODOLIST_ACTIVITY_BASE = 10;
 	private static final int REQUEST_ACTIVITY_DETAIL = TODOLIST_ACTIVITY_BASE + 1;
 	private static final int REQUEST_ACTIVITY_OPINION = TODOLIST_ACTIVITY_BASE + 2;
@@ -48,7 +48,6 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 	 */
 	private static int LISTVIEW_HEADER_COUNT = 1;
 
-	private PullToRefreshListView todoListViewWrapper;
 	private ImageButton reloadButton;
 	private TextView reloadText;
 
@@ -73,7 +72,7 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_todo_list, container, false);
-		bindAllViews(view);
+		
 		return view;
 	}
 
@@ -84,17 +83,24 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 		actionBarActivity.setSupportProgressBarIndeterminateVisibility(true);
 		this.model.load(LoadType.Local, null);
 	}
+	
+	
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+	    super.onViewCreated(view, savedInstanceState);
+	    bindAllViews(view);
+	}
 
 	private void bindAllViews(View root) {
 
 		/*
 		 * 原来
 		 */
-		todoListViewWrapper = (PullToRefreshListView) root.findViewById(R.id.activity_todo_list_listviewwrapper);
-		todoListViewWrapper.getRefreshableView().setOnItemLongClickListener(this);
-		todoListViewWrapper.setOnItemClickListener(this);
-		todoListViewWrapper.getRefreshableView().setChoiceMode(ListView.CHOICE_MODE_NONE);
-		todoListViewWrapper.setOnRefreshListener(new PulldownListener());
+//		pullToRefreshListView = (PullToRefreshListView) root.findViewById(R.id.activity_todo_list_listviewwrapper);
+//		pullToRefreshListView.getRefreshableView().setOnItemLongClickListener(this);
+//		pullToRefreshListView.setOnItemClickListener(this);
+		pullToRefreshListView.getRefreshableView().setChoiceMode(ListView.CHOICE_MODE_NONE);
+//		pullToRefreshListView.setOnRefreshListener(new PulldownListener());
 
 		actionBarActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		reloadButton = (ImageButton) root.findViewById(R.id.activity_todo_list_reload_button);
@@ -119,7 +125,7 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 		mActionMode = null;
 
 		listAdapter = new TodoListAdapter(this.getActivity(), listModel);
-		todoListViewWrapper.setAdapter(listAdapter);
+		pullToRefreshListView.setAdapter(listAdapter);
 
 	}
 
@@ -139,7 +145,7 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 			listModel.load(LoadType.Network, null);
 		} else {
 			actionBarActivity.setSupportProgressBarIndeterminateVisibility(false);
-			todoListViewWrapper.onRefreshComplete();
+			pullToRefreshListView.onRefreshComplete();
 		}
 
 	}
@@ -147,7 +153,7 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 	@Override
 	public void modelFailedLoad(Exception e, Model model) {
 		actionBarActivity.setSupportProgressBarIndeterminateVisibility(false);
-		todoListViewWrapper.onRefreshComplete();
+		pullToRefreshListView.onRefreshComplete();
 
 		// 如果没有数据，显示重试按钮
 		if ((listAdapter.getCount() == 0) && (!listModel.needLoadOnceMore())) {
@@ -169,7 +175,7 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 		mActionMode.setSubtitle(String.valueOf(getSelectedRowCount()));
 
 		// 将当前监听器删除，防止再次长按
-		todoListViewWrapper.getRefreshableView().setOnItemLongClickListener(null);
+		pullToRefreshListView.getRefreshableView().setOnItemLongClickListener(null);
 
 		return true;
 	}
@@ -278,14 +284,14 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 	 * 显示列表组件
 	 */
 	private void showList() {
-		todoListViewWrapper.setVisibility(View.VISIBLE);
-		todoListViewWrapper.bringToFront();
+		pullToRefreshListView.setVisibility(View.VISIBLE);
+		pullToRefreshListView.bringToFront();
 		reloadButton.setVisibility(View.INVISIBLE);
 		reloadText.setVisibility(View.INVISIBLE);
 	}
 
 	private void showEmptyTip(String message) {
-		todoListViewWrapper.setVisibility(View.INVISIBLE);
+		pullToRefreshListView.setVisibility(View.INVISIBLE);
 		reloadButton.setVisibility(View.VISIBLE);
 		reloadButton.setEnabled(true);
 		reloadButton.bringToFront();
@@ -346,7 +352,7 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			// 恢复长按监听
-			todoListViewWrapper.getRefreshableView().setOnItemLongClickListener(TodoListFragment.this);
+			pullToRefreshListView.getRefreshableView().setOnItemLongClickListener(TodoListFragment.this);
 
 			// 取消所有
 			TodoListFragment.this.deSelectAllRow();
@@ -355,18 +361,19 @@ public class TodoListFragment extends HDAbsRefreshableListFragmentController imp
 		}
 	}
 
-	private class PulldownListener implements OnRefreshListener<ListView> {
+//	private class PulldownListener implements OnRefreshListener<ListView> {
 
 		@Override
 		public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+			super.onRefresh(refreshView);
 			listModel.load(LoadType.Network, null);
 		}
-	}
+//	}
 
 	@Override
     protected int pulldownViewId() {
-	    // TODO Auto-generated method stub
-	    return 0;
+	    
+	    return R.id.activity_todo_list_listviewwrapper;
     }
 
 }

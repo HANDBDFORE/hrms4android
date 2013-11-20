@@ -67,7 +67,7 @@ public class FunctionModel extends HDAbstractModel {
 //				}
 //			});
 			
-			requestQueue.add(genRequest(this, param, NetworkUtil.getAbsoluteUrl(queryUrl)));
+			requestQueue.add(genRequest(this, param, queryUrl));
 		} catch (ParseExpressionException e1) {
 			handleError(e1);
 		}

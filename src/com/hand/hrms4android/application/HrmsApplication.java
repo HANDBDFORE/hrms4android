@@ -54,7 +54,9 @@ public class HrmsApplication extends Application {
 	 *            Response Headers.
 	 */
 	public void updateCoockies(Map<String, String> headers) {
+		System.out.println(headers);
 		if (headers.containsKey(SET_COOKIE_KEY) && headers.get(SET_COOKIE_KEY).startsWith(SESSION_COOKIE)) {
+			System.out.println("====================================================");
 			String cookie = headers.get(SET_COOKIE_KEY);
 			if (cookie.length() > 0) {
 				String[] splitCookie = cookie.split(";");
@@ -72,7 +74,7 @@ public class HrmsApplication extends Application {
 	 * 
 	 * @param headers
 	 */
-	public final void addSessionCookie(Map<String, String> headers) {
+	public final Map<String, String> addSessionCookie(Map<String, String> headers) {
 		String sessionId = getPreferences().getString(SESSION_COOKIE, "");
 		if (sessionId.length() > 0) {
 			StringBuilder builder = new StringBuilder();
@@ -85,6 +87,9 @@ public class HrmsApplication extends Application {
 			}
 			headers.put(COOKIE_KEY, builder.toString());
 		}
+		
+		return headers;
+		
 	}
 
 	private SharedPreferences getPreferences() {

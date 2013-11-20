@@ -74,7 +74,7 @@ public class TodoListAdapter extends BaseAdapter {
 		}
 
 		// 判断该行对应数值的状态
-		String recordLocalStatus = ((List<TodoListItem>) model.getProcessData()).get(position).getStatus();
+		String recordLocalStatus = ((List<TodoListDomain>) model.getProcessData()).get(position).getStatus();
 		if (recordLocalStatus.equals(Constrants.APPROVE_RECORD_STATUS_ERROR)) {
 			// 说明是出错项
 			wrapper.getErrorMessageTextView().setVisibility(View.VISIBLE);
@@ -160,7 +160,7 @@ public class TodoListAdapter extends BaseAdapter {
 
 	@Override
 	public boolean isEnabled(int position) {
-		String localStatus = ((List<TodoListItem>) model.getProcessData()).get(position).getStatus();
+		String localStatus = ((List<TodoListDomain>) model.getProcessData()).get(position).getStatus();
 		if ((localStatus.equals(Constrants.APPROVE_RECORD_STATUS_WAITING))
 		        || (localStatus.equals(Constrants.APPROVE_RECORD_STATUS_DIFFERENT))) {
 			return false;

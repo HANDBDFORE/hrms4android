@@ -15,6 +15,7 @@ import com.hand.hrms4android.core.HDAbstractModel;
 import com.hand.hrms4android.core.ModelViewController;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.network.HDJsonObjectRequest;
+import com.hand.hrms4android.network.HDOtherRequest;
 import com.hand.hrms4android.network.HDRequest;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.ConfigReader;
@@ -34,7 +35,7 @@ public class AutoLoginModel extends HDAbstractModel {
 	@Override
 	public void load(LoadType loadType, Object param) {
 		@SuppressWarnings("unchecked")
-		Map<String, Object> params = new HashMap<String, Object>((Map<String, String>) param);
+		Map<String, String> params = new HashMap<String, String>((Map<String, String>) param);
 		NetworkUtil.removeAllCookies();
 		String service = "";
 
@@ -61,10 +62,10 @@ public class AutoLoginModel extends HDAbstractModel {
 //
 //		});
 		
-		requestQueue.add(genRequest(this, param, service));
+		requestQueue.add(genRequest(this, params, service));
 	}
 	
-	private Request<JSONObject> genRequest(Object tag, Object param, String url) {
+	private Request<JSONObject> genRequest(Object tag, Map<String, String> param, String url) {
 		Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
@@ -80,7 +81,7 @@ public class AutoLoginModel extends HDAbstractModel {
 			}
 		};
 
-		HDRequest<JSONObject> request = new HDJsonObjectRequest(controller.getContext(), Method.POST,
+		HDRequest<JSONObject> request = new HDOtherRequest(controller.getContext(), Method.POST,
 		        NetworkUtil.getAbsoluteUrl(url), param, listener, errorListener);
 
 		request.setTag(tag);

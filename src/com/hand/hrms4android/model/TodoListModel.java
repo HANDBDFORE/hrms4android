@@ -23,6 +23,8 @@ import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.exception.PersistanceException;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.network.HDJsonObjectRequest;
+import com.hand.hrms4android.network.HDOtherRequest;
+import com.hand.hrms4android.network.KVParameterSource;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.network.RequestManager;
 import com.hand.hrms4android.parser.ConfigReader;
@@ -50,7 +52,8 @@ public class TodoListModel extends AbstractPageableModel<TodoListDomain> {
 		configReader = XmlConfigReader.getInstance();
 		dao = new TodoListDao();
 		currentSelectedIndex = new IndexPath(0, 0);
-		submitRecordsList = new ArrayList<TodoListDomain>();
+		data = new ArrayList<TodoListDomain>();
+		submitRecordsList= new ArrayList<TodoListDomain>();
 		firstLoadFromInternet = true;
 	}
 
@@ -223,7 +226,7 @@ public class TodoListModel extends AbstractPageableModel<TodoListDomain> {
 						String responseSourceSystemName = responseRecord.getString("sourceSystemName");
 						String responseRecordLocalId = responseRecord.getString("localId");
 
-						TodoListDomain submitRecord = findRecord(submitRecordsList, responseRecordLocalId,
+						TodoListDomain submitRecord = findRecord(data, responseRecordLocalId,
 						        responseSourceSystemName);
 
 						if ("S".equals(responseStatus)) {
@@ -301,7 +304,7 @@ public class TodoListModel extends AbstractPageableModel<TodoListDomain> {
 			return;
 		} 
 
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, String> params = new HashMap<String, String>();
 		params.put("localIds", submitJsonArray.toString());
 //		NetworkUtil.post(service, params, new UMJsonHttpResponseHandler() {
 //
@@ -364,7 +367,7 @@ public class TodoListModel extends AbstractPageableModel<TodoListDomain> {
 		RequestManager.getRequestQueue().add(genQueryRequest(requestTag, params, NetworkUtil.getAbsoluteUrl(service)));
 	}
 	
-	private Request<JSONObject> genQueryRequest(Object tag, Object params, String url) {
+	private Request<JSONObject> genQueryRequest(Object tag, Map<String, String> params, String url) {
 		Listener<JSONObject> listener = new Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
@@ -419,7 +422,7 @@ public class TodoListModel extends AbstractPageableModel<TodoListDomain> {
 			}
 		};
 
-		Request<JSONObject> request = new HDJsonObjectRequest(controller.getContext(), Method.GET, url, params, listener, errorListener);
+		Request<JSONObject> request = new HDOtherRequest(controller.getContext(), Method.POST, url, params, listener, errorListener);
 		request.setTag(tag);
 
 		return request;

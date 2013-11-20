@@ -1,6 +1,7 @@
 package com.hand.hrms4android.app;
 
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.core.Model;
 import com.hand.hrms4android.core.Model.LoadType;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
@@ -160,7 +162,7 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain>{
 		loadingProgress.setVisibility(View.VISIBLE);
 		this.model = new ApproveDetailActionModel(0, this);
 		this.model.load(LoadType.Network, record);
-		contentWebView.loadUrl(getAbsolutePageUrl(record));
+		contentWebView.loadUrl(getAbsolutePageUrl(record),HrmsApplication.getApplication().addSessionCookie(new HashMap<String, String>()));
 	}
 
 	private ActionMenuItem menuItemFactory(ApproveAction action) {

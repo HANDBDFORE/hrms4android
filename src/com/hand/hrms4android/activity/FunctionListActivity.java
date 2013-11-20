@@ -56,7 +56,6 @@ public class FunctionListActivity extends HDAbstractActivityController implement
 	protected void onCreate(Bundle arg0) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(arg0);
-		getSupportActionBar();
 
 		setContentView(R.layout.activity_function_list);
 
@@ -101,7 +100,7 @@ public class FunctionListActivity extends HDAbstractActivityController implement
 		userTextView.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(
 		        Constrants.SYS_PREFRENCES_USERNAME, ""));
 
-		mFunctionList = (ListView) findViewById(android.R.id.list);
+		mFunctionList = (ListView) findViewById(R.id.left_drawer);
 		mFunctionListAdapter = new FunctionListAdapter(this, new ArrayList<Object>(), mFunctionList);
 		mFunctionList.setAdapter(mFunctionListAdapter);
 		mFunctionList.setOnItemClickListener(this);

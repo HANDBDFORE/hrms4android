@@ -6,7 +6,7 @@ public class LogUtil {
 
 	public static void error(Object obj, String tag, String message) {
 		if (isDebug()) {
-			Log.e(obj.getClass().getName() + "  " + tag, message);
+			Log.e(obj + "  " + tag, message==null?"null":message);
 		}
 	}
 

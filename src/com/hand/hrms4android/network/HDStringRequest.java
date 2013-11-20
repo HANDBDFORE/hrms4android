@@ -36,12 +36,12 @@ public class HDStringRequest extends HDRequest<String> {
 
 	@Override
 	protected Response<String> parseResponse(NetworkResponse response) {
-		try {
-			String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+//		try {
+			String jsonString = new String(response.data);
 			return Response.success(jsonString, HttpHeaderParser.parseCacheHeaders(response));
-		} catch (UnsupportedEncodingException e) {
-			return Response.error(new ParseError(e));
-		}
+//		} catch (UnsupportedEncodingException e) {
+//			return Response.error(new ParseError(e));
+//		}
 	}
 
 	@Override

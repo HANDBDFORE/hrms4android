@@ -162,7 +162,7 @@ public class LoginActivity extends HDAbstractActivityController {
 		editor.putString(Constrants.SYS_PREFRENCES_USERNAME, username);
 		editor.commit();
 
-		Map<String, Object> params = generateLoginParams(username, password);
+		Map<String, String> params = generateLoginParams(username, password);
 
 		model.load(Model.LoadType.Network, params);
 	}
@@ -174,9 +174,9 @@ public class LoginActivity extends HDAbstractActivityController {
 	 * @param password
 	 * @return 组装好的参数
 	 */
-	private Map<String, Object> generateLoginParams(String username, String password) {
+	private Map<String, String> generateLoginParams(String username, String password) {
 		// 拼参数
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, String> params = new HashMap<String, String>();
 		params.put("user_name", username);
 		params.put("user_password", password);
 

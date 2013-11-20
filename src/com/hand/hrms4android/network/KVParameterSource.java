@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.hand.hrms4android.util.LogUtil;
+
 public class KVParameterSource implements RequestParameterSource {
 
 	private final Map<String, String> nameValuePare;
@@ -35,6 +37,7 @@ public class KVParameterSource implements RequestParameterSource {
 
 	@Override
 	public String getParamsAsString() {
+		
 		StringBuilder sb = new StringBuilder();
 
 		Set<String> keys = nameValuePare.keySet();
@@ -47,6 +50,7 @@ public class KVParameterSource implements RequestParameterSource {
 			}
 			sb.append("&");
 		}
+		
 
 		return sb.toString();
 	}

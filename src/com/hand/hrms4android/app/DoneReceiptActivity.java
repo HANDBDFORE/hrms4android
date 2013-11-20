@@ -1,9 +1,12 @@
 package com.hand.hrms4android.app;
 
+import java.util.HashMap;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.core.Model;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.item.DoneListItem;
@@ -63,7 +66,7 @@ public class DoneReceiptActivity extends BaseReceiptActivity<DoneListItem> {
 	private void loadResources(String absoluteUrl) {
 		// 拿到当前指向的记录
 		loadingProgress.setVisibility(View.VISIBLE);
-		contentWebView.loadUrl(absoluteUrl);
+		contentWebView.loadUrl(absoluteUrl,HrmsApplication.getApplication().addSessionCookie(new HashMap<String, String>()));
 	}
 
 	@Override
