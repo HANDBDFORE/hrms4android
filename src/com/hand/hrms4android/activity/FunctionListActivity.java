@@ -56,7 +56,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 		super.onCreate(arg0);
 		getSupportActionBar();
 
-		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, getDrawerPosition(), getDragMode());
+		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY, getDrawerPosition(), getDragMode());
 		mMenuDrawer.setMenuView(R.layout.activity_function_list);
 		mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
 		mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
@@ -107,7 +107,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	}
 
 	protected int getDragMode() {
-		return MenuDrawer.MENU_DRAG_CONTENT;
+		return MenuDrawer.MENU_DRAG_WINDOW;
 	}
 
 	protected Position getDrawerPosition() {
@@ -211,6 +211,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	@Override
 	public void onItemClick(AdapterView<?> listview, View row, int position, long id) {
 		Object o = mFunctionListAdapter.getItem(position);
+		
 		if (o instanceof FunctionItem) {
 			FunctionItem item = (FunctionItem) o;
 			Fragment currentFragment = getFragment(currentFunctionItem);
@@ -219,7 +220,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 			hideFragment(currentFragment, targetFragment, mMenuDrawer.getContentContainer().getId(),
 			        item.getFunctionId());
-			commitTransactions();
+//			commitTransactions();
 
 			if (targetFragment instanceof OnFragmentSelectListener) {
 				((OnFragmentSelectListener) targetFragment).onSelected(o);

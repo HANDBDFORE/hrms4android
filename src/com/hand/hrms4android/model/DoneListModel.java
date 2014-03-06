@@ -55,8 +55,9 @@ public class DoneListModel extends AbstractPageableModel<DoneListItem> {
 						array = response.getJSONObject("body").getJSONArray("list");
 						for (int i = 0; i < array.length(); i++) {
 							JSONObject o = array.getJSONObject(i);
-							adapter.add(new DoneListItem(o.getString("item1"), o.getString("item2"), o
-							        .getString("item3"), o.getString("item4"), o.getString("screenName")));
+							DoneListItem doneListItem = new DoneListItem(o.getString("item1"), o.getString("item2"), o
+							        .getString("item3"), o.getString("item4"), o.getString("screenName"));
+							adapter.add(doneListItem);
 						}
 
 						activity.modelDidFinishedLoad(DoneListModel.this);

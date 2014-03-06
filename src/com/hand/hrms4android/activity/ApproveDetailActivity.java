@@ -34,6 +34,7 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 	protected void afterSuperOnCreateFinish(Bundle savedInstanceState) {
 
 		loadResources(listModel.currentItem());
+		
 	}
 
 	@Override
@@ -159,17 +160,18 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 	private void loadResources(TodoListDomain record) {
 		// 拿到当前指向的记录
 		loadingProgress.setVisibility(View.VISIBLE);
+		setTitle(record.getItem1());
 		this.model = new ApproveDetailActionModel(0, this);
 		this.model.load(LoadType.Network, record);
 		contentWebView.loadUrl(getAbsolutePageUrl(record));
 	}
 
 	private ActionMenuItem menuItemFactory(ApproveAction action) {
-		if (action.actionType.equals(ApproveAction.ACTION_TYPE_APPROVE)) {
+		if (action.actionType.equalsIgnoreCase(ApproveAction.ACTION_TYPE_APPROVE)) {
 			return new AgreeActionMenuItem(action);
-		} else if (action.actionType.equals(ApproveAction.ACTION_TYPE_REJECT)) {
+		} else if (action.actionType.equalsIgnoreCase(ApproveAction.ACTION_TYPE_REJECT)) {
 			return new RejectActionMenuItem(action);
-		} else if (action.actionType.equals(ApproveAction.ACTION_TYPE_DELIVER)) {
+		} else if (action.actionType.equalsIgnoreCase(ApproveAction.ACTION_TYPE_DELIVER)) {
 			return new DeliverActionMenuItem(action);
 		} else
 			return new OtherActionMenuItem(action);

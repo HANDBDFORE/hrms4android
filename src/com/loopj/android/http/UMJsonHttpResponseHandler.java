@@ -11,8 +11,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Message;
 
+import com.hand.hrms4android.activity.LoginActivity;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.exception.AuroraServerFailure;
 import com.hand.hrms4android.util.LogUtil;
 
@@ -75,13 +79,31 @@ public class UMJsonHttpResponseHandler extends AsyncHttpResponseHandler {
 				// 对结果json进行处理
 				JSONObject responseJson = new JSONObject(responseBody);
 				JSONObject headObject = responseJson.getJSONObject("head");
-				boolean success = headObject.getString("code").equals("ok");
+				String code = headObject.getString("code");
 
 				// 判断服务器返回的处理结果成功与否
-				if (success) {
+				if (code.equals("ok")) {
 					// 成功，发送给需要处理的地方
 					sendSuccessMessage(status.getStatusCode(), responseBody);
-				} else {
+				}
+				
+				else if (code.equals("login required")) {
+					//需要登录，请求到此结束，弹出登录界面
+	                Context context = HrmsApplication.getApplication();
+	                Intent startLoginIntent = new Intent(context,LoginActivity.class);
+	                //表明是被拦截
+	                startLoginIntent.putExtra(LoginActivity.KEY_INTERCEPTED, true);
+					context.startActivity(startLoginIntent);
+	                
+					//调用出错逻辑
+					sendFailureMessage(new AuroraServerFailure("需要登录"), "需要登录");
+					//不再继续进行处理
+	                return;
+	                
+                }
+				
+				
+				else {
 					// 失败，得到失败信息
 					String errorMessage = null;
 					if (headObject.has("message")) {

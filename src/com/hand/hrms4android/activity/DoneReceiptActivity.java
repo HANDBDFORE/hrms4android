@@ -14,7 +14,7 @@ public class DoneReceiptActivity extends BaseReceiptActivity<DoneListItem> {
 	@Override
 	protected void afterSuperOnCreateFinish(Bundle savedInstanceState) {
 		super.afterSuperOnCreateFinish(savedInstanceState);
-		loadResources(getAbsolutePageUrl(listModel.currentItem()));
+		loadResources(listModel.currentItem());
 	}
 
 	@Override
@@ -51,16 +51,18 @@ public class DoneReceiptActivity extends BaseReceiptActivity<DoneListItem> {
 
 	@Override
 	protected void onPageableOptionsItemSelected(MenuItem item) {
-		loadResources(getAbsolutePageUrl(listModel.currentItem()));
+		// loadResources(getAbsolutePageUrl(listModel.currentItem()));
+		loadResources(listModel.currentItem());
 	}
 
 	private String getAbsolutePageUrl(DoneListItem record) {
 		return NetworkUtil.getAbsoluteUrl(record.getScreenName());
 	}
 
-	private void loadResources(String absoluteUrl) {
+	private void loadResources(DoneListItem item) {
 		// 拿到当前指向的记录
+		setTitle(item.getTitle());
 		loadingProgress.setVisibility(View.VISIBLE);
-		contentWebView.loadUrl(absoluteUrl);
+		contentWebView.loadUrl(getAbsolutePageUrl(item));
 	}
 }

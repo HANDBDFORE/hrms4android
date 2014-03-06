@@ -37,6 +37,7 @@ import com.loopj.android.http.RequestParams;
 public class LoginActivity extends ActionBarActivity {
 
 	private static final int ACTIVITY_SETTINGS = 1;
+	public static final String KEY_INTERCEPTED = "intercept";
 
 	private TextView titleTextView;
 	private EditText usernameEditText;
@@ -50,6 +51,10 @@ public class LoginActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		isIntercepted();
+		
+		
 		setContentView(R.layout.activity_login);
 		// TODO 保留
 		this.model = new LoginModel(0, this);
@@ -60,6 +65,8 @@ public class LoginActivity extends ActionBarActivity {
 		bindAllViews();
 		readConfig();
 	}
+
+
 
 	private void bindAllViews() {
 		titleTextView = (TextView) findViewById(R.id.activity_login_textview_title);
@@ -97,9 +104,17 @@ public class LoginActivity extends ActionBarActivity {
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
-		startActivity(new Intent(this, FunctionListActivity.class));
+		
+		if (isIntercepted()) {
+			//某操作被拦截，被迫弹出登录页面，登录完成后结束自身即可
+			finish();
+        }else{
+        	//正常进入,启动功能列表
+			startActivity(new Intent(this, FunctionListActivity.class)); 
+        	finish();
+        }
 
-		finish();
+		
 	}
 
 	@Override
@@ -217,4 +232,12 @@ public class LoginActivity extends ActionBarActivity {
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+	
+	/**
+	 * 
+	 */
+    private boolean isIntercepted() {
+	    Intent startIntent = getIntent();
+		return startIntent.getBooleanExtra(KEY_INTERCEPTED, false);
+    }
 }
