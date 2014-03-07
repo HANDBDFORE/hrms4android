@@ -1,12 +1,16 @@
 package com.hand.hrms4android.activity;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -33,8 +37,10 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 	private void bindAllViews(View root) {
 		contentWebView = (WebView) root.findViewById(R.id.html_base_activity_webview);
 		contentWebView.setWebViewClient(new ContentWebClient());
+		contentWebView.setWebChromeClient(new AlertWebChromeClient());
 		WebSettings webSettings = contentWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
+		
 
 		loadingProgress = (ProgressBar) root.findViewById(R.id.html_base_activity_loading_progress);
 		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -100,6 +106,57 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 			super.onPageFinished(view, url);
 			loadingProgress.setVisibility(View.GONE);
 		}
+	}
+	
+	private class AlertWebChromeClient extends WebChromeClient{
+		@Override
+	    public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result)
+	    {
+	        new AlertDialog.Builder(HTMLFragment.this.getActivity())
+	            .setTitle("")
+	            .setMessage(message)
+	            .setPositiveButton(android.R.string.ok,
+	                    new AlertDialog.OnClickListener()
+	                    {
+	                        public void onClick(DialogInterface dialog, int which)
+	                        {
+	                            result.confirm();
+	                        }
+	                    })
+	            .setCancelable(false)
+	            .create()
+	            .show();
+
+	        return true;
+	    };
+	    
+	    @Override
+	    public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+	        new AlertDialog.Builder(HTMLFragment.this.getActivity())
+	        .setTitle("")
+	        .setMessage(message)
+	        .setPositiveButton(android.R.string.ok,
+	                new DialogInterface.OnClickListener()
+	        {
+	            public void onClick(DialogInterface dialog, int which)
+	            {
+	                result.confirm();
+	            }
+	        })
+	        .setNegativeButton(android.R.string.cancel,
+	                new DialogInterface.OnClickListener()
+	        {
+	            public void onClick(DialogInterface dialog, int which)
+	            {
+	                result.cancel();
+	            }
+	        })
+	        .create()
+	        .show();
+
+	        return true;
+	    }
+	    
 	}
 
 	@Override
