@@ -48,6 +48,7 @@ public class NetworkUtil {
 	public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 
 		AsyncHttpClient client = new AsyncHttpClient();
+		
 		client.setCookieStore(cookieStore);
 		String token = mPreferences.getString("token", "");
 		if (token.length() > 0) {

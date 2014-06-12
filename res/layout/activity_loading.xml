@@ -34,4 +34,6 @@
         android:src="@drawable/loading_alert"
         android:visibility="invisible" />
 
+
+
 </RelativeLayout>

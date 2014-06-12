@@ -23,7 +23,7 @@ import com.actionbarsherlock.view.MenuItem;
 public class ActionBarActivity extends BaseModelActivity implements OnCreatePanelMenuListener,
         OnPreparePanelListener, OnMenuItemSelectedListener, OnActionModeStartedListener, OnActionModeFinishedListener {
 	private ActionBarSherlock mActionBarHelper;
-
+  
 	protected final ActionBarSherlock getSherlock() {
 		if (mActionBarHelper == null) {
 			mActionBarHelper = ActionBarSherlock.wrap(this, ActionBarSherlock.FLAG_DELEGATE);

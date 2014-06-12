@@ -7,8 +7,11 @@ import java.util.List;
 
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -26,6 +29,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.listable.adapter.FunctionListAdapter;
 import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.model.FunctionModel;
@@ -49,14 +53,15 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	private FunctionItem currentFunctionItem = todoItem;
 
 	private Model functionListModel;
+	public boolean flag;
 
 	@Override
-	protected void onCreate(Bundle arg0) {
+	protected void onCreate(Bundle arg0) {	 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(arg0);
 		getSupportActionBar();
 
-		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY, getDrawerPosition(), getDragMode());
+		mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, getDrawerPosition(), getDragMode());
 		mMenuDrawer.setMenuView(R.layout.activity_function_list);
 		mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
 		mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
@@ -88,6 +93,14 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 		System.out.println("onCreateonCreateonCreateonCreateonCreateonCreateonCreate");
 		this.functionListModel.load(LoadType.Network, null);
+		
+		//保存登录状态
+		SharedPreferences savedPreferences = PreferenceManager.getDefaultSharedPreferences(HrmsApplication
+		        .getApplication());
+		Editor editor = savedPreferences.edit();
+		editor.putBoolean(Constrants.SYS_LOGIN_STATUS, true);
+		editor.commit();
+		
 	}
 
 	
@@ -158,6 +171,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 			if (!target.isAdded()) { // 先判断是否被add过
 				mFragmentTransaction.hide(current).add(layout, target, tag); // 隐藏当前的fragment，add下一个到Activity中
 			} else {
+				target.onResume();
 				mFragmentTransaction.hide(current).show(target); // 隐藏当前的fragment，显示下一个
 			}
 		}
@@ -285,5 +299,20 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	public void setModel(Model<? extends Object> model) {
 
 	}
+
+
+
+	@Override
+	protected void onDestroy() {
+		//删除登录状态
+		SharedPreferences savedPreferences = PreferenceManager.getDefaultSharedPreferences(HrmsApplication
+		        .getApplication());
+		Editor editor = savedPreferences.edit();
+		editor.remove(Constrants.SYS_LOGIN_STATUS);
+		editor.commit();
+		super.onDestroy();
+	}
+	
+	
 
 }

@@ -2,6 +2,8 @@ package com.hand.hrms4android.application;
 
 import android.app.Application;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.hand.hrms4android.util.PlatformUtil;
 import com.igexin.slavesdk.MessageManager;
 
@@ -30,8 +32,11 @@ public class HrmsApplication extends Application {
 				e1.printStackTrace();
 			}
 		}
-		// 推送
-		MessageManager.getInstance().initialize(instance);
+			//初始化极光推送
+	         JPushInterface.setDebugMode(true);
+	         JPushInterface.init(this);
+//		// 推送
+//		MessageManager.getInstance().initialize(instance);
 
 	}
 

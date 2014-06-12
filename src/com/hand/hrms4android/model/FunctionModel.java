@@ -71,6 +71,8 @@ public class FunctionModel extends AbstractListModel<Object> {
 
 		item.clear();
 
+		
+
 		// ++++++++++++++++++是否显示工作流标题
 		boolean display = true;
 		try {
@@ -117,6 +119,10 @@ public class FunctionModel extends AbstractListModel<Object> {
 		if (display) {
 			item.add(doneItem);
 		}
+		
+		//+++++++++++++++++++++++++显示下载管理
+		item.add(new FunctionSection("系统设置"));
+		item.add(downItem);
 		
 		return item;
 	}

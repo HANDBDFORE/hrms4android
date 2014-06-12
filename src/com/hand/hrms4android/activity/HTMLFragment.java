@@ -1,14 +1,29 @@
 package com.hand.hrms4android.activity;
+ 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
+import android.app.DownloadManager.Query;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.DownloadListener;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -21,12 +36,15 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.network.NetworkUtil;
-
+ 
 public class HTMLFragment extends SherlockFragment implements OnFragmentSelectListener{
 
 	protected WebView contentWebView;
 	protected ProgressBar loadingProgress;
-
+	
+	//add by jtt 
+	private DownloadManager manager;
+	private Handler handler;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.activity_html_base, container, false);
@@ -44,6 +62,33 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 
 		loadingProgress = (ProgressBar) root.findViewById(R.id.html_base_activity_loading_progress);
 		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		//add by jtt
+		 this.manager =(DownloadManager)getActivity().getSystemService("download");
+		 this.handler =new Handler(){
+				@Override
+				//hand message
+				public void handleMessage(Message msg){
+				super.handleMessage(msg); 
+				}
+			};	
+			
+		 contentWebView.setDownloadListener(new DownloadListener(){
+			@Override
+			public void onDownloadStart(String url, String userAgent,
+					String contentDisposition, String mimetype,
+					long contentLength) {
+				  	//do the download
+					new  downloadthread(url).start();
+				  
+				
+			}
+			
+			
+		});
+		 
+		//add by jtt
+		
 	}
 
 	@Override
@@ -169,4 +214,58 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
             }
         }
     }
+	
+	//add by jtt
+	public class downloadthread extends Thread{
+		String url;
+		public downloadthread(String url){
+			this.url  =  url;
+			
+		}
+		 
+		public void run(){
+			URL myURL;
+			String  filename = null;
+			Uri uri;
+			long lastDownloadId;
+			try {
+				myURL = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
+				conn.setRequestMethod("GET");
+				conn.setConnectTimeout(5000);
+				conn.connect(); 
+				int responseCode = conn.getResponseCode();  
+				if(responseCode == 200){ 
+					
+				
+				  filename = new String(conn.getHeaderField("Content-Disposition").getBytes("UTF-8"), "iso-8859-1");
+
+				  filename = filename.substring(filename.indexOf('\"')+1,filename.lastIndexOf('\"'));
+				  uri = Uri.parse(url);  
+				  
+				  Environment.getExternalStoragePublicDirectory(DownLoadListFragment.DOWNLOAD_DIR).mkdir();
+				  
+				  DownloadManager.Request down=new DownloadManager.Request(uri);
+				  //enable wifi and NETWORK_MOBILE download
+				  down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE|DownloadManager.Request.NETWORK_WIFI);  
+				  //download at  /sdcard/download
+				  down.setDestinationInExternalPublicDir( DownLoadListFragment.DOWNLOAD_DIR, filename);  
+				  lastDownloadId = manager.enqueue(down); 
+				}
+				//send empty message
+				Message msg = new Message();   
+                handler.sendMessage(msg);  	
+                
+                
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block 
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	}
+    //add by jtt
 }

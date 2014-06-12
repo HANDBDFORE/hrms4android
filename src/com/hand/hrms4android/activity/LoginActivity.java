@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.exception.AuroraServerFailure;
 import com.hand.hrms4android.exception.ParseExpressionException;
@@ -45,6 +47,7 @@ public class LoginActivity extends ActionBarActivity {
 	private Button loginButton;
 	private SharedPreferences mPreferences;
 	private Animation shake;
+
 
 	private ConfigReader configReader;
 
@@ -167,9 +170,11 @@ public class LoginActivity extends ActionBarActivity {
 			StorageUtil.deleteDB();
 		}
 
-		// 记录此次登陆用户名
+		// 
 		Editor editor = mPreferences.edit();
 		editor.putString(Constrants.SYS_PREFRENCES_USERNAME, username);
+		//初始化token
+		editor.putString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, JPushInterface.getRegistrationID(this.getApplicationContext()));
 		editor.commit();
 
 		RequestParams params = generateLoginParams(username, password);
@@ -198,7 +203,8 @@ public class LoginActivity extends ActionBarActivity {
 		if (token.length() != 0) {
 			params.put("push_token", token);
 		}
-
+		System.out.println(token);
+		
 		// 设备imei，作为设备ID使用
 		params.put(Constrants.SYS_ATTS_DEVICE_ID,
 		        ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId());

@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FunctionListActivity" >
+
+    <RelativeLayout
+        android:id="@+id/function_activity_user_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <TextView
+            android:id="@+id/function_activity_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/function_activity_button_exit"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:drawableLeft="@drawable/administrator"
+            android:gravity="center_vertical"
+            android:text="样小林"
+            android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Subtitle.Inverse" />
+
+        <Button
+            android:id="@+id/function_activity_button_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:onClick="exitSystem"
+            android:text="注销" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+    </ListView>
+
+</RelativeLayout>

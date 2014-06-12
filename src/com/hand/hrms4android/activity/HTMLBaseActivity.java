@@ -1,11 +1,26 @@
 package com.hand.hrms4android.activity;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
+import android.app.DownloadManager.Query;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -18,7 +33,10 @@ import com.hand.hrms4android.R;
 public class HTMLBaseActivity extends ActionBarActivity {
 	protected WebView contentWebView;
 	protected ProgressBar loadingProgress;
-
+	 
+	private DownloadManager manager;
+	private Handler handler;
+	
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +51,34 @@ public class HTMLBaseActivity extends ActionBarActivity {
 
 		loadingProgress = (ProgressBar) findViewById(R.id.html_base_activity_loading_progress);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		
+		//add by jtt	
+		 this.manager =(DownloadManager)getSystemService("download");
+		 this.handler =new Handler(){
+				@Override
+				//hand message
+				public void handleMessage(Message msg){
+					super.handleMessage(msg); 
+				}
+			};	
+			
+		 contentWebView.setDownloadListener(new DownloadListener(){
+			@Override
+			public void onDownloadStart(String url, String userAgent,
+					String contentDisposition, String mimetype,
+					long contentLength) {
+				  	//do the download
+					new  downloadthread(url).start();
+				  
 
+				
+			}
+			
+			
+		}); 
+		 
+		//add by jtt 
 		afterSuperOnCreateFinish(savedInstanceState);
 	}
 
@@ -108,5 +153,60 @@ public class HTMLBaseActivity extends ActionBarActivity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	 
+	 
+    
+    //add by jtt
+	public class downloadthread extends Thread{
+		String url;
+		public downloadthread(String url){
+			this.url  =  url;
+			
+		}
+		 
+		public void run(){
+			URL myURL;
+			String  filename = null;
+			Uri uri;
+			long lastDownloadId;
+			try {
+				myURL = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
+				conn.setRequestMethod("GET");
+				conn.setConnectTimeout(5000);
+				conn.connect(); 
+				int responseCode = conn.getResponseCode();  
+				if(responseCode == 200){
+					
+				  filename = new String(conn.getHeaderField("Content-Disposition").getBytes("UTF-8"), "iso-8859-1");
+				 
+				  filename = filename.substring(filename.indexOf('\"')+1,filename.lastIndexOf('\"'));
+				  uri = Uri.parse(url);   
+				  
+				  Environment.getExternalStoragePublicDirectory(DownLoadListFragment.DOWNLOAD_DIR).mkdir();
+				  
+				  DownloadManager.Request down=new DownloadManager.Request(uri);
+				  //enable wifi and NETWORK_MOBILE download
+				  down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE|DownloadManager.Request.NETWORK_WIFI);  
+
+				  down.setDestinationInExternalPublicDir( DownLoadListFragment.DOWNLOAD_DIR, filename);  
+				  lastDownloadId = manager.enqueue(down); 
+				}
+				//send empty message
+				Message msg = new Message();  
+                handler.sendMessage(msg); 
+                
+                
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block 
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		//add by jtt
 	}
 }

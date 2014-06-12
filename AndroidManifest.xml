@@ -4,21 +4,40 @@
     android:versionCode="1"
     android:versionName="aries" >
 
-    <uses-sdk
-        android:minSdkVersion="8"
+    <uses-sdk 
+        android:minSdkVersion="10"
         android:targetSdkVersion="17" />
-
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- =================推送sdk使用====================== -->
-    <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <permission
+        android:name="com.hand.hrms4android.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+  
+    <!-- Required  一些系统要求的权限，如访问网络等-->
+    <uses-permission android:name="com.hand.hrms4android.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>  
+
+    
+    
+    <!-- Optional for location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <!-- ================= end ====================== -->
     <application
         android:name="com.hand.hrms4android.application.HrmsApplication"
@@ -26,6 +45,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock.Light" >
+        
         <activity
             android:name="com.hand.hrms4android.activity.LoadingActivity"
             android:launchMode="singleTop" >
@@ -60,6 +80,7 @@
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.FunctionListActivity"
+            android:launchMode="singleTask"
             android:label="@string/title_activity_function_list" >
         </activity>
         <activity
@@ -89,73 +110,82 @@
             -->
         </activity>
 
-        <!-- =========================配置的第三方参数属性====================== -->
-		<meta-data android:name="appid" android:value="Ytk0ePKK6k65cRd8BGRN17" />
-		<meta-data android:name="appkey" android:value="tYaDvmhEbj8VTgQYZaEJP4" />
-		<meta-data android:name="appsecret" android:value="e1f4ZVg35n8tywU9XvBmm" />
-
-        <activity
-            android:name="com.igexin.sdk.SdkActivity"
-            android:excludeFromRecents="true"
-            android:process="com.hand.hrms4android.pushservice"
-            android:taskAffinity="android.task.SdkActivityTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-            <intent-filter>
-                <action android:name="com.igexin.action.popupact.com.hand.hrms4android" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <service
-            android:name="com.igexin.sdk.coordinator.SdkMsgService"
-            android:exported="true"
-            android:label="NotifyCenterAIDL"
-            android:process="com.hand.hrms4android.pushservice" >
-        </service>
-
-        <receiver android:name="com.igexin.sdk.coordinator.NotificationCenterAIDLReceiver" >
-            <intent-filter>
-                <action android:name="com.igexin.sdk.action.refreshls" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.igexin.sdk.SdkMainService"
-            android:exported="false"
-            android:label="NotifyCenter"
-            android:process="com.hand.hrms4android.pushservice" >
-        </service>
-
-        <receiver android:name="com.igexin.sdk.SdkReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="sdk.download.DownloadService"
-            android:process="com.hand.hrms4android.pushservice" />
-
-        <receiver
-            android:name="sdk.download.DownloadReceiver"
+        <!-- Required -->
+       <service
+            android:name="cn.jpush.android.service.PushService"
+            android:enabled="true"
             android:exported="false" >
             <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER" />
+                <action android:name="cn.jpush.android.intent.REPORT" />
+                <action android:name="cn.jpush.android.intent.PushService" />
+                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+            </intent-filter>
+        </service>
+         
+        <!-- Required -->
+
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true" >
+          <intent-filter android:priority="1000"> <!--since 1.3.5 -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> <!--since 1.3.5 -->
+                <category android:name="com.hand.hrms4android" /> <!--since 1.3.5 -->
+            </intent-filter> <!--since 1.3.5 -->
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
         </receiver>
-
-        <provider
-            android:name="sdk.download.DownloadProvider"
-            android:authorities="sdk.download.com.hand.hrms4android"
-            android:process="com.hand.hrms4android.pushservice" />
+     <!-- Required SDK核心功能-->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.hand.hrms4android" />
+            </intent-filter>
+        </activity>
+        <!-- Required SDK核心功能-->
+       <service
+            android:name="cn.jpush.android.service.DownloadService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+        <!-- Required SDK核心功能-->
+        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+      
+        <!-- Required. For publish channel feature -->
+        <!-- JPUSH_CHANNEL 是为了方便开发者统计APK分发渠道。-->
+        <!-- 例如: -->
+        <!-- 发到 Google Play 的APK可以设置为 google-play; -->
+        <!-- 发到其他市场的 APK 可以设置为 xxx-market。 -->
+        <!-- 目前这个渠道统计功能的报表还未开放。-->
+        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
+        <!-- Required. AppKey copied from Portal -->
+        <meta-data android:name="JPUSH_APPKEY" android:value="860559ff7ac00cf01c33f106"/> 
         <!-- ========================= igetui 使用 ，结束====================== -->
         <!-- 接收消息广播 -->
-        <receiver android:name="com.hand.hrms4android.receiver.HDMessageReceiver" >
+        <!-- User defined.  For test only  用户自定义的广播接收器-->
+        <receiver
+            android:name="com.example.jpushdemo.MyReceiver"
+            android:exported="false"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="com.igexin.sdk.action.Ytk0ePKK6k65cRd8BGRN17" />
+                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!--Required  用户注册SDK的intent-->
+                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />  
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!--Required  用户打开自定义通知栏的intent-->
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!--Required  用户接收SDK消息的intent-->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!--Required  用户接收SDK通知栏信息的intent-->
+                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> <!--Optional 用户接受Rich Push Javascript 回调函数的intent-->
+                <category android:name="com.hand.hrms4android" />
             </intent-filter>
         </receiver>
     </application>

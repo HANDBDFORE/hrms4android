@@ -19,6 +19,8 @@ public class HDMessageReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Bundle bundle = intent.getExtras();
+		
+		
 		LogUtil.debug(this, "IGetuiMessageReceiver", "onReceive() action=" + bundle.getInt("action"));
 
 		switch (bundle.getInt(Consts.CMD_ACTION)) {

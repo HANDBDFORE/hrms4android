@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.jpush.android.api.JPushInterface;
+
+import com.example.jpushdemo.ExampleUtil;
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.exception.ParseException;
 import com.hand.hrms4android.model.AbstractBaseModel;
@@ -24,6 +27,7 @@ import com.hand.hrms4android.model.LoadingModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.util.Constrants;
+
 
 public class LoadingActivity extends ActionBarActivity {
 
@@ -43,8 +47,10 @@ public class LoadingActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading);
-		bindAllViews(); 
+		
 
+		bindAllViews(); 
+		
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		model = new LoadingModel(MODEL_LOADING, this);
 		autoLoginModel = new AutoLoginModel(MODEL_AUTO_LOGIN, this);
@@ -82,7 +88,7 @@ public class LoadingActivity extends ActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		System.out.println("i am on resume");
 		setViewAsNew();
 
 		baseUrl = mPreferences.getString("sys_basic_url", "");
@@ -97,6 +103,7 @@ public class LoadingActivity extends ActionBarActivity {
 
 //			TODO 自动登录
 			if (mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN, "").length() != 0) {
+				System.out.println("auto login");
 				autoLoginModel.load(LoadType.Network, getAutoLoginParams());
 				return;
 			}
@@ -187,6 +194,7 @@ public class LoadingActivity extends ActionBarActivity {
 	}
 
 	public void doReload() {
+		System.out.println("doreload");
 		setViewAsNew();
 		model.load(LoadType.Network, baseUrl);
 	}
@@ -199,6 +207,7 @@ public class LoadingActivity extends ActionBarActivity {
 	private class ButtonClickListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
+			System.out.println("in click");
 			if (v.getId() == R.id.activity_loading_reload_button) {
 				//
 				doReload();

@@ -54,7 +54,7 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 		case R.id.approve_opinion_ok: {
 			String comments = opinionEditText.getText().toString();
 
-			// 检查输入
+			 //检查输入 项目需求不检查输入
 			if (StringUtils.isEmpty(comments)) {
 				opinionEditText.requestFocus();
 				opinionEditText.startAnimation(shake);

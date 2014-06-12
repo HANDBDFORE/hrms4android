@@ -18,4 +18,6 @@ public class Constrants {
 	public static final String SYS_ATTS_DEVICE_TYPE = "Android";
 	public static final String SYS_ATTS_DEVICE_ID = "device_id";
 	
+	public static final String SYS_LOGIN_STATUS = "login_status";
+	
 }
