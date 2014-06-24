@@ -3,7 +3,9 @@ package com.hand.hrms4android.activity;
 import org.apache.commons.lang3.StringUtils;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 
 	private Animation shake;
 	private EditText opinionEditText;
+	private SharedPreferences mPreferences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +35,10 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 		}
 
 		setContentView(R.layout.activity_approve_opinion);
-
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		String default_approve_option = mPreferences.getString("default_approve_option", "");
 		opinionEditText = (EditText) findViewById(R.id.approve_opinion_comments);
+		opinionEditText.setText(default_approve_option);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -54,7 +59,7 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 		case R.id.approve_opinion_ok: {
 			String comments = opinionEditText.getText().toString();
 
-			 //检查输入 项目需求不检查输入
+
 			if (StringUtils.isEmpty(comments)) {
 				opinionEditText.requestFocus();
 				opinionEditText.startAnimation(shake);

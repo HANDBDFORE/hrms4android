@@ -1,5 +1,6 @@
 package com.hand.hrms4android.activity;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -79,6 +80,7 @@ public class SettingsActivity extends PreferenceActivity {
 		// their values. When their values change, their summaries are updated
 		// to reflect the new value, per the Android Design guidelines.
 		bindPreferenceSummaryToValue(findPreference("sys_basic_url"));
+		bindPreferenceSummaryToValue(findPreference("default_approve_option"));
 		// bindPreferenceSummaryToValue(findPreference("example_list"));
 		// bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
 		// bindPreferenceSummaryToValue(findPreference("sync_frequency"));
@@ -189,6 +191,7 @@ public class SettingsActivity extends PreferenceActivity {
 	 * This fragment shows general preferences only. It is used when the
 	 * activity is showing a two-pane settings UI.
 	 */
+	@SuppressLint("ValidFragment")
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public class GeneralPreferenceFragment extends PreferenceFragment {
 		@Override
@@ -209,6 +212,7 @@ public class SettingsActivity extends PreferenceActivity {
 	 * This fragment shows notification preferences only. It is used when the
 	 * activity is showing a two-pane settings UI.
 	 */
+	@SuppressLint("ValidFragment")
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public class NotificationPreferenceFragment extends PreferenceFragment {
 		@Override
@@ -228,6 +232,7 @@ public class SettingsActivity extends PreferenceActivity {
 	 * This fragment shows data and sync preferences only. It is used when the
 	 * activity is showing a two-pane settings UI.
 	 */
+	@SuppressLint("ValidFragment")
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public class DataSyncPreferenceFragment extends PreferenceFragment {
 		@Override

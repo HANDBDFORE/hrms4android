@@ -20,6 +20,17 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/pref_title_display_name" />
+         
+         <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="@string/pref_default_approve_option"
+            android:dialogMessage="@string/pref_default_dialog_message"
+            android:inputType="text"
+            android:key="default_approve_option"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_approve_option_name" />
     </PreferenceCategory>
 
     <!--

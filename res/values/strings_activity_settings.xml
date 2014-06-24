@@ -11,6 +11,8 @@
     <string name="pref_description_social_recommendations">Recommendations for people to contact based on your message history</string>
     <string name="pref_title_display_name">服务器地址</string>
     <string name="pref_default_display_name">http://</string>
+    <string name="pref_default_approve_option">来自我的android</string>
+    <string name="pref_title_approve_option_name">默认审批意见</string>
     <string name="pref_default_dialog_message">警告，修改此地址会导致程序清空所有缓存信息并退出账户！</string>
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
 

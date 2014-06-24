@@ -56,7 +56,7 @@ public class LoadingActivity extends ActionBarActivity {
 		autoLoginModel = new AutoLoginModel(MODEL_AUTO_LOGIN, this);
 
 		baseUrl = mPreferences.getString("sys_basic_url", "");
-
+		
 		if (!checkBaseUrl(baseUrl)) {
 			// url地址不合理，弹出配置页面
 			startSettingsActivity();
