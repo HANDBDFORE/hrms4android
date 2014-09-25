@@ -231,10 +231,7 @@ public class LoginActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_login, menu);
-		menu.add(101, R.id.approve_detail_tool_previous, 0, "上一条").setShowAsAction(
-		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		menu.add(101, R.id.approve_detail_tool_next, 1, "下一条").setShowAsAction(
-		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
 		return true;
 	}
 
