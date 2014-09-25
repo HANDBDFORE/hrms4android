@@ -25,11 +25,12 @@ import com.igexin.slavesdk.MessageManager;
 
 public class HrmsApplication extends Application {
 	private static HrmsApplication instance;
-	
+
 	public List<Activity> activityList;
 	public Timer timer;
 	public int execTime;
 	public Boolean enableTime;
+
 	/**
 	 * 为了在程序任何位置获得context对象
 	 * 
@@ -44,11 +45,11 @@ public class HrmsApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
-		
+
 		activityList = new ArrayList();
-		timer =	new Timer("overtime");
+		timer = new Timer("overtime");
 		enableTime = true;
-		
+
 		if (PlatformUtil.getAndroidSDKVersion() == 14) {
 			// 怪异的问题
 			try {
@@ -57,104 +58,92 @@ public class HrmsApplication extends Application {
 				e1.printStackTrace();
 			}
 		}
-			//初始化极光推送
-//	         JPushInterface.setDebugMode(true);
-//	         JPushInterface.init(this);
-
+		// 初始化极光推送
+		 JPushInterface.setDebugMode(true);
+		 JPushInterface.init(this);
 
 	}
-	
-	public  void initTimer()
-	{
-		if(!enableTime){
+
+	public void initTimer() {
+		if (!enableTime) {
 			return;
 		}
 
-		if(timer == null){
-			timer  = new Timer();
-		}else{
+		if (timer == null) {
+			timer = new Timer();
+		} else {
 			timer.cancel();
-			timer  = new Timer();
-			
+			timer = new Timer();
+
 		}
-    	
-    	timer.schedule(new TimerTask() {
-			
+
+		timer.schedule(new TimerTask() {
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				
-				
+
 				goback();
 				timer.cancel();
-				timer=null;
+				timer = null;
 			}
 		}, this.execTime * 60 * 1000);
-//		timer.cancel();
+		// timer.cancel();
 	}
-	
-	
-	public void addActivity(Activity activity)
-	{
+
+	public void addActivity(Activity activity) {
 		activityList.add(activity);
-		
+
 	}
-	
-	
+
 	/**
-	* 
-	* @param context
-	* @return
-	*/
-	public  boolean isBackground(Context context) {
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public boolean isBackground(Context context) {
 
+		ActivityManager activityManager = (ActivityManager) context
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningAppProcessInfo> appProcesses = activityManager
+				.getRunningAppProcesses();
+		for (RunningAppProcessInfo appProcess : appProcesses) {
+			if (appProcess.processName.equals(context.getPackageName())) {
+				if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
 
-	ActivityManager activityManager = (ActivityManager) context
-	.getSystemService(Context.ACTIVITY_SERVICE);
-	List<RunningAppProcessInfo> appProcesses = activityManager
-	.getRunningAppProcesses();
-	for (RunningAppProcessInfo appProcess : appProcesses) {
-	if (appProcess.processName.equals(context.getPackageName())) {
-	if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
+					return true;
+				} else {
 
-		return true;
-	}else{
+					return false;
+				}
+			}
+		}
+		return false;
+	}
 
-	return false;
-	}
-	}
-	}
-	return false;
-	}
-	
-	public void goback()
-	{
-		Iterator activityList   =   this.activityList.iterator();
-		while(activityList.hasNext()){
-			Activity activity = (Activity)activityList.next();
-			if(activity !=null){
+	public void goback() {
+		Iterator activityList = this.activityList.iterator();
+		while (activityList.hasNext()) {
+			Activity activity = (Activity) activityList.next();
+			if (activity != null) {
 				activity.finish();
 			}
 		}
-		
-//		Intent intent = new Intent(this,LoadingActivity.class);
-//		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//		startActivity(intent);
-		
-		
-		if(isBackground(this)){
-		Intent intent = new Intent(this,LoadingActivity.class);
-//		intent.addCategory(Intent.CATEGORY_DEFAULT);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-		//		startActivity(intent);
-		}else {
-			Intent intent = new Intent(this,LoadingActivity.class);
+
+		if (isBackground(this)) {
+			Intent intent = new Intent(this, LoadingActivity.class);
+			 intent.addCategory(Intent.CATEGORY_DEFAULT);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+			 startActivity(intent);
+		} else {
+			Intent intent = new Intent(this, LoadingActivity.class);
 			intent.addCategory(Intent.CATEGORY_HOME);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
-			
+
 		}
 	}
-	
+
 }

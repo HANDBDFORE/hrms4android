@@ -110,8 +110,7 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			
-			//每次网络请求初始化 timer;
-			HrmsApplication.getApplication().initTimer();
+
 			
 			Uri query_string = Uri.parse(url);
 			String query_scheme = query_string.getScheme();
@@ -154,6 +153,9 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
+			//每次网络请求初始化 timer;
+			HrmsApplication.getApplication().initTimer();
+			
 			loadingProgress.setVisibility(View.GONE);
 		}
 	}
