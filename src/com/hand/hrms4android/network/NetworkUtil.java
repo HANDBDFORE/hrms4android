@@ -46,7 +46,10 @@ public class NetworkUtil {
 	 *            回调
 	 */
 	public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-
+		
+		//每次网络请求初始化 timer;
+		HrmsApplication.getApplication().initTimer();
+		
 		AsyncHttpClient client = new AsyncHttpClient();
 		
 		client.setCookieStore(cookieStore);
@@ -68,6 +71,9 @@ public class NetworkUtil {
 	 *            回调
 	 */
 	public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+		//每次网络请求初始化 timer;
+		HrmsApplication.getApplication().initTimer();
+		
 		AsyncHttpClient client = new AsyncHttpClient();
 
 		client.setCookieStore(cookieStore);
@@ -87,6 +93,10 @@ public class NetworkUtil {
 
 	public static void post(Context ctx, String url, HttpEntity entity, String contentType,
 	        AsyncHttpResponseHandler responseHandler) {
+		
+		//每次网络请求初始化 timer;
+		HrmsApplication.getApplication().initTimer();
+		
 		AsyncHttpClient client = new AsyncHttpClient();
 
 		client.setCookieStore(cookieStore);

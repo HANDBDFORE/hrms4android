@@ -15,6 +15,8 @@ public class BaseModelActivity extends Activity implements ModelActivity {
 
 	}
 
+
+	
 	@Override
 	public void modelFailedLoad(Exception e, Model<? extends Object> model) {
 		Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();

@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.network.NetworkUtil;
  
@@ -108,6 +109,10 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 	private class ContentWebClient extends WebViewClient {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			
+			//每次网络请求初始化 timer;
+			HrmsApplication.getApplication().initTimer();
+			
 			Uri query_string = Uri.parse(url);
 			String query_scheme = query_string.getScheme();
 			String query_host = query_string.getHost();

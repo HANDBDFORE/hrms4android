@@ -5,6 +5,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.hand.hrms4android.activity.ModelActivity;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.ConfigReader;
@@ -43,6 +44,8 @@ public class AutoLoginModel extends AbstractBaseModel<Void> {
 		NetworkUtil.post(service, params, new UMJsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, JSONObject response) {
+				//重置超时时间
+				HrmsApplication.getApplication().initTimer();
 				activity.modelDidFinishedLoad(AutoLoginModel.this);
 			}
 

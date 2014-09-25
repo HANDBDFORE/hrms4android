@@ -10,6 +10,7 @@ import net.simonvt.menudrawer.Position;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -87,7 +88,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 		});
 		bindAllViews(mMenuDrawer.getMenuView());
 
-		
+		HrmsApplication.getApplication().addActivity(this);
 
 		this.functionListModel = new FunctionModel(0, this);
 
@@ -224,6 +225,9 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 	@Override
 	public void onItemClick(AdapterView<?> listview, View row, int position, long id) {
+
+//		HrmsApplication.getApplication().goback();
+		
 		Object o = mFunctionListAdapter.getItem(position);
 		
 		if (o instanceof FunctionItem) {

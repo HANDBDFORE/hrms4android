@@ -58,7 +58,10 @@ public class LoginModel extends AbstractBaseModel<Void> {
 					activity.modelFailedLoad(new Exception("error data"), LoginModel.this);
 				}
 
+				
+				
 				// 通知Activity已完成加载
+				HrmsApplication.getApplication().initTimer();
 				LoginModel.this.activity.modelDidFinishedLoad(LoginModel.this);
 			}
 

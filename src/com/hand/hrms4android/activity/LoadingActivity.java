@@ -20,12 +20,17 @@ import cn.jpush.android.api.JPushInterface;
 
 import com.example.jpushdemo.ExampleUtil;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.exception.ParseException;
+import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.model.AbstractBaseModel;
 import com.hand.hrms4android.model.AutoLoginModel;
 import com.hand.hrms4android.model.LoadingModel;
+import com.hand.hrms4android.model.LoginModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
+import com.hand.hrms4android.parser.Expression;
+import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.util.Constrants;
 
 
@@ -50,6 +55,8 @@ public class LoadingActivity extends ActionBarActivity {
 		
 
 		bindAllViews(); 
+		
+		HrmsApplication.getApplication().addActivity(this);
 		
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		model = new LoadingModel(MODEL_LOADING, this);
@@ -82,7 +89,8 @@ public class LoadingActivity extends ActionBarActivity {
 		reloadButton = (Button) findViewById(R.id.activity_loading_reload_button);
 		alertImage = (ImageView) findViewById(R.id.activity_loading_alert);
 		reloadButton.setOnClickListener(new ButtonClickListener());
-
+		
+		   
 	}
 
 	@Override
@@ -99,8 +107,34 @@ public class LoadingActivity extends ActionBarActivity {
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
+		
+		//每次获取超时时间
+		try {
+		String time  = XmlConfigReader.getInstance().getAttr(new Expression(
+				        "/config/application/overtime",
+				        "value"));
+		
+		try{
+			int paraInt  =  Integer.parseInt(time);
+			HrmsApplication.getApplication().execTime	= Integer.parseInt(time);
+		}catch(NumberFormatException  e ){
+			HrmsApplication.getApplication().enableTime = false;
+			
+		}
+		
+
+		
+		
+		} catch (ParseExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		if (model.getModelId() == MODEL_LOADING) {
 
+			
+			
 //			TODO 自动登录
 			if (mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN, "").length() != 0) {
 				System.out.println("auto login");
@@ -110,12 +144,14 @@ public class LoadingActivity extends ActionBarActivity {
 
 			else {
 				startLoginActivity();
+				finish();
 			}
 
 		}
 
 		if (model.getModelId() == MODEL_AUTO_LOGIN) {
 			startFunctionListActivity();
+			finish();
 			return;
 		}
 	}

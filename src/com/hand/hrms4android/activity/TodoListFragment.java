@@ -221,6 +221,9 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 					listModel.addRecordToSubmitQueue(options, listAdapter.getSelectedItemIDs());
 					mActionMode.finish();
 				}
+			}else {
+				listModel.load(LoadType.Network, null);
+				
 			}
 		}
 

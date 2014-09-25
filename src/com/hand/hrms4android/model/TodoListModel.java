@@ -133,6 +133,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 					// "localId": 25908,
 					// "sourceSystemName": "HR"
 					try {
+						HrmsApplication.getApplication().initTimer();
 
 						JSONArray resultJsonArray = response.getJSONObject("body").getJSONArray("list");
 						for (int i = 0; i < resultJsonArray.length(); i++) {

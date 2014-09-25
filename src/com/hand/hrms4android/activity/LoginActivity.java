@@ -1,6 +1,10 @@
 package com.hand.hrms4android.activity;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,7 +28,9 @@ import android.widget.Toast;
 
 import cn.jpush.android.api.JPushInterface;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.exception.AuroraServerFailure;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.model.LoginModel;
@@ -64,7 +70,7 @@ public class LoginActivity extends ActionBarActivity {
 		configReader = XmlConfigReader.getInstance();
 
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
+		HrmsApplication.getApplication().addActivity(this);
 		bindAllViews();
 		readConfig();
 	}
@@ -113,7 +119,10 @@ public class LoginActivity extends ActionBarActivity {
 			finish();
         }else{
         	//正常进入,启动功能列表
-			startActivity(new Intent(this, FunctionListActivity.class)); 
+
+        	startActivity(new Intent(this, FunctionListActivity.class)); 
+			
+			
         	finish();
         }
 
@@ -132,12 +141,15 @@ public class LoginActivity extends ActionBarActivity {
 
 		loginButton.setEnabled(true);
 		loginButton.setText(R.string.activity_login_loginbutton_text);
+	
 	}
 
 	private class LoginButtonClickListener implements OnClickListener {
 
 		@Override
 		public void onClick(View v) {
+
+			
 			doLogin();
 		}
 	}
@@ -202,7 +214,12 @@ public class LoginActivity extends ActionBarActivity {
 		String token = mPreferences.getString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, "");
 		if (token.length() != 0) {
 			params.put("push_token", token);
+		}else{
+			params.put("push_token", "-1");
+
+
 		}
+		
 		System.out.println(token);
 		
 		// 设备imei，作为设备ID使用
@@ -214,7 +231,10 @@ public class LoginActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_login, menu);
-
+		menu.add(101, R.id.approve_detail_tool_previous, 0, "上一条").setShowAsAction(
+		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		menu.add(101, R.id.approve_detail_tool_next, 1, "下一条").setShowAsAction(
+		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		return true;
 	}
 

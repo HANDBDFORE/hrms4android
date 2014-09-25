@@ -6,11 +6,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -21,6 +23,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.webkit.DownloadListener;
+import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -29,7 +34,10 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 
+
+@SuppressLint("JavascriptInterface")
 public class HTMLBaseActivity extends ActionBarActivity {
 	protected WebView contentWebView;
 	protected ProgressBar loadingProgress;
@@ -46,13 +54,20 @@ public class HTMLBaseActivity extends ActionBarActivity {
 
 		contentWebView = (WebView) findViewById(R.id.html_base_activity_webview);
 		contentWebView.setWebViewClient(new ContentWebClient());
-		WebSettings webSettings = contentWebView.getSettings();
-		webSettings.setJavaScriptEnabled(true);
 
+		
+		contentWebView.addJavascriptInterface(this, "activity");
+		
+		
+		WebSettings webSettings = contentWebView.getSettings();	
+		webSettings.setJavaScriptEnabled(true);
+		
+		contentWebView.setWebChromeClient(new AlertWebChromeClient());
+		
 		loadingProgress = (ProgressBar) findViewById(R.id.html_base_activity_loading_progress);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		
+		HrmsApplication.getApplication().addActivity(this);
 		//add by jtt	
 		 this.manager =(DownloadManager)getSystemService("download");
 		 this.handler =new Handler(){
@@ -81,6 +96,14 @@ public class HTMLBaseActivity extends ActionBarActivity {
 		//add by jtt 
 		afterSuperOnCreateFinish(savedInstanceState);
 	}
+	
+	@Override
+	@JavascriptInterface
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+	}
+	
 
 	/**
 	 * 设定布局文件，必须是 继承自 activity_html_base的布局文件
@@ -97,6 +120,9 @@ public class HTMLBaseActivity extends ActionBarActivity {
 	private class ContentWebClient extends WebViewClient {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			//每次网络请求初始化 timer;
+			HrmsApplication.getApplication().initTimer();
+			
 			Uri query_string = Uri.parse(url);
 			String query_scheme = query_string.getScheme();
 			String query_host = query_string.getHost();
@@ -142,6 +168,61 @@ public class HTMLBaseActivity extends ActionBarActivity {
 		}
 	}
 
+	
+	
+	private class AlertWebChromeClient extends WebChromeClient{
+		@Override
+	    public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result)
+	    {
+	        new AlertDialog.Builder(HTMLBaseActivity.this)
+	            .setTitle("")
+	            .setMessage(message)
+	            .setPositiveButton(android.R.string.ok,
+	                    new AlertDialog.OnClickListener()
+	                    {
+	                        public void onClick(DialogInterface dialog, int which)
+	                        {
+	                            result.confirm();
+	                        }
+	                    })
+	            .setCancelable(false)
+	            .create()
+	            .show();
+
+	        return true;
+	    };
+	    
+	    @Override
+	    public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+	        new AlertDialog.Builder(HTMLBaseActivity.this)
+	        .setTitle("")
+	        .setMessage(message)
+	        .setPositiveButton(android.R.string.ok,
+	                new DialogInterface.OnClickListener()
+	        {
+	            public void onClick(DialogInterface dialog, int which)
+	            {
+	                result.confirm();
+	            }
+	        })
+	        .setNegativeButton(android.R.string.cancel,
+	                new DialogInterface.OnClickListener()
+	        {
+	            public void onClick(DialogInterface dialog, int which)
+	            {
+	                result.cancel();
+	            }
+	        })
+	        .create()
+	        .show();
+
+	        return true;
+	    }
+	    
+	}
+
+	
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
