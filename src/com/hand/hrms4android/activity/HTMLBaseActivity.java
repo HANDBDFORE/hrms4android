@@ -137,6 +137,13 @@ public class HTMLBaseActivity extends ActionBarActivity {
 				return true;
 			}
 
+			//特殊url调用返回逻辑
+			if(query_scheme.equalsIgnoreCase("jscall")){
+				finish();
+				return true;
+			}	
+			
+			
 			if (query_scheme.equalsIgnoreCase("mailto")) {
 
 				android.net.MailTo mailTo = android.net.MailTo.parse(url);
