@@ -34,8 +34,10 @@ public class DownLoadListFragment extends BaseSherlockFragment implements
 
 	@Override
 	public void onResume() {
-		this.myFileAdapter.setDatas(this.getFileList());
-		super.onResume();
+		if(this.myFileAdapter !=null){
+			this.myFileAdapter.setDatas(this.getFileList());
+		}
+			super.onResume();
 	}
 
 	@Override
@@ -55,6 +57,11 @@ public class DownLoadListFragment extends BaseSherlockFragment implements
 			dir.mkdir();
 		}
 		File[] fil = dir.listFiles();
+		if(fil==null){
+			
+			return null;
+		}
+		
 		for (int i = 0; i < fil.length; i++) {
 
 			ar.add(  new FileItem(fil[i]));
@@ -65,6 +72,11 @@ public class DownLoadListFragment extends BaseSherlockFragment implements
 	}
 
 	public void bulidView(View view) {
+		if(getFileList() == null){
+			
+			return;
+		}
+		
 		myFileAdapter = new DownLoadListAdapter(this.getActivity(),
 				getFileList());
 		myList = (ListView) view.findViewById(R.id.downlistview);
