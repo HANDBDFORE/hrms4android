@@ -86,7 +86,7 @@ public class FunctionModel extends AbstractListModel<Object> {
 		}
 
 		if (display) {
-			item.add(new FunctionSection("工作流"));
+			item.add(new FunctionSection("WorkFlow"));
 		}
 		// ++++++++++++++++++
 
@@ -121,7 +121,7 @@ public class FunctionModel extends AbstractListModel<Object> {
 		}
 		
 		//+++++++++++++++++++++++++显示下载管理
-		item.add(new FunctionSection("系统设置"));
+		item.add(new FunctionSection("SystemSetting"));
 		item.add(downItem);
 		
 		return item;

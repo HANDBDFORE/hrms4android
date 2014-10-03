@@ -93,7 +93,7 @@ public class DoneListFragment extends BaseSherlockFragment implements OnItemClic
 		listViewWrapper.onRefreshComplete();
 
 		if (listAdapter.getCount() == 0) {
-			showEmptyTip("暂时没有已完成事项");
+			showEmptyTip("Had not completed");
 		} else {
 			showList();
 		}

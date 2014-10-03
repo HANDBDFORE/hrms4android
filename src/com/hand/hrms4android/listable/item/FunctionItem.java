@@ -24,12 +24,12 @@ public class FunctionItem {
 	 */
 	public static final String DOWNLOAD_ITEM_ID	= "com.hand.hrms4android.activity.DownLoadListFragment";
 	
-	public static final FunctionItem todoItem = new FunctionItem(TODO_ITEM_ID, "待办事项", "bundle://envelope_info.png",
+	public static final FunctionItem todoItem = new FunctionItem(TODO_ITEM_ID, "To Do List", "bundle://envelope_info.png",
 	        "", R.drawable.hd_ic_todo);
-	public static final FunctionItem doneItem = new FunctionItem(DONE_ITEM_ID, "已审批", "bundle://cancel_red.png", "",
+	public static final FunctionItem doneItem = new FunctionItem(DONE_ITEM_ID, "Approved List", "bundle://cancel_red.png", "",
 	        R.drawable.hd_ic_done);
 	
-	public static final FunctionItem downItem = new FunctionItem(DOWNLOAD_ITEM_ID, "下载管理", "bundle://cancel_red.png", "",
+	public static final FunctionItem downItem = new FunctionItem(DOWNLOAD_ITEM_ID, "DownLoad Manager", "bundle://cancel_red.png", "",
 	        R.drawable.hd_ic_done);
 	
 	private String functionId;

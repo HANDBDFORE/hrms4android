@@ -100,8 +100,8 @@ public class DownLoadListFragment extends BaseSherlockFragment implements
 		 final FileItem fi = (FileItem) localAdapter.getDatas().get(position);
 		
 		 new AlertDialog.Builder(this.getActivity())
-				.setTitle("是否删除" + fi.getTitle())
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				.setTitle("Whether or not to delete" + fi.getTitle())
+				.setPositiveButton("confirm", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -115,7 +115,7 @@ public class DownLoadListFragment extends BaseSherlockFragment implements
 
 					}
 
-				}).setNegativeButton("取消", null).show();
+				}).setNegativeButton("cancel", null).show();
 
 		return true;
 	}

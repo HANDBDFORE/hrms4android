@@ -59,8 +59,8 @@ public class HrmsApplication extends Application {
 			}
 		}
 		// 初始化极光推送
-//		 JPushInterface.setDebugMode(true);
-//		 JPushInterface.init(this);
+		 JPushInterface.setDebugMode(true);
+		 JPushInterface.init(this);
 
 	}
 

@@ -160,7 +160,7 @@ public class HTMLBaseActivity extends ActionBarActivity {
 				try {
 					startActivity(sendIntent);
 				} catch (ActivityNotFoundException e) {
-					Toast.makeText(HTMLBaseActivity.this, "没有找到邮件客户端", Toast.LENGTH_SHORT).show();
+					Toast.makeText(HTMLBaseActivity.this, "Didn't find mail client", Toast.LENGTH_SHORT).show();
 				}
 				return true;
 			}

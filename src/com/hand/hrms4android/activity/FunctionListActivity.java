@@ -256,9 +256,9 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	public void exitSystem(View v) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
-		builder.setTitle("退出系统");
-		builder.setMessage("确认退出系统吗？退出后所有本地保存的数据将被清空！");
-		builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+		builder.setTitle("Logout");
+		builder.setMessage("Do you  confirm to exit the system？After all locally stored data will be empty!");
+		builder.setPositiveButton("logout", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				StorageUtil.deleteDB();
 				StorageUtil.removeSavedInfo();
@@ -266,7 +266,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 				finish();
 			}
 		});
-		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 			}
 		});
