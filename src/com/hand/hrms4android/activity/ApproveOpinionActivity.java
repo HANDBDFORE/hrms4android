@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 
 public class ApproveOpinionActivity extends ActionBarActivity {
@@ -26,6 +27,9 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		HrmsApplication.getApplication().addActivity(this);
+		
+		
 		Intent i = getIntent();
 		if (i != null) {
 			String title = i.getStringExtra(EXTRA_TITLE);

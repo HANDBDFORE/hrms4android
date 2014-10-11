@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.model.DeliverModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
@@ -60,6 +61,9 @@ public class DeliverActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		HrmsApplication.getApplication().addActivity(this);
+		
 		setContentView(R.layout.activity_deliver);
 		setTitle("审批动作：转交");
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
