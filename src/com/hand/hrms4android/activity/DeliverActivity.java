@@ -66,6 +66,8 @@ public class DeliverActivity extends ActionBarActivity {
 		comment = (EditText) findViewById(R.id.activity_deliver_comment);
 		comment.setText(default_approve_option);
 		
+		selectedItemData = new HashMap<String, String>();
+		
 		AutoCompleteTextView employeeView = (AutoCompleteTextView) findViewById(R.id.activity_deliver_username);
 		employeeView.setOnClickListener(new OnClickListener() {
 			
@@ -101,10 +103,11 @@ public class DeliverActivity extends ActionBarActivity {
     	switch (requestCode) {
 		case RETURN_USERNAME:
 			if(resultCode == RESULT_OK){
-				this.deliverTo.setText(data.getStringExtra("employeeName"));
-				selectedItemData = new HashMap<String, String>();
+
 				selectedItemData.put("employeeName", data.getStringExtra("employeeName").toString());
-				selectedItemData.put("employeeId", data.getStringExtra("employeeId").toString());		
+				selectedItemData.put("employeeId", data.getStringExtra("employeeId").toString());
+				
+				this.deliverTo.setText(data.getStringExtra("employeeName").toString());
 			}
 			break;
 		}
