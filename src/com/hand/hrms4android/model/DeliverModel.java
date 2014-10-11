@@ -10,6 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+import android.widget.Toast;
+
+import com.hand.hrms4android.activity.DeliverActivity;
 import com.hand.hrms4android.activity.ModelActivity;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.network.NetworkUtil;
@@ -21,6 +25,8 @@ import com.loopj.android.http.UMJsonHttpResponseHandler;
 
 public class DeliverModel extends AbstractListModel<Map<String, String>> {
 
+//	public ArrayList<Map<String,String>> loadAuroraDataset;
+	
 	public DeliverModel(int id, ModelActivity activity) {
 		super(id, activity);
 		configReader = XmlConfigReader.getInstance();
@@ -28,33 +34,52 @@ public class DeliverModel extends AbstractListModel<Map<String, String>> {
 
 	private ConfigReader configReader;
 
+	public static boolean isNumeric(String str){
+		   for(int i=str.length();--i>=0;){
+		      int chr=str.charAt(i);
+		      if(chr<48 || chr>57)
+		         return false;
+		   }
+		   return true;
+		}	
+	
 	@Override
 	public void load(LoadType loadType, Object param) {
 		String[] ps=(String[]) param;
-
 		try {
 			String actionName = configReader.getAttr(new Expression(
 			        "/config/application/activity[@name='deliver_activity']/request/url[@name='employee_query_url']",
 			        "value"));
 
 			RequestParams params = new RequestParams();
-			params.put("sourceSystemName", ps[0]);
-			params.put("keyword", ps[1]);
+//			params.put("sourceSystemName", ps[0]);
+//			params.put("keyword", ps[1]);
 
+			params.put("mobile_employee_keyword", ps[1]);
+
+			
 			NetworkUtil.post(actionName, params, new UMJsonHttpResponseHandler(){
 				@Override
 				public void onSuccess(int statusCode, JSONObject response) {
 					
 					try {
 						JSONArray list = response.getJSONObject("body").getJSONArray("list");
+						
+
 						loadAuroraDataset =new ArrayList<Map<String,String>>();  
+						
 						for (int i = 0; i < list.length(); i++) {
 	                        JSONObject jsonRecord = list.getJSONObject(i);
 	                        Map<String, String> record = new HashMap<String, String>();
-	                        record.put("realEmployeeId", jsonRecord.getString("realEmployeeId"));
+	                        record.put("employee_id", jsonRecord.getString("employee_id"));
+	                        record.put("employee_code", jsonRecord.getString("employee_code"));
 	                        record.put("name", jsonRecord.getString("name"));
-	                        record.put("description", jsonRecord.getString("description"));
+	                        record.put("email", jsonRecord.getString("email"));
+	                        record.put("mobile", jsonRecord.getString("mobile"));
+	                        record.put("job", jsonRecord.getString("job"));
 	                        loadAuroraDataset.add(record);
+	                        
+	                        Log.d("LEN",Integer.toString(list.length()));
                         }
 						
 						activity.modelDidFinishedLoad(DeliverModel.this);
@@ -78,7 +103,9 @@ public class DeliverModel extends AbstractListModel<Map<String, String>> {
 
 	@Override
 	public List<Map<String, String>> getProcessData() {
+		
 		return loadAuroraDataset;
+		
 	}
 
 }

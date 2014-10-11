@@ -1,0 +1,66 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="#fff"
+    android:descendantFocusability="blocksDescendants">
+
+   <ImageView
+            android:id="@+id/employeePhonto"
+            android:layout_alignParentLeft="true" 
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:background="@drawable/deliver_user_icon"
+            android:layout_marginLeft="10dip"
+            />    
+    
+	<TextView
+	    android:id="@+id/employeeName"
+	    android:layout_toRightOf="@id/employeePhonto"
+	    android:layout_marginTop="2dp"
+	    android:layout_marginLeft="10dp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="Wang Nima"
+	    android:textSize="22sp"/>
+
+	<TextView
+	    android:id="@+id/employeeNo"
+	    android:layout_below="@id/employeeName"
+	    android:layout_toRightOf="@id/employeePhonto"
+	    android:layout_marginTop="3dp"
+	    android:layout_marginLeft="10dp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="No.22222"/>
+
+	<TextView
+	    android:id="@+id/employeeTel"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:layout_alignBottom="@id/employeeName"
+	    android:layout_marginRight="10dp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="1893322123"
+	    android:autoLink="phone"/>
+
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="Tel:"
+	    android:layout_toLeftOf="@id/employeeTel"
+	    android:layout_alignTop="@id/employeeTel"/>	
+	
+	<TextView
+	    android:id="@+id/employeeJob"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:layout_alignTop="@id/employeeNo"
+	    android:layout_marginRight="10dp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="Job:"
+	    android:textSize="12sp"/>	
+
+</RelativeLayout>

@@ -6,7 +6,7 @@
 
     <uses-sdk 
         android:minSdkVersion="10"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -109,7 +109,10 @@
             </intent-filter>
             -->
         </activity>
-
+		<activity
+		    android:name="com.hand.hrms4android.activity.EmployeeListActivity"
+		    android:label="@string/title_activity_test">
+		</activity>
         <!-- Required -->
        <service
             android:name="cn.jpush.android.service.PushService"
