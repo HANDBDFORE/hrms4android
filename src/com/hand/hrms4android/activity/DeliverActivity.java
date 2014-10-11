@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -48,7 +49,7 @@ public class DeliverActivity extends ActionBarActivity {
 
 	private Animation shake;
 
-	private AutoCompleteTextView deliverTo;
+	private TextView deliverTo;
 	private EditText comment;
 	private SimpleAdapter autoCompleteAdapter;
 	private String sourceSystemName;
@@ -68,14 +69,13 @@ public class DeliverActivity extends ActionBarActivity {
 		
 		selectedItemData = new HashMap<String, String>();
 		
-		AutoCompleteTextView employeeView = (AutoCompleteTextView) findViewById(R.id.activity_deliver_username);
-		employeeView.setOnClickListener(new OnClickListener() {
+		deliverTo = (TextView) findViewById(R.id.activity_deliver_username);
+		deliverTo.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO 自动生成的方法存根
-//				Log.d("GGG",DeliverActivity.this.deliverTo.getText().toString());
-				if(DeliverActivity.this.deliverTo.getText().toString().equals("")){
+				if(true){
 					Intent intent = new Intent(DeliverActivity.this, EmployeeListActivity.class);
 					startActivityForResult(intent, RETURN_USERNAME);					
 				}
@@ -115,8 +115,8 @@ public class DeliverActivity extends ActionBarActivity {
     }
 	
 	private void bindAllViews() {
-		deliverTo = (AutoCompleteTextView) findViewById(R.id.activity_deliver_username);
-		deliverTo.setThreshold(1);
+		deliverTo = (TextView) findViewById(R.id.activity_deliver_username);
+//		deliverTo.setThreshold(1);
 		comment = (EditText) findViewById(R.id.activity_deliver_comment);
 
 		deliverTo.addTextChangedListener(new TextChangeListener());
@@ -133,7 +133,7 @@ public class DeliverActivity extends ActionBarActivity {
 		autoCompleteAdapter = new SimpleAdapter(this, new ArrayList<Map<String, String>>(),
 		        android.R.layout.simple_list_item_2, adapter_from_place_holder, adapter_to);
 
-		deliverTo.setAdapter(autoCompleteAdapter);
+//		deliverTo.setAdapter(autoCompleteAdapter);
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class DeliverActivity extends ActionBarActivity {
 		autoCompleteAdapter = new SimpleAdapter(this, (List<Map<String, String>>) model.getProcessData(),
 		        android.R.layout.simple_list_item_2, adapter_from_place_holder, adapter_to);
 
-		deliverTo.setAdapter(autoCompleteAdapter);
+//		deliverTo.setAdapter(autoCompleteAdapter);
 		autoCompleteAdapter.notifyDataSetChanged();
 	}
 
@@ -192,11 +192,6 @@ public class DeliverActivity extends ActionBarActivity {
 		MenuItem item = menu.findItem(R.id.approve_opinion_ok);
 
 		String input = deliverTo.getText().toString();
-		if(selectedItemData != null){
-		Toast.makeText(this, selectedItemData.get("employeeName"), Toast.LENGTH_SHORT).show();}
-		else{
-			Toast.makeText(this, "NaN", Toast.LENGTH_SHORT).show();
-		}
 		if (selectedItemData != null && (input.equals(selectedItemData.get("employeeName")))) {
 			item.setEnabled(true);
 		} else {

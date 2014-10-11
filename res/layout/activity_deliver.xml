@@ -21,14 +21,13 @@
                 android:layout_weight="7.53"
                 android:text="@string/activity_diliver_prompt_to" />
 
-            <AutoCompleteTextView
+            <TextView
                 android:id="@+id/activity_deliver_username"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="27.24"
                 android:background="@drawable/edit_text_holo_light"
                 android:inputType="text"
-                android:focusable="false" 
                 />
         </LinearLayout>
 
