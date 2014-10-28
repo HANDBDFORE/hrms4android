@@ -23,11 +23,42 @@
     <string name="title_activity_approve_detail">明细内容</string>
     <string name="title_activity_loading">Loading</string>
     <string name="title_activity_deliver">转交</string>
+    <string name="action_activity_approve_opinion">审批动作</string>
+    <string name="ok">确定</string>
+    <string name="cancle">取消</string>
+    <string name="base_receipt_last_item">上一条</string>
+    <string name="base_receipt_next_item">下一条</string>
+    <string name="activity_done_list_fragment_no_matters">暂时没有已完成事项</string>
+    <string name="activity_employee_list_no_or_name">输入工号或姓名</string>
+    <string name="activity_function_list_logout">退出系统</string>
+    <string name="activity_function_list_logout_message">确认退出系统吗？退出后所有本地保存的数据将被清空！</string>
+    <string name="activity_function_list_exit">退出</string>
+    <string name="activity_login_communication_error">通信出现错误，请检查网络连接或服务</string>
+    <string name="activity_login_unknown_error">未知错误</string>
+    <string name="activity_todo_list_fragment_no_pending_matters">暂时没有待审批事项</string>
+    <string name="activity_todo_list_fragment_batch_approval">批量审批</string>
+    <string name="approval">同意</string>
+    <string name="refuse">拒绝</string>
 
     <!-- ///// 转交语言 //// -->
     <string name="activity_diliver_prompt_to">转交给</string>
+    <string name="activity_diliver_action_prompt_to">审批动作：转交</string>
+    <string name="activity_diliver_send_out">送出</string>
+    <string name="activity_diliver_cancel">取消</string>
+    <string name="activity_diliver_employee_title">用户查询</string>
     <!-- ///// 功能语言 //// -->
     <string name="title_activity_function_list">移动商务</string>
     <string name="title_activity_html"></string>
+    <string name="activity_html_base_no_email_client">没有找到邮件客户端</string>
+    <string name="activity_loading_network_issue_and_change_setting">网络存在问题，请稍后再试，或者调整设置</string>
+    <string name="activity_loading_network_issue">网络存在问题，请稍后再试</string>
+    <string name="activity_loading_config_error">配置文件读取后发生错误，请检查配置地址</string>
+    <string name="activity_test_search">搜索</string>
+    <!-- ///// item ////// -->
+    <string name="item_todo">待办事项</string>
+    <string name="item_done">已审批</string>
+    <string name="download">下载管理</string>
+	<string name="workflow">工作流</string>
+	<string name="systemsetting">系统设置</string>
 
 </resources>

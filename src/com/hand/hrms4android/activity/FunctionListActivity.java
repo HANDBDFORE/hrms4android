@@ -144,8 +144,10 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 
 			if (function.getFunctionId().equals(FunctionItem.OTHER_ITEM_ID)) {
 				Bundle bundle = new Bundle();
+//				String title = getResources().getString(Integer.parseInt(function.getText()));
+//				String title = getResources().getString(R.string.item_done);
 				bundle.putString("url", function.getUrl());
-				bundle.putString("title", function.getText());
+				bundle.putString("title", function.getText(getApplicationContext()));
 				return Fragment.instantiate(this, "com.hand.hrms4android.activity.HTMLFragment", bundle);
 			}
 
@@ -256,9 +258,9 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 	public void exitSystem(View v) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
-		builder.setTitle("退出系统");
-		builder.setMessage("确认退出系统吗？退出后所有本地保存的数据将被清空！");
-		builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+		builder.setTitle(getResources().getString(R.string.activity_function_list_logout_message));
+		builder.setMessage(getResources().getString(R.string.activity_function_list_logout_message));
+		builder.setPositiveButton(getResources().getString(R.string.activity_function_list_exit), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				StorageUtil.deleteDB();
 				StorageUtil.removeSavedInfo();
@@ -266,7 +268,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 				finish();
 			}
 		});
-		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton(getResources().getString(R.string.cancle), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 			}
 		});

@@ -1,5 +1,7 @@
 package com.hand.hrms4android.widget;
 
+//import android.R;
+import com.hand.hrms4android.R;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -50,7 +52,7 @@ public class ContentWebClient extends WebViewClient {
 			try {
 				context.startActivity(sendIntent);
 			} catch (ActivityNotFoundException e) {
-				Toast.makeText(context, "没有找到邮件客户端", Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, context.getString(R.string.activity_html_base_no_email_client), Toast.LENGTH_SHORT).show();
 			}
 			return true;
 		}

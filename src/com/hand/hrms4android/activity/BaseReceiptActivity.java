@@ -58,9 +58,9 @@ public class BaseReceiptActivity<E> extends HTMLBaseActivity {
 //		        MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		int toolIndex = GROUP_TOOLS;
-		menu.add(GROUP_TOOLS, R.id.approve_detail_tool_previous, toolIndex++, "上一条").setShowAsAction(
+		menu.add(GROUP_TOOLS, R.id.approve_detail_tool_previous, toolIndex++, getResources().getString(R.string.base_receipt_last_item)).setShowAsAction(
 		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		menu.add(GROUP_TOOLS, R.id.approve_detail_tool_next, toolIndex, "下一条").setShowAsAction(
+		menu.add(GROUP_TOOLS, R.id.approve_detail_tool_next, toolIndex, getResources().getString(R.string.base_receipt_next_item)).setShowAsAction(
 		        MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
 		return super.onCreateOptionsMenu(menu);

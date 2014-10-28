@@ -61,7 +61,7 @@ public class DeliverActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deliver);
-		setTitle("审批动作：转交");
+		setTitle(getResources().getString(R.string.activity_diliver_action_prompt_to));
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		String default_approve_option = mPreferences.getString("default_approve_option", "");
 		comment = (EditText) findViewById(R.id.activity_deliver_comment);
@@ -182,8 +182,8 @@ public class DeliverActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, R.id.approve_opinion_ok, 0, "送出").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		menu.add(0, R.id.approve_opinion_cancel, 1, "取消").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(0, R.id.approve_opinion_ok, 0, getResources().getString(R.string.activity_diliver_send_out)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(0, R.id.approve_opinion_cancel, 1, getResources().getString(R.string.activity_diliver_cancel)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 

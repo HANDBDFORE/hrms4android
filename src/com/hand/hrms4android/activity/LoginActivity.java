@@ -132,11 +132,11 @@ public class LoginActivity extends ActionBarActivity {
 	@Override
 	public void modelFailedLoad(Exception e, Model model) {
 		if (e.getCause() instanceof IOException) {
-			Toast.makeText(this, "通信出现错误，请检查网络连接或服务", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getResources().getString(R.string.activity_login_communication_error), Toast.LENGTH_LONG).show();
 		} else if (e.getCause() instanceof AuroraServerFailure) {
 			Toast.makeText(this, e.getCause().getMessage(), Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(this, "未知错误", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getResources().getString(R.string.activity_login_unknown_error), Toast.LENGTH_LONG).show();
 		}
 
 		loginButton.setEnabled(true);
