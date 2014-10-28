@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.listable.adapter.DeliverListAdapter;
 import com.hand.hrms4android.model.DeliverModel;
 import com.hand.hrms4android.model.Employee;
@@ -39,6 +40,9 @@ public class EmployeeListActivity extends ActionBarActivity implements SearchVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+		HrmsApplication.getApplication().addActivity(this);
+        
         setContentView(R.layout.activity_employee_search);
         model = new DeliverModel(0, this);
         

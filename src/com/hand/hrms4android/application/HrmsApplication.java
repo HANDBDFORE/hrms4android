@@ -63,6 +63,8 @@ public class HrmsApplication extends Application {
 //		 JPushInterface.init(this);
 
 	}
+	
+
 
 	public void initTimer() {
 		if (!enableTime) {
@@ -130,20 +132,32 @@ public class HrmsApplication extends Application {
 			}
 		}
 
-
-		if (isBackground(this)) {
-			Intent intent = new Intent(this, LoadingActivity.class);
-			 intent.addCategory(Intent.CATEGORY_DEFAULT);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-			 startActivity(intent);
-		} else {
-			Intent intent = new Intent(this, LoadingActivity.class);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-
+		while(isBackground(this)){
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		Intent intent = new Intent(this, LoadingActivity.class);
+		intent.addCategory(Intent.CATEGORY_DEFAULT);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+//		if (isBackground(this)) {
+//			Intent intent = new Intent(this, LoadingActivity.class);
+//			 intent.addCategory(Intent.CATEGORY_DEFAULT);
+//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//			 startActivity(intent);
+//		} else {
+//			Intent intent = new Intent(this, LoadingActivity.class);
+//			intent.addCategory(Intent.CATEGORY_HOME);
+//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			
+//			startActivity(intent);
+//
+//		}
 	}
 
 }

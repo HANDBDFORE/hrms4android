@@ -8,6 +8,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.model.Model;
 
 import android.os.Bundle;
@@ -22,6 +23,9 @@ public class TestActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		HrmsApplication.getApplication().addActivity(this);
+		
 		setContentView(R.layout.activity_test);
 		nameListView = (ListView) findViewById(android.R.id.list);
 		nameListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, datas));

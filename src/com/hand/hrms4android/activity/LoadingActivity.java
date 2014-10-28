@@ -53,7 +53,7 @@ public class LoadingActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading);
 		
-
+		
 		bindAllViews(); 
 		
 		HrmsApplication.getApplication().addActivity(this);
