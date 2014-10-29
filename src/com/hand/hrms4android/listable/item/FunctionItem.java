@@ -1,6 +1,8 @@
 package com.hand.hrms4android.listable.item;
 
 import com.hand.hrms4android.R;
+import com.hand.hrms4android.application.HrmsApplication;
+
 import 	android.content.Context;
 
 public class FunctionItem {
@@ -24,13 +26,13 @@ public class FunctionItem {
 	 *下载管理 
 	 */
 	public static final String DOWNLOAD_ITEM_ID	= "com.hand.hrms4android.activity.DownLoadListFragment";
-
-	public static final FunctionItem todoItem = new FunctionItem(TODO_ITEM_ID,  String.valueOf(R.string.item_todo), "bundle://envelope_info.png",
+	
+	public static final FunctionItem todoItem = new FunctionItem(TODO_ITEM_ID,  HrmsApplication.getApplication().getResources().getString(R.string.item_todo), "bundle://envelope_info.png",
 	        "", R.drawable.hd_ic_todo);
-	public static final FunctionItem doneItem = new FunctionItem(DONE_ITEM_ID, String.valueOf(R.string.item_done), "bundle://cancel_red.png", "",
+	public static final FunctionItem doneItem = new FunctionItem(DONE_ITEM_ID, HrmsApplication.getApplication().getResources().getString(R.string.item_done), "bundle://cancel_red.png", "",
 	        R.drawable.hd_ic_done);
 	
-	public static final FunctionItem downItem = new FunctionItem(DOWNLOAD_ITEM_ID, String.valueOf(R.string.download), "bundle://cancel_red.png", "",
+	public static final FunctionItem downItem = new FunctionItem(DOWNLOAD_ITEM_ID, HrmsApplication.getApplication().getResources().getString(R.string.download), "bundle://cancel_red.png", "",
 	        R.drawable.hd_ic_done);
 	
 	private String functionId;
@@ -64,13 +66,13 @@ public class FunctionItem {
 	}
 
 	public String getText(Context context) {
-		boolean flag = text.matches("\\d+");
-		if(flag){
-			String title = context.getString(Integer.parseInt(text));	
-			return title;
-		}else{
+//		boolean flag = text.matches("\\d+");
+//		if(flag){
+//			String title = context.getString(Integer.parseInt(text));	
+//			return title;
+//		}else{
 			return text;
-		}
+//		}
 		
 	}
 

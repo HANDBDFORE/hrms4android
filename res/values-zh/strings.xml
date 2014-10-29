@@ -13,6 +13,7 @@
     <string name="activity_login_prompt_title">汉得移动商务</string>
     <string name="activity_login_prompt_username">用户名：</string>
     <string name="activity_login_prompt_password">密码：</string>
+    <string name="activity_login_server_setting">设置</string>
     <!-- ///// 结束 //// -->
 
 

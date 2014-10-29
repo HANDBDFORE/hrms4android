@@ -17,6 +17,7 @@ import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -60,7 +61,7 @@ public class LoginActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		isIntercepted();
 		
 		
@@ -237,7 +238,7 @@ public class LoginActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-		if (item.getItemId() == R.id.menu_settings) {
+		if (item.getItemId() == R.id.setting) {
 			Intent i = new Intent(this, SettingsActivity.class);
 			startActivityForResult(i, ACTIVITY_SETTINGS);
 		}
