@@ -5,25 +5,13 @@
     android:background="@drawable/bg"
     android:orientation="vertical" >
 
-    <!-- 标题 -->
 
-    <TextView
-        android:id="@+id/activity_login_textview_title"
-        style="@android:style/TextAppearance.Large"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:text="@string/activity_login_prompt_title" />
-
-    <!-- 账户 -->
-
+	<View
+	    android:layout_width="match_parent"
+	    android:layout_height="200dp"/>
     <LinearLayout
         style="@style/login_input_container"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="0dp">
         
 
         <EditText
@@ -71,5 +59,4 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:textColor="#ffffff"/>
-
 </LinearLayout>

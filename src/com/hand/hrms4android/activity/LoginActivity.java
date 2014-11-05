@@ -79,7 +79,7 @@ public class LoginActivity extends ActionBarActivity {
 
 
 	private void bindAllViews() {
-		titleTextView = (TextView) findViewById(R.id.activity_login_textview_title);
+//		titleTextView = (TextView) findViewById(R.id.activity_login_textview_title);
 		usernameEditText = (EditText) findViewById(R.id.activity_login_textedit_username);
 		passwordEditText = (EditText) findViewById(R.id.activity_login_textedit_password);
 		loginButton = (Button) findViewById(R.id.activity_login_textedit_loginButton);
@@ -104,12 +104,12 @@ public class LoginActivity extends ActionBarActivity {
 	}
 
 	private void readConfig() {
-		try {
-			titleTextView.setText(configReader.getAttr(new Expression(
-			        "/config/application/activity[@name='login_activity']/view/title_textview", "text")));
-		} catch (ParseExpressionException pe) {
-			pe.printStackTrace();
-		}
+//		try {
+//			titleTextView.setText(configReader.getAttr(new Expression(
+//			        "/config/application/activity[@name='login_activity']/view/title_textview", "text")));
+//		} catch (ParseExpressionException pe) {
+//			pe.printStackTrace();
+//		}
 	}
 
 	@Override
