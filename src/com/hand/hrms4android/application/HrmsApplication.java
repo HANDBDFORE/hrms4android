@@ -48,7 +48,7 @@ public class HrmsApplication extends Application {
 
 		activityList = new ArrayList();
 		timer = new Timer("overtime");
-		enableTime = true;
+		enableTime = false;
 
 		if (PlatformUtil.getAndroidSDKVersion() == 14) {
 			// 怪异的问题
@@ -59,8 +59,8 @@ public class HrmsApplication extends Application {
 			}
 		}
 		// 初始化极光推送
-//		 JPushInterface.setDebugMode(true);
-//		 JPushInterface.init(this);
+		 JPushInterface.setDebugMode(true);
+		 JPushInterface.init(this);
 
 	}
 	

@@ -101,8 +101,9 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 
 	/**
 	 * @param url
-	 */
+	 */ 
     protected void load(String url) {
+    	String _url = NetworkUtil.getAbsoluteUrl(url.replace("${base_url}", ""));
 	    contentWebView.loadUrl(NetworkUtil.getAbsoluteUrl(url.replace("${base_url}", "")));
     }
 	
@@ -274,5 +275,5 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 			
 		}
 	}
-    //add by jtt
+
 }

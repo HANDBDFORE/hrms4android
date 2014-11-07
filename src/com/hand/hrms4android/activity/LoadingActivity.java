@@ -108,31 +108,30 @@ public class LoadingActivity extends ActionBarActivity {
 	@Override
 	public void modelDidFinishedLoad(Model model) {
 		
-		//每次获取超时时间
-		try {
-		String time  = XmlConfigReader.getInstance().getAttr(new Expression(
-				        "/config/application/overtime",
-				        "value"));
-		
-		try{
-			int paraInt  =  Integer.parseInt(time);
-			HrmsApplication.getApplication().execTime	= Integer.parseInt(time);
-		}catch(NumberFormatException  e ){
-			HrmsApplication.getApplication().enableTime = false;
-			
-		}
-		
 
-		
-		
-		} catch (ParseExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		
 		if (model.getModelId() == MODEL_LOADING) {
 
+			
+			//每次获取超时时间
+			
+			try{
+				String time  = XmlConfigReader.getInstance().getAttr(new Expression(
+				        "/config/application/overtime",
+				        "value"));
+				int paraInt  =  Integer.parseInt(time);
+				HrmsApplication.getApplication().execTime	= Integer.parseInt(time);
+			}catch(NumberFormatException  e ){
+				HrmsApplication.getApplication().enableTime = false;
+				
+			
+			} catch (ParseExpressionException e) {
+				// TODO Auto-generated catch block
+				HrmsApplication.getApplication().enableTime = false;
+				e.printStackTrace();
+			}
+			
 			
 			
 //			TODO 自动登录
