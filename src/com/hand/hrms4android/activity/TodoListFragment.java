@@ -120,7 +120,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		listAdapter.reFetchData();
 
 		if ((listAdapter.getCount() == 0) && (!listModel.needLoadOnceMore())) {
-			showEmptyTip("暂时没有待审批事项");
+			showEmptyTip(getResources().getString(R.string.activity_todo_list_fragment_no_pending_matters));
 		} else {
 			showList();
 		}
@@ -152,7 +152,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		// 启动多选
 		mActionMode = getSherlockActivity().startActionMode(actionModeCallback);
-		mActionMode.setTitle("批量审批");
+		mActionMode.setTitle(getResources().getString(R.string.activity_todo_list_fragment_batch_approval));
 		multiChoiceMode = true;
 
 		// 选中长按项
@@ -301,10 +301,10 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			menu.add(0, MENU_ID_APPROVE, 0, R.string.activity_todo_list_actionitem_approve)
-			        .setIcon(R.drawable.ic_approve_agree_dark).setTitle("同意")
+			        .setIcon(R.drawable.ic_approve_agree_dark).setTitle(getResources().getString(R.string.approval))
 			        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 			menu.add(0, MENU_ID_DENY, 1, R.string.activity_todo_list_actionitem_deny)
-			        .setIcon(R.drawable.ic_approve_refuse_dark).setTitle("拒绝")
+			        .setIcon(R.drawable.ic_approve_refuse_dark).setTitle(getResources().getString(R.string.refuse))
 			        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 			return true;
 		}

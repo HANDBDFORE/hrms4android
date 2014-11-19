@@ -34,7 +34,8 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 		if (i != null) {
 			String title = i.getStringExtra(EXTRA_TITLE);
 			if (title != null && title.length() != 0) {
-				setTitle("审批动作：" + title);
+				
+				setTitle(getResources().getString(R.string.action_activity_approve_opinion) + title);
 			}
 		}
 
@@ -51,8 +52,8 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, R.id.approve_opinion_ok, 0, "确定").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		menu.add(0, R.id.approve_opinion_cancel, 1, "取消").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(0, R.id.approve_opinion_ok, 0, getResources().getString(R.string.ok)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(0, R.id.approve_opinion_cancel, 1, getResources().getString(R.string.cancle)).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
 

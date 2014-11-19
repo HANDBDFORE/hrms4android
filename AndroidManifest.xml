@@ -111,7 +111,7 @@
         </activity>
 		<activity
 		    android:name="com.hand.hrms4android.activity.EmployeeListActivity"
-		    android:label="用户查询">
+		    android:label="@string/activity_diliver_employee_title">
 		</activity>
         <!-- Required -->
        <service

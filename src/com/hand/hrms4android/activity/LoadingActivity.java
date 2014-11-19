@@ -191,14 +191,14 @@ public class LoadingActivity extends ActionBarActivity {
 
 		if (e instanceof IOException) {
 			// 提示网络有问题
-			informationTextView.setText("网络存在问题，请稍后再试，或者调整设置");
-			Toast.makeText(this, "网络存在问题，请稍后再试", Toast.LENGTH_LONG).show();
+			informationTextView.setText(getResources().getString(R.string.activity_loading_network_issue_and_change_setting));
+			Toast.makeText(this, getResources().getString(R.string.activity_loading_network_issue), Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		if (e instanceof ParseException) {
-			informationTextView.setText("配置文件读取后发生错误，请检查配置地址");
-			Toast.makeText(this, "配置文件读取后发生错误，请检查配置地址", Toast.LENGTH_LONG).show();
+			informationTextView.setText(getResources().getString(R.string.activity_loading_config_error));
+			Toast.makeText(this, getResources().getString(R.string.activity_loading_config_error), Toast.LENGTH_LONG).show();
 			// 配置文件错误，弹出配置界面
 			startSettingsActivity();
 			return;

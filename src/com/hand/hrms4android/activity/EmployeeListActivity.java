@@ -58,7 +58,7 @@ public class EmployeeListActivity extends ActionBarActivity implements SearchVie
         //设置该SearchView显示搜索按钮
         sv.setSubmitButtonEnabled(true);
         //设置该SearchView内默认显示的提示文本
-        sv.setQueryHint("输入工号或姓名");        
+        sv.setQueryHint(getResources().getString(R.string.activity_employee_list_no_or_name));        
         
         //绑定listview事件
         lv.setOnItemClickListener(new OnItemClickListener() {

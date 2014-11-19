@@ -144,7 +144,7 @@ public class HTMLFragment extends SherlockFragment implements OnFragmentSelectLi
 				try {
 					startActivity(sendIntent);
 				} catch (ActivityNotFoundException e) {
-					Toast.makeText(getSherlockActivity(), "没有找到邮件客户端", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getSherlockActivity(), getResources().getString(R.string.activity_html_base_no_email_client), Toast.LENGTH_SHORT).show();
 				}
 				return true;
 			}

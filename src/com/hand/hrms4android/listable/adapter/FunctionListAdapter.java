@@ -24,10 +24,12 @@ public class FunctionListAdapter extends BaseAdapter {
 	private List<Object> datas;
 	private ListView mListView;
 
+	private Context context;
 	public FunctionListAdapter(Context context, List<Object> datas, ListView listview) {
 		this.datas = datas;
 		this.mListView = listview;
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.context = context;
 	}
 
 	@Override
@@ -95,8 +97,10 @@ public class FunctionListAdapter extends BaseAdapter {
 			} else {
 				wrapper.getTitle().setCompoundDrawablesWithIntrinsicBounds(item.getIconRes(), 0, 0, 0);
 			}
-
-			wrapper.getTitle().setText(item.getText());
+			
+			wrapper.getTitle().setText(item.getText(context));
+//			String title = context.getString(Integer.parseInt(item.getText()));
+//			wrapper.getTitle().setText(title);
 
 			break;
 		}

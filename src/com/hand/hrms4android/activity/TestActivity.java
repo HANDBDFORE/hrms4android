@@ -38,7 +38,7 @@ public class TestActivity extends ActionBarActivity {
 		searchView.setQueryHint("Search for countries…");
 		searchView.setOnQueryTextListener(new X());
 
-		menu.add(0, R.id.todo_list_menu_search, index++, "搜索").setIcon(R.drawable.ic_search_inverse)
+		menu.add(0, R.id.todo_list_menu_search, index++, getResources().getString(R.string.activity_test_search)).setIcon(R.drawable.ic_search_inverse)
 		        .setActionView(searchView)
 		        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		return true;

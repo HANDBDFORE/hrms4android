@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import com.hand.hrms4android.R;
 import com.hand.hrms4android.activity.ModelActivity;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.listable.item.FunctionSection;
@@ -84,9 +85,9 @@ public class FunctionModel extends AbstractListModel<Object> {
 			// 如果没有找到这一项，说明是老版本，应该显示
 			display = true;
 		}
-
+		
 		if (display) {
-			item.add(new FunctionSection("工作流"));
+			item.add(new FunctionSection(HrmsApplication.getApplication().getResources().getString(R.string.workflow)));
 		}
 		// ++++++++++++++++++
 
@@ -115,13 +116,12 @@ public class FunctionModel extends AbstractListModel<Object> {
 			// 如果没有找到这一项，说明是老版本，应该显示
 			display = true;
 		}
-
 		if (display) {
 			item.add(doneItem);
 		}
 		
 		//+++++++++++++++++++++++++显示下载管理
-		item.add(new FunctionSection("系统设置"));
+		item.add(new FunctionSection(HrmsApplication.getApplication().getResources().getString(R.string.systemsetting)));
 		item.add(downItem);
 		
 		return item;
