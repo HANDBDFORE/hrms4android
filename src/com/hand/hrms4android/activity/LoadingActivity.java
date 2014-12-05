@@ -176,6 +176,10 @@ public class LoadingActivity extends ActionBarActivity {
 		params.put(Constrants.SYS_PREFRENCES_TOKEN, mPreferences.getString(Constrants.SYS_PREFRENCES_TOKEN, ""));
 		
 		String device_token = mPreferences.getString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, "");
+		// 系统语言环境
+		String language = getResources().getConfiguration().locale.getLanguage();
+		params.put("language", language);
+		
 		params.put("device_type", Constrants.SYS_ATTS_DEVICE_TYPE);
 		params.put(Constrants.SYS_ATTS_DEVICE_ID, ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
 				.getDeviceId());

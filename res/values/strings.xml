@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Mobile Business</string>
+    <string name="app_name">EMS</string>
 
     <!-- ///// loading语言 //// -->
     <string name="menu_settings">Settings</string>

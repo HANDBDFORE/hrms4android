@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Mobile Business</string>
+    <string name="app_name">EMS</string>
 
     <!-- ///// loading语言 //// -->
     <string name="menu_settings">SetUp</string>
@@ -13,6 +13,8 @@
     <string name="activity_login_prompt_title">Bestseller mobile business</string>
     <string name="activity_login_prompt_username">User Name：</string>
     <string name="activity_login_prompt_password">Password：</string>
+    <string name="activity_login_prompt_username_hint">User Name</string>
+    <string name="activity_login_prompt_password_hint">Password</string>
     <string name="activity_login_server_setting">Preferences</string>
     <!-- ///// 结束 //// -->
 
