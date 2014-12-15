@@ -15,6 +15,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -84,8 +85,7 @@ public class HrmsApplication extends Application {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-
-				goback();
+//				goback();
 				timer.cancel();
 				timer = null;
 			}

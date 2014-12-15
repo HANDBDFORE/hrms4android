@@ -34,7 +34,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 
 	private ConfigReader configReader;
 	private TodoListDao dao;
-	private boolean firstLoadFromInternet;
+	private static boolean firstLoadFromInternet;
 
 	private List<TodoListDomain> submitRecordsList;
 
@@ -288,6 +288,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 				if (error instanceof IOException) {
 					error = new IOException("通讯失败");
 				}
+				error.printStackTrace();
 				activity.modelFailedLoad(new Exception(error.getMessage()), TodoListModel.this);
 			}
 

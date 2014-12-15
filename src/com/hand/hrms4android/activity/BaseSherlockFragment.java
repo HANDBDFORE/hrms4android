@@ -17,7 +17,7 @@ public class BaseSherlockFragment extends SherlockFragment implements ModelActiv
 
 	@Override
 	public void modelFailedLoad(Exception e, Model<? extends Object> model) {
-		Toast.makeText(this.getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this.getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
 		LogUtil.error(this, TAG, e.getMessage());
 	}
 
