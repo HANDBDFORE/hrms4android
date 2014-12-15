@@ -67,6 +67,8 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		bindAllViews(view);
 		return view;
 	}
+	
+	
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -300,6 +302,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			
 			menu.add(0, MENU_ID_APPROVE, 0, R.string.activity_todo_list_actionitem_approve)
 			        .setIcon(R.drawable.ic_approve_agree_dark).setTitle(getResources().getString(R.string.approval))
 			        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);

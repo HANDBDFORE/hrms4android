@@ -104,7 +104,6 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 		
 	}
 
-	
 
 	private void bindAllViews(View base) {
 

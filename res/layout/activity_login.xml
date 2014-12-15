@@ -51,12 +51,13 @@
     <Button
         android:id="@+id/activity_login_textedit_loginButton" 
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="50dp"
         android:text="@string/activity_login_loginbutton_text"
-        android:textSize="28sp"
-        android:background="@drawable/button_corner"
+        android:textSize="22sp"
+        android:background="@drawable/button_selector"
         android:layout_marginTop="80dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+		android:layout_marginLeft="40dp"
+		android:layout_marginRight="40dp"
+		android:layout_gravity="center_horizontal"
         android:textColor="#ffffff"/>
 </LinearLayout>
