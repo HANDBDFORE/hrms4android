@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 

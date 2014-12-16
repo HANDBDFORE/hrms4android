@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.listable.adapter.TodoListAdapter;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;

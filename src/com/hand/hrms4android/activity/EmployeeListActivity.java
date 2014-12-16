@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.listable.adapter.DeliverListAdapter;
 import com.hand.hrms4android.model.DeliverModel;

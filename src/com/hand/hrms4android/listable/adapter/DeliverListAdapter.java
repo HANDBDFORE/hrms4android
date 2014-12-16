@@ -2,7 +2,7 @@ package com.hand.hrms4android.listable.adapter;
 
 import java.util.List;
 
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.model.Employee;
 
 import android.content.Context;
