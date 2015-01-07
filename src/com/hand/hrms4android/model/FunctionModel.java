@@ -121,8 +121,8 @@ public class FunctionModel extends AbstractListModel<Object> {
 		}
 		
 		//+++++++++++++++++++++++++显示下载管理
-		item.add(new FunctionSection(HrmsApplication.getApplication().getResources().getString(R.string.systemsetting)));
-		item.add(downItem);
+//		item.add(new FunctionSection(HrmsApplication.getApplication().getResources().getString(R.string.systemsetting)));
+//		item.add(downItem);
 		
 		return item;
 	}

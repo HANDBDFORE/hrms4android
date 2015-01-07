@@ -87,7 +87,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 			}
 		});
 		bindAllViews(mMenuDrawer.getMenuView());
-		mMenuDrawer.openMenu();
+		mMenuDrawer.closeMenu();
 		HrmsApplication.getApplication().addActivity(this);
 
 		this.functionListModel = new FunctionModel(0, this);
