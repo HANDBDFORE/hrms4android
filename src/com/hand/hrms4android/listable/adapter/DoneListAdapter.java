@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.listable.item.DoneListItem;
 
 public class DoneListAdapter extends ArrayAdapter<DoneListItem> {

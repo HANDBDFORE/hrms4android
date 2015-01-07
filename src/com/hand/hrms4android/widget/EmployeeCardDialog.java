@@ -1,6 +1,6 @@
 package com.hand.hrms4android.widget;
 
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

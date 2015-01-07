@@ -5,7 +5,8 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.model.AbstractPageableModel;
 import com.hand.hrms4android.network.NetworkUtil;
 import com.hand.hrms4android.parser.ConfigReader;

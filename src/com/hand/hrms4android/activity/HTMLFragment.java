@@ -33,7 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.listable.item.FunctionItem;
 import com.hand.hrms4android.network.NetworkUtil;

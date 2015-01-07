@@ -29,7 +29,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.listable.adapter.FunctionListAdapter;
 import com.hand.hrms4android.listable.item.FunctionItem;
