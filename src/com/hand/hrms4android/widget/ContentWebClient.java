@@ -1,7 +1,7 @@
 package com.hand.hrms4android.widget;
 
 //import android.R;
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;

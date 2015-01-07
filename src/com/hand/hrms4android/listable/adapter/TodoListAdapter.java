@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.listable.item.ItemFactory;
 import com.hand.hrms4android.listable.item.TodoListItem;

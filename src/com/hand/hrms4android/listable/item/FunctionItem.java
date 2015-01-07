@@ -1,6 +1,6 @@
 package com.hand.hrms4android.listable.item;
 
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.application.HrmsApplication;
 
 import 	android.content.Context;

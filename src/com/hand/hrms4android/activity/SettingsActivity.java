@@ -15,7 +15,7 @@ import android.preference.PreferenceManager;
 
 import java.util.List;
 
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.util.StorageUtil;
 
 /**

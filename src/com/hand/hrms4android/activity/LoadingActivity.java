@@ -19,7 +19,7 @@ import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 import com.example.jpushdemo.ExampleUtil;
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.exception.ParseException;
 import com.hand.hrms4android.exception.ParseExpressionException;

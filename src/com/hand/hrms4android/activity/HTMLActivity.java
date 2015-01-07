@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import android.os.Bundle;
 
-import com.hand.hrms4android.R;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.network.NetworkUtil;
 
 public class HTMLActivity extends HTMLBaseActivity {
