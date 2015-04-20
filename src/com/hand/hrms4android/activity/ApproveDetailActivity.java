@@ -163,7 +163,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 		setTitle(record.getItem1());
 		this.model = new ApproveDetailActionModel(0, this);
 		this.model.load(LoadType.Network, record);
-		contentWebView.loadUrl(getAbsolutePageUrl(record));
+		String url = getAbsolutePageUrl(record);
+		contentWebView.loadUrl(url);
 	}
 
 	private ActionMenuItem menuItemFactory(ApproveAction action) {

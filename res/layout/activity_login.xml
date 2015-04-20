@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
             android:inputType="text" 
-            android:hint="用户名"
+            android:hint="@string/activity_login_prompt_username_hint"
              />
     </LinearLayout>
 
@@ -43,7 +43,7 @@
             android:imeOptions="actionGo"
             android:inputType="textPassword"
             android:singleLine="true" 
-            android:hint="密码"/>
+            android:hint="@string/activity_login_prompt_password_hint"/>
     </LinearLayout>
 
     <!-- 登录 -->
