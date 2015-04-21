@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
@@ -30,10 +31,14 @@ import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.cfca.srcbulanview.SigActivity;
+import com.cfist.mobile.ulan.UlanKey;
+import com.cfist.mobile.ulan.util.Consts;
 import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.exception.AuroraServerFailure;
 import com.hand.hrms4android.exception.ParseExpressionException;
+import com.hand.hrms4android.model.CheckNumModel;
 import com.hand.hrms4android.model.LoginModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.parser.ConfigReader;
@@ -54,7 +59,20 @@ public class LoginActivity extends ActionBarActivity {
 	private Button loginButton;
 	private SharedPreferences mPreferences;
 	private Animation shake;
-
+   
+	private String p_res;
+	private String key_id;
+	/*加密*/
+	private int connectType;
+	String certType;
+	String signHash;
+	String pin;
+	String signFormat;	
+	
+	RequestParams loginParams;
+	/* 两次退出 */
+	boolean mFlag;
+	
 
 	private ConfigReader configReader;
 
@@ -67,7 +85,8 @@ public class LoginActivity extends ActionBarActivity {
 		
 		setContentView(R.layout.activity_login);
 		// TODO 保留
-		this.model = new LoginModel(0, this);
+//		this.model = new LoginModel(0, this);
+		this.model = new CheckNumModel(0, this);
 		configReader = XmlConfigReader.getInstance();
 
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -75,7 +94,6 @@ public class LoginActivity extends ActionBarActivity {
 		bindAllViews();
 		readConfig();
 	}
-
 
 
 	private void bindAllViews() {
@@ -89,7 +107,7 @@ public class LoginActivity extends ActionBarActivity {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_GO) {
-					doLogin();
+					doCheck();
 					return true;
 				}
 
@@ -114,6 +132,17 @@ public class LoginActivity extends ActionBarActivity {
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
+	
+		if(model instanceof CheckNumModel){
+			p_res = ((CheckNumModel) model).getRes();
+			key_id = ((CheckNumModel) model).getKeyId();
+			if(p_res.equals("0") || p_res.equals("1")){
+				doLogin();
+			}
+//			loginButton.setEnabled(true);
+//			loginButton.setText(R.string.activity_login_loginbutton_text);	
+			return;
+		}
 		
 		if (isIntercepted()) {
 			//某操作被拦截，被迫弹出登录页面，登录完成后结束自身即可
@@ -149,12 +178,31 @@ public class LoginActivity extends ActionBarActivity {
 
 		@Override
 		public void onClick(View v) {
-
 			
-			doLogin();
+			doCheck();
+			
+//			doLogin();
 		}
 	}
 
+	private void doCheck(){
+		String username = usernameEditText.getText().toString();
+		// 检查
+		if (StringUtils.isEmpty(username)) {
+			usernameEditText.requestFocus();
+			usernameEditText.startAnimation(shake);
+			return;
+		}	
+		loginButton.setEnabled(false);
+		loginButton.setText(R.string.activity_login_loginbutton_loading);
+		RequestParams params = generateCheckParams(username);
+		if(!(model instanceof CheckNumModel)){
+			model = new CheckNumModel(0, LoginActivity.this);
+		}
+		model.load(Model.LoadType.Network, params);
+		
+	}
+	
 	private void doLogin() {
 		String username = usernameEditText.getText().toString();
 		String password = passwordEditText.getText().toString();
@@ -192,10 +240,57 @@ public class LoginActivity extends ActionBarActivity {
 		editor.commit();
 
 		RequestParams params = generateLoginParams(username, password);
-
-		model.load(Model.LoadType.Network, params);
+		if(!(model instanceof LoginModel)){
+			model = new LoginModel(0, LoginActivity.this);
+		}
+		if (p_res.equals("1")) {
+			//检查PIN
+			byte[] data = "abc".getBytes();
+			//连接方式
+			connectType = UlanKey.BLE;
+			//证书类型
+			certType = Consts.ALGORITHM_RSA2048;
+			//hash算法
+			signHash = Consts.ALGORITHM_MD5;
+			//签名格式
+			signFormat = Consts.SignFormat_PKCS7Att;
+			
+			Intent intent = new Intent();
+			intent.setClass(LoginActivity.this, SigActivity.class);
+			
+			intent.putExtra(SigActivity.SIGNATURE_CONNECT_TYPE, connectType);
+			if(certType == null) {
+				intent.putExtra(SigActivity.SIGNATURE_ACTION, SigActivity.ACTION_SIGN_AUTO);
+			}
+			else {
+				intent.putExtra(SigActivity.SIGNATURE_ACTION, SigActivity.ACTION_SIGN_MANUAL);
+				intent.putExtra(SigActivity.SIGNATURE_CERT_TYPE, certType);
+				intent.putExtra(SigActivity.SIGNATURE_HASH, signHash);
+			}
+											
+			intent.putExtra(SigActivity.SIGNATURE_DATA, data);
+			intent.putExtra(SigActivity.SIGNATURE_KEYID, key_id);
+			intent.putExtra(SigActivity.SIGNATURE_FORMAT, signFormat);
+			LoginActivity.this.startActivityForResult(intent, 0);
+			loginParams = params;
+		}else{
+			model.load(Model.LoadType.Network, params);
+		}
+		
 	}
-
+	
+	/**
+	 * 检查是否需要加密
+	 * @param uesrname
+	 * @return
+	 */
+	private RequestParams generateCheckParams(String username){
+		RequestParams params = new RequestParams();
+		params.put("username", username);
+		return params;
+		
+	}
+	
 	/**
 	 * 组装登陆请求使用的params
 	 * 
@@ -257,7 +352,14 @@ public class LoginActivity extends ActionBarActivity {
 				startActivity(new Intent(this, LoadingActivity.class));
 				finish();
 			}
+		}else if(requestCode == 0){
+			if(data == null) return;
+			if(!(model instanceof LoginModel)){
+				model = new LoginModel(0, LoginActivity.this);
+			}
+			model.load(Model.LoadType.Network, loginParams);
 		}
+		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
@@ -267,5 +369,6 @@ public class LoginActivity extends ActionBarActivity {
     private boolean isIntercepted() {
 	    Intent startIntent = getIntent();
 		return startIntent.getBooleanExtra(KEY_INTERCEPTED, false);
-    }
+    }  
+    
 }

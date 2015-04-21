@@ -25,6 +25,7 @@ import com.hand.hrms4android.exception.ParseException;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.model.AbstractBaseModel;
 import com.hand.hrms4android.model.AutoLoginModel;
+import com.hand.hrms4android.model.CheckNumModel;
 import com.hand.hrms4android.model.LoadingModel;
 import com.hand.hrms4android.model.LoginModel;
 import com.hand.hrms4android.model.Model;
@@ -32,12 +33,14 @@ import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.parser.Expression;
 import com.hand.hrms4android.parser.xml.XmlConfigReader;
 import com.hand.hrms4android.util.Constrants;
+import com.loopj.android.http.RequestParams;
 
 
 public class LoadingActivity extends ActionBarActivity {
 
 	private static final int MODEL_LOADING = 0;
 	private static final int MODEL_AUTO_LOGIN = 1;
+	private static final int CHECK_NUM = 2;
 
 	private SharedPreferences mPreferences;
 	private String baseUrl;
@@ -47,6 +50,10 @@ public class LoadingActivity extends ActionBarActivity {
 	private ImageView alertImage;
 
 	private AbstractBaseModel<Void> autoLoginModel;
+	
+	/*加密*/
+	private String p_res;
+	private String key_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +108,7 @@ public class LoadingActivity extends ActionBarActivity {
 
 		baseUrl = mPreferences.getString("sys_basic_url", "");
 		if (checkBaseUrl(baseUrl)) {
-			doReload();
+			doCheck();
 		}
 	}
 
@@ -119,17 +126,23 @@ public class LoadingActivity extends ActionBarActivity {
 			HrmsApplication.getApplication().execTime	= Integer.parseInt(time);
 		}catch(NumberFormatException  e ){
 			HrmsApplication.getApplication().enableTime = false;
-			
 		}
-		
-
-		
 		
 		} catch (ParseExpressionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		if (model.getModelId() == CHECK_NUM){
+			p_res = ((CheckNumModel) model).getRes();
+			key_id = ((CheckNumModel) model).getKeyId();
+			if(p_res.equals("-1") || p_res.equals("1")){
+				startLoginActivity();
+				finish();
+			}else if(p_res.equals("0")){
+				doReload();
+			}
+		}
 		
 		if (model.getModelId() == MODEL_LOADING) {
 
@@ -189,6 +202,13 @@ public class LoadingActivity extends ActionBarActivity {
         }
 		return params;
 	}
+	
+	private RequestParams getCheckParams(){
+		RequestParams params = new RequestParams();
+		String storedUsername = mPreferences.getString(Constrants.SYS_PREFRENCES_USERNAME, "");
+		params.put("username", storedUsername);
+		return params;
+	}
 
 	@Override
 	public void modelFailedLoad(Exception e, Model model) {
@@ -236,7 +256,19 @@ public class LoadingActivity extends ActionBarActivity {
 	public void doReload() {
 		System.out.println("doreload");
 		setViewAsNew();
+		if (!(model instanceof LoadingModel)) {
+			model = new LoadingModel(MODEL_LOADING, LoadingActivity.this);
+		}
 		model.load(LoadType.Network, baseUrl);
+	}
+	
+	public void doCheck() {
+		System.out.println("docheck");
+		setViewAsNew();		
+		if (!(model instanceof CheckNumModel)) {
+			model = new CheckNumModel(CHECK_NUM,LoadingActivity.this);
+		}
+		model.load(Model.LoadType.Network, getCheckParams());
 	}
 
 	private void startSettingsActivity() {
@@ -250,7 +282,7 @@ public class LoadingActivity extends ActionBarActivity {
 			System.out.println("in click");
 			if (v.getId() == R.id.activity_loading_reload_button) {
 				//
-				doReload();
+				doCheck();
 			}
 		}
 	}
