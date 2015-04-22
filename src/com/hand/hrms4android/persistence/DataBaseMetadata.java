@@ -33,6 +33,7 @@ public final class DataBaseMetadata {
 		public static final String ITEM4 = "item4";
 		public static final String SCREENNAME = "screenName";
 		public static final String SOURCE_SYSTEM_NAME = "sourceSystemName";
+		public static final String VERIFICATIONID = "verificationId";
 
 		/**
 		 * 转交人

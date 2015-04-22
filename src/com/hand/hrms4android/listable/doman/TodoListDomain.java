@@ -15,6 +15,8 @@ public class TodoListDomain {
 	private String sourceSystemName;
 	private String deliveree;
 	private String screenName;
+	
+	private int verificationId;
 
 	public TodoListDomain() {
 	}
@@ -27,12 +29,12 @@ public class TodoListDomain {
 	public TodoListDomain(JSONObject json) throws JSONException {
 		this("-1", "", "", "", "", "", json.getString("localId"), json.getString("item1"), json.getString("item2"),
 		        json.getString("item3"), json.getString("item4"), json.getString("screenName"), json
-		                .getString("sourceSystemName"), "");
+		                .getString("sourceSystemName"), "",json.getInt("verificationId"));
 	}
 
 	public TodoListDomain(String id, String status, String serverMessage, String action, String actionType,
 	        String comments, String localId, String item1, String item2, String item3, String item4, String screenName,
-	        String sourceSystemName, String deliveree) {
+	        String sourceSystemName, String deliveree, int verificationId) {
 		super();
 		this.id = id;
 		this.status = status;
@@ -48,12 +50,13 @@ public class TodoListDomain {
 		this.screenName=screenName;
 		this.sourceSystemName = sourceSystemName;
 		this.deliveree = deliveree;
+		this.verificationId = verificationId;
 	}
 
 	public TodoListDomain(TodoListDomain old) {
 		this(old.getId(), old.getStatus(), old.getServerMessage(), old.getAction(), old.getActionType(), old
 		        .getComments(), old.getLocalId(), old.getItem1(), old.getItem2(), old.getItem3(), old.getItem4(), old
-		        .getScreenName(), old.getSourceSystemName(), old.getDeliveree());
+		        .getScreenName(), old.getSourceSystemName(), old.getDeliveree(), old.getVerificationId());
 	}
 
 	public String getId() {
@@ -168,4 +171,11 @@ public class TodoListDomain {
 		this.screenName = screenName;
 	}
 
+	public int getVerificationId(){
+		return verificationId;
+	}
+	
+	public void setVerificationId(){
+		this.verificationId = verificationId;
+	}
 }

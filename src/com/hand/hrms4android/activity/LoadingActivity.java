@@ -108,18 +108,21 @@ public class LoadingActivity extends ActionBarActivity {
 
 		baseUrl = mPreferences.getString("sys_basic_url", "");
 		if (checkBaseUrl(baseUrl)) {
-			doCheck();
+			doReload();
 		}
 	}
 
 	@Override
 	public void modelDidFinishedLoad(Model model) {
 		
+		if(model.getModelId() != CHECK_NUM && p_res == null){
+			doCheck();
+			return;
+		}
+		
 		//每次获取超时时间
 		try {
-		String time  = XmlConfigReader.getInstance().getAttr(new Expression(
-				        "/config/application/overtime",
-				        "value"));
+		String time  = XmlConfigReader.getInstance().getAttr(new Expression("/config/application/overtime","value"));
 		
 		try{
 			int paraInt  =  Integer.parseInt(time);
@@ -282,7 +285,7 @@ public class LoadingActivity extends ActionBarActivity {
 			System.out.println("in click");
 			if (v.getId() == R.id.activity_loading_reload_button) {
 				//
-				doCheck();
+				doReload();
 			}
 		}
 	}

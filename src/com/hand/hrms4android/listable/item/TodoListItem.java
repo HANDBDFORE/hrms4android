@@ -4,14 +4,15 @@ public class TodoListItem extends TextListItem {
 
 	private String errorMessage;
 	private String status;
+	private int verificationId;
 	private boolean isLate;
 
 	public TodoListItem() {
-		this(0, null, null, null, null, null, null, false);
+		this(0, null, null, null, null, null, null,0, false);
 	}
 
 	public TodoListItem(int id, String title, String date, String subTitle, String information, String errorMessage,
-	        String status, boolean isLate) {
+	        String status,int verificationId ,boolean isLate) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -20,6 +21,7 @@ public class TodoListItem extends TextListItem {
 		this.information = information;
 		this.errorMessage = errorMessage;
 		this.status = status;
+		this.verificationId = verificationId;
 		this.isLate = isLate;
 	}
 
@@ -39,6 +41,14 @@ public class TodoListItem extends TextListItem {
 		this.status = status;
 	}
 
+	public int getVerificationId(){
+		return verificationId;
+	} 
+	
+	public void setVerificationId(int verificationId){
+		this.verificationId = verificationId;
+	}
+	
 	public boolean isLate() {
 		return isLate;
 	}

@@ -22,7 +22,7 @@ public class TodoListItemFactory implements ItemFactory<TodoListItem,TodoListDom
 		item.setInformation(record.getItem4());
 		item.setErrorMessage(record.getServerMessage());
 		item.setStatus(record.getStatus());
-
+		item.setVerificationId(record.getVerificationId());
 		item.setLate(false);
 		return item;
 	}

@@ -73,6 +73,8 @@ public class LoginActivity extends ActionBarActivity {
 	/* 两次退出 */
 	boolean mFlag;
 	
+	boolean isLogining = false;
+	
 
 	private ConfigReader configReader;
 
@@ -94,6 +96,17 @@ public class LoginActivity extends ActionBarActivity {
 		bindAllViews();
 		readConfig();
 	}
+
+	
+
+	@Override
+	protected void onResume() {
+		// TODO 自动生成的方法存根
+		super.onResume();
+		if(isLogining == false)
+			resetButton();
+	}
+
 
 
 	private void bindAllViews() {
@@ -168,9 +181,9 @@ public class LoginActivity extends ActionBarActivity {
 		} else {
 			Toast.makeText(this, getResources().getString(R.string.activity_login_unknown_error), Toast.LENGTH_LONG).show();
 		}
-
-		loginButton.setEnabled(true);
-		loginButton.setText(R.string.activity_login_loginbutton_text);
+		isLogining = false;
+		resetButton();
+		
 	
 	}
 
@@ -357,12 +370,26 @@ public class LoginActivity extends ActionBarActivity {
 			if(!(model instanceof LoginModel)){
 				model = new LoginModel(0, LoginActivity.this);
 			}
-			model.load(Model.LoadType.Network, loginParams);
+			if(data.getBooleanExtra(SigActivity.SIGNATURE_SUCCESS, false)){
+				isLogining = true;
+				model.load(Model.LoadType.Network, loginParams);
+			}else{
+				showErrorMsg();
+			}
+			
 		}
 		
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
+	private void showErrorMsg(){
+		Toast.makeText(LoginActivity.this, "有错误发生，请检查BlueTooth是否打开", Toast.LENGTH_SHORT).show();
+		resetButton();
+	}
+	private void resetButton(){
+		loginButton.setEnabled(true);
+		loginButton.setText(R.string.activity_login_loginbutton_text);
+	}
 	/**
 	 * 
 	 */

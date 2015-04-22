@@ -49,8 +49,11 @@ public class XmlConfigReader implements ConfigReader {
 			File dir = HrmsApplication.getApplication().getDir(Constrants.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
 			        Context.MODE_PRIVATE);
 			try {
-				configReader = new XmlConfigReader(new File(dir, "android-backend-config.xml"));
-			} catch (FileNotFoundException e) {
+				final File file = new File(dir, "android-backend-config.xml");
+				boolean flag =  file.createNewFile();
+				configReader = new XmlConfigReader(file);
+				
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -70,7 +73,8 @@ public class XmlConfigReader implements ConfigReader {
 
 			File dir = HrmsApplication.getApplication().getDir(Constrants.SYS_PREFRENCES_CONFIG_FILE_DIR_NAME,
 			        Context.MODE_PRIVATE);
-			File configFile = new File(dir, "android-backend-config.xml");
+			final File configFile = new File(dir, "android-backend-config.xml");
+			boolean flag = configFile.createNewFile();
 			FileInputStream inputStream = new FileInputStream(configFile);
 			xmlInputSource = new InputSource(inputStream);
 			Object result = xpath.evaluate(expression, xmlInputSource, XPathConstants.NODE);

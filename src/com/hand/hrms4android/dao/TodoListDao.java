@@ -50,6 +50,7 @@ public class TodoListDao {
 			cv.put(TodoList.ITEM4, record.getItem4());
 			cv.put(TodoList.SCREENNAME, record.getScreenName());
 			cv.put(TodoList.SOURCE_SYSTEM_NAME, record.getSourceSystemName());
+			cv.put(TodoList.VERIFICATIONID, record.getVerificationId());
 			record.setId(String.valueOf(dataManager.insert(TodoList.TABLENAME, null, cv)));
 			affectiveRows += 1;
 		}
@@ -134,18 +135,22 @@ public class TodoListDao {
 			final int index_screenName = index++;
 			final int index_SOURCE_SYSTEM_NAME = index++;
 			final int index_deliveree = index++;
+			final int index_verificationId = index++;
 
 			@Override
 			public void onQuerySuccess(Cursor cursor) {
 				if (cursor.moveToFirst()) {
 					do {
+//						int test = cursor.getInt(index_verificationId);
+						
 						datas.add(new TodoListDomain(cursor.getString(index_ID), cursor.getString(index_STATUS), cursor
 						        .getString(index_SERVER_MESSAGE), cursor.getString(index_ACTION), cursor
 						        .getString(index_ACTION_TYPE), cursor.getString(index_COMMENTS), cursor
 						        .getString(index_LOCALID), cursor.getString(index_ITEM1),
 						        cursor.getString(index_ITEM2), cursor.getString(index_ITEM3), cursor
 						                .getString(index_ITEM4), cursor.getString(index_screenName), cursor
-						                .getString(index_SOURCE_SYSTEM_NAME), cursor.getString(index_deliveree)));
+						                .getString(index_SOURCE_SYSTEM_NAME), cursor.getString(index_deliveree),
+						                cursor.getInt(index_verificationId)));
 					} while (cursor.moveToNext());
 
 				}
@@ -157,7 +162,7 @@ public class TodoListDao {
 		String sql = "select " + TodoList.ID + ", " + TodoList.STATUS + ", " + TodoList.SERVER_MESSAGE + ", "
 		        + TodoList.ACTION + ", " + TodoList.ACTION_TYPE + ", " + TodoList.COMMENTS + ", " + TodoList.LOCALID
 		        + ", " + TodoList.ITEM1 + ", " + TodoList.ITEM2 + ", " + TodoList.ITEM3 + ", " + TodoList.ITEM4 + ", "
-		        + TodoList.SCREENNAME + "," + TodoList.SOURCE_SYSTEM_NAME + ", " + TodoList.DELIVEREE + "  from "
+		        + TodoList.SCREENNAME + "," + TodoList.SOURCE_SYSTEM_NAME + ", " + TodoList.DELIVEREE + ", " + TodoList.VERIFICATIONID  + " from "
 		        + TodoList.TABLENAME;
 		dataManager.query(sql, null, getDictionaryCallback);
 		return datas;
