@@ -73,6 +73,7 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 
 			Intent i = new Intent(getIntent());
 			i.putExtra(TodoList.COMMENTS, comments);
+			
 			setResult(RESULT_OK, i);
 			finish();
 			break;

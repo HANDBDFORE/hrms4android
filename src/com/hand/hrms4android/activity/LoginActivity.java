@@ -149,6 +149,7 @@ public class LoginActivity extends ActionBarActivity {
 		if(model instanceof CheckNumModel){
 			p_res = ((CheckNumModel) model).getRes();
 			key_id = ((CheckNumModel) model).getKeyId();
+			HrmsApplication.getApplication().setKeyId(key_id);
 			if(p_res.equals("0") || p_res.equals("1")){
 				doLogin();
 			}
@@ -200,12 +201,18 @@ public class LoginActivity extends ActionBarActivity {
 
 	private void doCheck(){
 		String username = usernameEditText.getText().toString();
+		String password = passwordEditText.getText().toString();
 		// 检查
 		if (StringUtils.isEmpty(username)) {
 			usernameEditText.requestFocus();
 			usernameEditText.startAnimation(shake);
 			return;
 		}	
+		if (StringUtils.isEmpty(password)) {
+			passwordEditText.requestFocus();
+			passwordEditText.startAnimation(shake);
+			return;
+		}
 		loginButton.setEnabled(false);
 		loginButton.setText(R.string.activity_login_loginbutton_loading);
 		RequestParams params = generateCheckParams(username);

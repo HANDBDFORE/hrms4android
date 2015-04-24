@@ -23,6 +23,8 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 	private ConfigReader configReader;
 	private ActionsDao actionsDao;
 	private List<ApproveAction> actions;
+	
+	private String signature;
 
 	public ApproveDetailActionModel(int id, ModelActivity activity) {
 		super(id, activity);
@@ -35,10 +37,10 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 	public void load(LoadType loadType, Object param) {
 		final TodoListDomain record = (TodoListDomain) param;
 
-		List<ApproveAction> storedActions = actionsDao.getAllActionsByRecordId(record.getId());
+//		List<ApproveAction> storedActions = actionsDao.getAllActionsByRecordId(record.getId());
 
 		// 没有存储此项动作
-		if (storedActions.size() == 0) {
+		if (true) {
 
 			String service;
 			try {
@@ -50,10 +52,13 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 				RequestParams p = new RequestParams();
 				p.put("localId", record.getLocalId());
 				p.put("sourceSystemName", record.getSourceSystemName());
+				String ca_verification_necessity = record.getVerificationId() == 0 ? "0" : "1";
+				p.put("ca_verification_necessity", ca_verification_necessity);
 				NetworkUtil.post(service, p, new UMJsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int statusCode, JSONObject response) {
 						try {
+							signature = response.getJSONObject("body").getString("signature");
 							JSONArray responseActionJson = response.getJSONObject("body").getJSONArray("list");
 							List<ApproveAction> responseActions = new ArrayList<ApproveAction>(responseActionJson
 							        .length());
@@ -64,7 +69,7 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 								        .getString("actionTitle")));
 							}
 
-							actionsDao.insertAllActions(responseActions);
+//							actionsDao.insertAllActions(responseActions);
 							actions = responseActions;
 							activity.modelDidFinishedLoad(ApproveDetailActionModel.this);
 						} catch (JSONException e) {
@@ -86,15 +91,20 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 		}
 
 		// 已经存在存储动作
-		else {
-			actions = storedActions;
-			storedActions = null;
-			activity.modelDidFinishedLoad(this);
-		}
+//		else {
+//			actions = storedActions;
+//			storedActions = null;
+//			activity.modelDidFinishedLoad(this);
+//		}
 	}
 
 	@Override
 	public List<ApproveAction> getProcessData() {
 		return actions;
+	}
+	
+	public String getSignature(){
+		
+		return this.signature;
 	}
 }

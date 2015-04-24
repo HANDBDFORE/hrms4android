@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import android.text.InputFilter.LengthFilter;
 import android.widget.Toast;
 
+import com.cfca.srcbulanview.R;
 import com.hand.hrms4android.activity.ModelActivity;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.exception.ParseExpressionException;
@@ -46,11 +47,11 @@ public class CheckNumModel extends AbstractBaseModel<Void> {
 					try {
 						p_res = response.getJSONObject("body").getString("p_res");
 						if(p_res.equals("-1")){
-							Toast.makeText(HrmsApplication.getApplication(), "用户可能不存在、已失效或为空",Toast.LENGTH_SHORT).show();
+							Toast.makeText(HrmsApplication.getApplication(), HrmsApplication.getApplication().getResources().getString(R.string.resmin1),Toast.LENGTH_SHORT).show();
 						}else if(p_res.equals("0")){
-							Toast.makeText(HrmsApplication.getApplication(), "此用户不需要验证",Toast.LENGTH_SHORT).show();
+							Toast.makeText(HrmsApplication.getApplication(), HrmsApplication.getApplication().getResources().getString(R.string.res0),Toast.LENGTH_SHORT).show();
 						}else if(p_res.equals("1")){
-							Toast.makeText(HrmsApplication.getApplication(), "此用户需要验证",Toast.LENGTH_SHORT).show();
+							Toast.makeText(HrmsApplication.getApplication(), HrmsApplication.getApplication().getResources().getString(R.string.res1),Toast.LENGTH_SHORT).show();
 						}
 						key_id = response.getJSONObject("body").getString("key_id");;
 					} catch (JSONException e) {

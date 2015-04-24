@@ -152,17 +152,17 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		// 启动多选
-		mActionMode = getSherlockActivity().startActionMode(actionModeCallback);
-		mActionMode.setTitle(getResources().getString(R.string.activity_todo_list_fragment_batch_approval));
-		multiChoiceMode = true;
-
-		// 选中长按项
-		selectRow(String.valueOf(id));
-		mActionMode.setSubtitle(String.valueOf(getSelectedRowCount()));
-
-		// 将当前监听器删除，防止再次长按
-		todoListViewWrapper.getRefreshableView().setOnItemLongClickListener(null);
+//		// 启动多选
+//		mActionMode = getSherlockActivity().startActionMode(actionModeCallback);
+//		mActionMode.setTitle(getResources().getString(R.string.activity_todo_list_fragment_batch_approval));
+//		multiChoiceMode = true;
+//
+//		// 选中长按项
+//		selectRow(String.valueOf(id));
+//		mActionMode.setSubtitle(String.valueOf(getSelectedRowCount()));
+//
+//		// 将当前监听器删除，防止再次长按
+//		todoListViewWrapper.getRefreshableView().setOnItemLongClickListener(null);
 
 		return true;
 	}

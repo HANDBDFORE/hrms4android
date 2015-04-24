@@ -31,6 +31,8 @@ public class HrmsApplication extends Application {
 	public Timer timer;
 	public int execTime;
 	public Boolean enableTime;
+	private String keyId;
+	private String signatureResult;
 
 	/**
 	 * 为了在程序任何位置获得context对象
@@ -159,5 +161,21 @@ public class HrmsApplication extends Application {
 //
 //		}
 	}
+	
+	public void setKeyId(String keyId){
+		this.keyId = keyId;
+		
+	}
 
+	public String getKeyId(){
+		return this.keyId;
+	}
+	
+	public void setSignatureResult(String signatureResult){
+		this.signatureResult = signatureResult;
+	}
+	
+	public String getSignatureResult(){
+		return this.signatureResult;
+	}
 }

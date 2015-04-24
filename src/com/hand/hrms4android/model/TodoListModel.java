@@ -120,9 +120,12 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 
 			RequestParams params = new RequestParams();
 			params.put("actions", submitArray.toString());
-
-			// NetworkUtil.post(actionURL, params, new
-			// UMJsonHttpResponseHandler() {
+			/* 加密参数 */
+			String signature_result = HrmsApplication.getApplication().getSignatureResult();
+			HrmsApplication.getApplication().setSignatureResult(null);
+			params.put("ca_verification_necessity", signature_result == null ? "0" : "1");
+			params.put("signature", signature_result);
+			
 			NetworkUtil.post(actionURL, params, new UMJsonHttpResponseHandler() {
 				@Override
 				public void onSuccess(int statusCode, JSONObject response) {

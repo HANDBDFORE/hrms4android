@@ -11,10 +11,15 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.cfca.srcbulanview.SigActivity;
+import com.cfist.mobile.ulan.UlanKey;
+import com.cfist.mobile.ulan.util.Consts;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.model.ApproveDetailActionModel;
+import com.hand.hrms4android.model.LoginModel;
 import com.hand.hrms4android.model.Model;
 import com.hand.hrms4android.model.Model.LoadType;
 import com.hand.hrms4android.network.NetworkUtil;
@@ -26,21 +31,85 @@ import com.hand.hrms4android.util.Constrants;
 public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 	private static final int REQUEST_ACTIVITY_OPINION = 1;
 	private static final int REQUEST_ACTIVITY_DELIVER = 2;
+	
+	private static final int RESULT_SIGNATURE = 300;
 
 	private List<ApproveAction> actions;
 	private String urlKeyName;
+	String signature;
+	
+	/*加密*/
+	private int connectType;
+	String certType;
+	String signHash;
+	String pin;
+	String signFormat;
+	
+	Bundle savedBundle;
 
 	@Override
 	protected void afterSuperOnCreateFinish(Bundle savedInstanceState) {
 
-		loadResources(listModel.currentItem());
+		if(listModel != null)
+			loadResources(listModel.currentItem());
 		
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_ACTIVITY_OPINION || requestCode == REQUEST_ACTIVITY_DELIVER) {
+		if(requestCode == RESULT_SIGNATURE){
+			if(data == null) return;
+			if(data.getBooleanExtra(SigActivity.SIGNATURE_SUCCESS, false)){
+				// 再退回
+				Bundle bundle = savedBundle;
+				// 将当前选中行的本地recordpk传回，用于标示
+				bundle.putString(TodoList.ID, String.valueOf(listModel.currentItem().getId()));
+				String signature_result = data.getStringExtra(SigActivity.SIGNATURE_RESULT); 
+				bundle.putString("signature_result",signature_result);
+				HrmsApplication.getApplication().setSignatureResult(signature_result);
+				Intent result = new Intent();
+				result.putExtras(bundle);
+				setResult(RESULT_OK, result);
+				finish();
+			}else{
+				showErrorMsg();
+			}
+		}else if (requestCode == REQUEST_ACTIVITY_OPINION || requestCode == REQUEST_ACTIVITY_DELIVER) {
 			if (resultCode == RESULT_OK) {
+				
+				if( signature != null && !signature.equals("null")){
+					savedBundle = data.getExtras();
+					String signatureString = signature+"{"+ data.getStringExtra("title") +"}";
+					//检查PIN
+					byte[] signatureData = signatureString.getBytes();
+					//连接方式
+					connectType = UlanKey.BLE;
+					//证书类型
+					certType = Consts.ALGORITHM_RSA2048;
+					//hash算法
+					signHash = Consts.ALGORITHM_MD5;
+					//签名格式
+					signFormat = Consts.SignFormat_PKCS7Att;
+					
+					Intent intent = new Intent();
+					intent.setClass(ApproveDetailActivity.this, SigActivity.class);
+					
+					intent.putExtra(SigActivity.SIGNATURE_CONNECT_TYPE, connectType);
+					if(certType == null) {
+						intent.putExtra(SigActivity.SIGNATURE_ACTION, SigActivity.ACTION_SIGN_AUTO);
+					}
+					else {
+						intent.putExtra(SigActivity.SIGNATURE_ACTION, SigActivity.ACTION_SIGN_MANUAL);
+						intent.putExtra(SigActivity.SIGNATURE_CERT_TYPE, certType);
+						intent.putExtra(SigActivity.SIGNATURE_HASH, signHash);
+					}
+													
+					intent.putExtra(SigActivity.SIGNATURE_DATA, signatureData);
+					intent.putExtra(SigActivity.SIGNATURE_KEYID, HrmsApplication.getApplication().getKeyId());
+					intent.putExtra(SigActivity.SIGNATURE_FORMAT, signFormat);	
+					ApproveDetailActivity.this.startActivityForResult(intent, RESULT_SIGNATURE);
+					return;
+				}
 				// 再退回
 				Bundle bundle = data.getExtras();
 				// 将当前选中行的本地recordpk传回，用于标示
@@ -60,6 +129,7 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 	@Override
 	public void modelDidFinishedLoad(Model model) {
 		actions = (List<ApproveAction>) model.getProcessData();
+		signature = ((ApproveDetailActionModel) model).getSignature();
 		super.invalidateOptionsMenu();
 	}
 
@@ -273,4 +343,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 			return item;
 		}
 	}
+	
+	private void showErrorMsg(){
+		Toast.makeText(ApproveDetailActivity.this, "有错误发生，请检查BlueTooth是否打开", Toast.LENGTH_SHORT).show();
+	}	
 }
