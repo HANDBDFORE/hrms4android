@@ -33,6 +33,7 @@ public class HrmsApplication extends Application {
 	public Boolean enableTime;
 	private String keyId;
 	private String signatureResult;
+	private String p_record_id;
 
 	/**
 	 * 为了在程序任何位置获得context对象
@@ -177,5 +178,13 @@ public class HrmsApplication extends Application {
 	
 	public String getSignatureResult(){
 		return this.signatureResult;
+	}
+	
+	public void setPRecordId(String p_record_id){
+		this.p_record_id = p_record_id;
+	}
+	
+	public String getPRecordId(){
+		return this.p_record_id;
 	}
 }

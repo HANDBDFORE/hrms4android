@@ -269,9 +269,9 @@ public class LoginActivity extends ActionBarActivity {
 			//连接方式
 			connectType = UlanKey.BLE;
 			//证书类型
-			certType = Consts.ALGORITHM_RSA2048;
+			certType = null;
 			//hash算法
-			signHash = Consts.ALGORITHM_MD5;
+			signHash = Consts.ALGORITHM_SM3;
 			//签名格式
 			signFormat = Consts.SignFormat_PKCS7Att;
 			

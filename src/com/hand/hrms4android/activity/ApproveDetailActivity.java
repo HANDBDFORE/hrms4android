@@ -36,7 +36,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 
 	private List<ApproveAction> actions;
 	private String urlKeyName;
-	String signature;
+	private String signature;
+	private String p_record_id;
 	
 	/*加密*/
 	private int connectType;
@@ -85,9 +86,9 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 					//连接方式
 					connectType = UlanKey.BLE;
 					//证书类型
-					certType = Consts.ALGORITHM_RSA2048;
+					certType = null;
 					//hash算法
-					signHash = Consts.ALGORITHM_MD5;
+					signHash = Consts.ALGORITHM_SM3;
 					//签名格式
 					signFormat = Consts.SignFormat_PKCS7Att;
 					
@@ -130,6 +131,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 	public void modelDidFinishedLoad(Model model) {
 		actions = (List<ApproveAction>) model.getProcessData();
 		signature = ((ApproveDetailActionModel) model).getSignature();
+		p_record_id = ((ApproveDetailActionModel) model).getPRecordId();
+		HrmsApplication.getApplication().setPRecordId(p_record_id);
 		super.invalidateOptionsMenu();
 	}
 

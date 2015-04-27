@@ -25,6 +25,7 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 	private List<ApproveAction> actions;
 	
 	private String signature;
+	private String p_record_id;
 
 	public ApproveDetailActionModel(int id, ModelActivity activity) {
 		super(id, activity);
@@ -54,11 +55,13 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 				p.put("sourceSystemName", record.getSourceSystemName());
 				String ca_verification_necessity = record.getVerificationId() == 0 ? "0" : "1";
 				p.put("ca_verification_necessity", ca_verification_necessity);
+				
 				NetworkUtil.post(service, p, new UMJsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int statusCode, JSONObject response) {
 						try {
 							signature = response.getJSONObject("body").getString("signature");
+							p_record_id = response.getJSONObject("body").getString("record_id");
 							JSONArray responseActionJson = response.getJSONObject("body").getJSONArray("list");
 							List<ApproveAction> responseActions = new ArrayList<ApproveAction>(responseActionJson
 							        .length());
@@ -106,5 +109,9 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 	public String getSignature(){
 		
 		return this.signature;
+	}
+	
+	public String getPRecordId(){
+		return this.p_record_id;
 	}
 }
