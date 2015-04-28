@@ -20,6 +20,9 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.UMJsonHttpResponseHandler;
 
 public class LoginModel extends AbstractBaseModel<Void> {
+
+	private String code;
+	
 	private ConfigReader configReader;
 
 	public LoginModel(int id) {
@@ -53,6 +56,7 @@ public class LoginModel extends AbstractBaseModel<Void> {
 				// 存储相关数据
 				try {
 					LoginModel.this.storeSomething(response.getJSONObject("body"));
+					code = response.getJSONObject("head").getString("code");
 				} catch (JSONException e) {
 					e.printStackTrace();
 					activity.modelFailedLoad(new Exception("error data"), LoginModel.this);
@@ -102,4 +106,7 @@ public class LoginModel extends AbstractBaseModel<Void> {
 		return 0;
 	}
 
+	public String getCode(){
+		return this.code;
+	}
 }

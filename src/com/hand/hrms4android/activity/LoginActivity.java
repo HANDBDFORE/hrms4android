@@ -163,8 +163,12 @@ public class LoginActivity extends ActionBarActivity {
 			finish();
         }else{
         	//正常进入,启动功能列表
-
-        	startActivity(new Intent(this, FunctionListActivity.class)); 
+        	if(((LoginModel)model).getCode().equals("ok")){
+        		startActivity(new Intent(this, FunctionListActivity.class));
+        	}else{
+        		Toast.makeText(LoginActivity.this, "Error！", Toast.LENGTH_SHORT).show();
+        	}
+        	 
 			
 			
         	finish();
@@ -379,6 +383,11 @@ public class LoginActivity extends ActionBarActivity {
 			}
 			if(data.getBooleanExtra(SigActivity.SIGNATURE_SUCCESS, false)){
 				isLogining = true;
+				if(p_res.equals("1")){
+					loginParams.put("ca_verification_necessity", "1");
+					String signature_result = data.getStringExtra(SigActivity.SIGNATURE_RESULT); 
+					loginParams.put("Signature", data.getStringExtra(SigActivity.SIGNATURE_RESULT));
+				}
 				model.load(Model.LoadType.Network, loginParams);
 			}else{
 				showErrorMsg();
