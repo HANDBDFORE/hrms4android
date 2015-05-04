@@ -136,6 +136,7 @@ public class TodoListDao {
 			final int index_SOURCE_SYSTEM_NAME = index++;
 			final int index_deliveree = index++;
 			final int index_verificationId = index++;
+			final int index_signature = index++;
 
 			@Override
 			public void onQuerySuccess(Cursor cursor) {
@@ -150,7 +151,8 @@ public class TodoListDao {
 						        cursor.getString(index_ITEM2), cursor.getString(index_ITEM3), cursor
 						                .getString(index_ITEM4), cursor.getString(index_screenName), cursor
 						                .getString(index_SOURCE_SYSTEM_NAME), cursor.getString(index_deliveree),
-						                cursor.getInt(index_verificationId)));
+						                cursor.getInt(index_verificationId),
+						                cursor.getString(index_signature)));
 					} while (cursor.moveToNext());
 
 				}
@@ -162,7 +164,7 @@ public class TodoListDao {
 		String sql = "select " + TodoList.ID + ", " + TodoList.STATUS + ", " + TodoList.SERVER_MESSAGE + ", "
 		        + TodoList.ACTION + ", " + TodoList.ACTION_TYPE + ", " + TodoList.COMMENTS + ", " + TodoList.LOCALID
 		        + ", " + TodoList.ITEM1 + ", " + TodoList.ITEM2 + ", " + TodoList.ITEM3 + ", " + TodoList.ITEM4 + ", "
-		        + TodoList.SCREENNAME + "," + TodoList.SOURCE_SYSTEM_NAME + ", " + TodoList.DELIVEREE + ", " + TodoList.VERIFICATIONID  + " from "
+		        + TodoList.SCREENNAME + "," + TodoList.SOURCE_SYSTEM_NAME + ", " + TodoList.DELIVEREE + ", " + TodoList.VERIFICATIONID + "," + TodoList.SIGNATURE  + " from "
 		        + TodoList.TABLENAME;
 		dataManager.query(sql, null, getDictionaryCallback);
 		return datas;
@@ -181,7 +183,21 @@ public class TodoListDao {
 		int affectiveRows = dataManager.update(TodoList.TABLENAME, cv, TodoList.ID + "= ?", new String[] { id });
 		return affectiveRows;
 	}
+	
+	/**
+	 * 更新signature
+	 * @param id
+	 * @param signature
+	 * @return
+	 */
+	public int updateSignatureRecord(String id, String signature){
+		ContentValues cv = new ContentValues();
+		cv.put(TodoList.SIGNATURE, signature);
 
+		int affectiveRows = dataManager.update(TodoList.TABLENAME, cv, TodoList.ID + "= ?", new String[] { id });
+		return affectiveRows;		
+	}
+	
 	/**
 	 * 保存审批动作
 	 * 

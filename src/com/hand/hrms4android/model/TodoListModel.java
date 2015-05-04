@@ -99,6 +99,11 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 				jsonSubmitRecord.put(TodoList.ACTION_TYPE, sr.getActionType());
 				jsonSubmitRecord.put(TodoList.COMMENTS, sr.getComments());
 				jsonSubmitRecord.put(TodoList.SOURCE_SYSTEM_NAME, sr.getSourceSystemName());
+				String signature_result = sr.getSignature();
+				jsonSubmitRecord.put("ca_verification_necessity", signature_result == null ? "0" : "1");
+				jsonSubmitRecord.put("signature", signature_result);
+				jsonSubmitRecord.put("p_record_id", HrmsApplication.getApplication().getPRecordId());
+								
 
 				if (!StringUtils.isEmpty(sr.getDeliveree())) {
 					JSONObject otherParamsJson = new JSONObject();
@@ -121,11 +126,11 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 			RequestParams params = new RequestParams();
 			params.put("actions", submitArray.toString());
 			/* 加密参数 */
-			String signature_result = HrmsApplication.getApplication().getSignatureResult();
+//			String signature_result = HrmsApplication.getApplication().getSignatureResult();
 			
-			params.put("ca_verification_necessity", signature_result == null ? "0" : "1");
-			params.put("signature", signature_result);
-			params.put("p_record_id", HrmsApplication.getApplication().getPRecordId());
+//			params.put("ca_verification_necessity", signature_result == null ? "0" : "1");
+//			params.put("signature", signature_result);
+//			params.put("p_record_id", HrmsApplication.getApplication().getPRecordId());
 			HrmsApplication.getApplication().setSignatureResult(null);
 			HrmsApplication.getApplication().setPRecordId(null);
 			
@@ -357,6 +362,9 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 	// 放入审批数据
 	// /////////////////////////////////////////////////////////////////////////////
 	public void addRecordToSubmitQueue(Map<String, String> options, String... ids) {
+		/* 更新数据 */
+		List<TodoListDomain> allLocalRecords = dao.getAllTodoRecords();
+		loadAuroraDataset = allLocalRecords;
 		for (int i = 0; i < ids.length; i++) {
 			for (TodoListDomain record : loadAuroraDataset) {
 				if (record.getId().equals(ids[i])) {
@@ -366,6 +374,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 					record.setActionType(options.get(TodoList.ACTION_TYPE));
 					record.setComments(options.get(TodoList.COMMENTS));
 					record.setDeliveree(options.get(TodoList.DELIVEREE));
+					
 					// 放入拷贝数据
 					this.submitRecordsList.add(new TodoListDomain(record));
 

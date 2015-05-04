@@ -15,6 +15,7 @@ import com.cfca.srcbulanview.SigActivity;
 import com.cfist.mobile.ulan.UlanKey;
 import com.cfist.mobile.ulan.util.Consts;
 import com.hand.hrms4android.application.HrmsApplication;
+import com.hand.hrms4android.dao.TodoListDao;
 import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
@@ -67,12 +68,16 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 				bundle.putString(TodoList.ID, String.valueOf(listModel.currentItem().getId()));
 				String signature_result = data.getStringExtra(SigActivity.SIGNATURE_RESULT); 
 				bundle.putString("signature_result",signature_result);
+				TodoListDao dao = new TodoListDao();
+				String id = String.valueOf(listModel.currentItem().getId());
+				dao.updateSignatureRecord(listModel.currentItem().getId(), signature_result);
 				HrmsApplication.getApplication().setSignatureResult(signature_result);
 				Intent result = new Intent();
 				result.putExtras(bundle);
 				setResult(RESULT_OK, result);
 				finish();
 			}else{
+				HrmsApplication.getApplication().setPinCode(null);
 				showErrorMsg();
 			}
 		}else if (requestCode == REQUEST_ACTIVITY_OPINION || requestCode == REQUEST_ACTIVITY_DELIVER) {
@@ -86,11 +91,14 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 					//连接方式
 					connectType = UlanKey.BLE;
 					//证书类型
-					certType = null;
+					certType = Consts.ALGORITHM_RSA2048;
 					//hash算法
-					signHash = Consts.ALGORITHM_SM3;
+					signHash = Consts.ALGORITHM_SHA1;
 					//签名格式
 					signFormat = Consts.SignFormat_PKCS7Att;
+					//Pin码
+					pin = HrmsApplication.getApplication().getPinCode();
+					
 					
 					Intent intent = new Intent();
 					intent.setClass(ApproveDetailActivity.this, SigActivity.class);
@@ -107,7 +115,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 													
 					intent.putExtra(SigActivity.SIGNATURE_DATA, signatureData);
 					intent.putExtra(SigActivity.SIGNATURE_KEYID, HrmsApplication.getApplication().getKeyId());
-					intent.putExtra(SigActivity.SIGNATURE_FORMAT, signFormat);	
+					intent.putExtra(SigActivity.SIGNATURE_FORMAT, signFormat);
+					intent.putExtra(SigActivity.SIGNATURE_PINCODE, pin);
 					ApproveDetailActivity.this.startActivityForResult(intent, RESULT_SIGNATURE);
 					return;
 				}

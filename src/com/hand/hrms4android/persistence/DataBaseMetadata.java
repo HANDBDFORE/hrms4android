@@ -34,6 +34,8 @@ public final class DataBaseMetadata {
 		public static final String SCREENNAME = "screenName";
 		public static final String SOURCE_SYSTEM_NAME = "sourceSystemName";
 		public static final String VERIFICATIONID = "verificationId";
+		public static final String SIGNATURE = "signature";
+		
 
 		/**
 		 * 转交人

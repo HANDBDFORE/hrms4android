@@ -273,9 +273,9 @@ public class LoginActivity extends ActionBarActivity {
 			//连接方式
 			connectType = UlanKey.BLE;
 			//证书类型
-			certType = null;
+			certType = Consts.ALGORITHM_RSA2048;
 			//hash算法
-			signHash = Consts.ALGORITHM_SM3;
+			signHash = Consts.ALGORITHM_SHA1;
 			//签名格式
 			signFormat = Consts.SignFormat_PKCS7Att;
 			
@@ -384,12 +384,14 @@ public class LoginActivity extends ActionBarActivity {
 			if(data.getBooleanExtra(SigActivity.SIGNATURE_SUCCESS, false)){
 				isLogining = true;
 				if(p_res.equals("1")){
-					loginParams.put("ca_verification_necessity", "1");
-					String signature_result = data.getStringExtra(SigActivity.SIGNATURE_RESULT); 
+					loginParams.put("ca_verification_necessity", "1"); 
 					loginParams.put("Signature", data.getStringExtra(SigActivity.SIGNATURE_RESULT));
 				}
+				String pinCode = data.getStringExtra(SigActivity.SIGNATURE_PINCODE);
+				HrmsApplication.getApplication().setPinCode(pinCode);
 				model.load(Model.LoadType.Network, loginParams);
 			}else{
+				HrmsApplication.getApplication().setPinCode(null);
 				showErrorMsg();
 			}
 			

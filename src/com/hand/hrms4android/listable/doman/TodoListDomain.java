@@ -17,7 +17,8 @@ public class TodoListDomain {
 	private String screenName;
 	
 	private int verificationId;
-
+	private String signature;
+	
 	public TodoListDomain() {
 	}
 
@@ -29,12 +30,12 @@ public class TodoListDomain {
 	public TodoListDomain(JSONObject json) throws JSONException {
 		this("-1", "", "", "", "", "", json.getString("localId"), json.getString("item1"), json.getString("item2"),
 		        json.getString("item3"), json.getString("item4"), json.getString("screenName"), json
-		                .getString("sourceSystemName"), "",json.getInt("verificationId"));
+		                .getString("sourceSystemName"), "",json.getInt("verificationId"),"");
 	}
 
 	public TodoListDomain(String id, String status, String serverMessage, String action, String actionType,
 	        String comments, String localId, String item1, String item2, String item3, String item4, String screenName,
-	        String sourceSystemName, String deliveree, int verificationId) {
+	        String sourceSystemName, String deliveree, int verificationId, String signature) {
 		super();
 		this.id = id;
 		this.status = status;
@@ -51,12 +52,13 @@ public class TodoListDomain {
 		this.sourceSystemName = sourceSystemName;
 		this.deliveree = deliveree;
 		this.verificationId = verificationId;
+		this.signature = signature;
 	}
 
 	public TodoListDomain(TodoListDomain old) {
 		this(old.getId(), old.getStatus(), old.getServerMessage(), old.getAction(), old.getActionType(), old
 		        .getComments(), old.getLocalId(), old.getItem1(), old.getItem2(), old.getItem3(), old.getItem4(), old
-		        .getScreenName(), old.getSourceSystemName(), old.getDeliveree(), old.getVerificationId());
+		        .getScreenName(), old.getSourceSystemName(), old.getDeliveree(), old.getVerificationId(),old.getSignature());
 	}
 
 	public String getId() {
@@ -175,7 +177,17 @@ public class TodoListDomain {
 		return verificationId;
 	}
 	
-	public void setVerificationId(){
+	public void setVerificationId(int verificationId){
 		this.verificationId = verificationId;
 	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+	
+	
 }

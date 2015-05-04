@@ -34,6 +34,8 @@ public class HrmsApplication extends Application {
 	private String keyId;
 	private String signatureResult;
 	private String p_record_id;
+	
+	private String pinCode;
 
 	/**
 	 * 为了在程序任何位置获得context对象
@@ -186,5 +188,13 @@ public class HrmsApplication extends Application {
 	
 	public String getPRecordId(){
 		return this.p_record_id;
+	}
+	
+	public void setPinCode(String pinCode){
+		this.pinCode = pinCode;
+	}
+	
+	public String getPinCode(){
+		return pinCode;
 	}
 }

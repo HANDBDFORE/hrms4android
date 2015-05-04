@@ -56,7 +56,8 @@ public class DatabaseManager extends SQLiteOpenHelper implements DataManage {
 		        + TodoList.LOCALID + "  TEXT , " + TodoList.ITEM1 + "  TEXT , " + TodoList.ITEM2 + "  TEXT , "
 		        + TodoList.ITEM3 + "  TEXT , " + TodoList.ITEM4 + "  TEXT , " + TodoList.SCREENNAME + " TEXT , "
 		        + TodoList.SOURCE_SYSTEM_NAME + " TEXT ,"
-		        + TodoList.VERIFICATIONID + "  INTEGER )");
+		        + TodoList.VERIFICATIONID + "  INTEGER ,"
+		        + TodoList.SIGNATURE + " TEXT)");
 
 		// 审批动作表
 		db.execSQL("CREATE TABLE  " + DataBaseMetadata.TableActions.TABLENAME + "  ( "
