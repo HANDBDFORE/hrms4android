@@ -44,6 +44,8 @@ public class ApproveOpinionActivity extends ActionBarActivity {
 		String default_approve_option = mPreferences.getString("default_approve_option", "");
 		opinionEditText = (EditText) findViewById(R.id.approve_opinion_comments);
 		opinionEditText.setText(default_approve_option);
+		opinionEditText.setSelected(true);
+		opinionEditText.selectAll();
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

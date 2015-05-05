@@ -166,7 +166,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 								// 成功
 								// 删除数据库数据
 								dao.deleteRecord(submitRecord.getId());
-							} else {
+							} else if("F".equals(responseStatus)) {
 								// 失败
 								submitRecord.setServerMessage(responseMessage);
 								submitRecord.setStatus(Constrants.APPROVE_RECORD_STATUS_ERROR);
@@ -174,6 +174,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 								dao.updateApproveRecordAsError(submitRecord.getId(), responseMessage);
 							}
 							// 从待提交列表中移除记录
+							
 							removeRecordFromSubmitList(submitRecord);
 						}
 						// 重新加载数据
