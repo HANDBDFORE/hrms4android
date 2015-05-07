@@ -29,7 +29,9 @@ import com.hand.hrms4android.persistence.DataBaseMetadata.TodoList;
 import com.hand.hrms4android.util.TempTransfer;
 import com.hand.hrms4android.util.data.IndexPath;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class TodoListFragment extends BaseSherlockFragment implements OnItemClickListener, OnItemLongClickListener {
@@ -54,6 +56,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	private TodoListModel listModel;
 
 	private boolean multiChoiceMode;
+
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -84,6 +87,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		 * 原来
 		 */
 		todoListViewWrapper = (PullToRefreshListView) root.findViewById(R.id.activity_todo_list_listviewwrapper);
+		todoListViewWrapper.setMode(Mode.PULL_FROM_START);
 		todoListViewWrapper.getRefreshableView().setOnItemLongClickListener(this);
 		todoListViewWrapper.setOnItemClickListener(this);
 		todoListViewWrapper.getRefreshableView().setChoiceMode(ListView.CHOICE_MODE_NONE);
@@ -119,7 +123,10 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	@Override
 	public void modelDidFinishedLoad(Model model) {
 		// 重新绘制界面
-		listAdapter.reFetchData();
+//		if(pageNum == 0)
+			listAdapter.reFetchData();
+//		else
+//			listAdapter.notifyDataSetChanged();
 
 		if ((listAdapter.getCount() == 0) && (!listModel.needLoadOnceMore())) {
 			showEmptyTip(getResources().getString(R.string.activity_todo_list_fragment_no_pending_matters));
@@ -351,10 +358,19 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		}
 	}
 
-	private class PulldownListener implements OnRefreshListener<ListView> {
+	private class PulldownListener implements OnRefreshListener2<ListView> {
 
 		@Override
-		public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+		public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+			// TODO 自动生成的方法存根
+			listModel.load(LoadType.Network, null);
+			
+			
+		}
+
+		@Override
+		public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+			// TODO 自动生成的方法存根
 			listModel.load(LoadType.Network, null);
 		}
 	}

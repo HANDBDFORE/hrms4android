@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.hand.hrms4android.activity.ModelActivity;
 import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.dao.TodoListDao;
@@ -37,6 +39,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 	private static boolean firstLoadFromInternet;
 
 	private List<TodoListDomain> submitRecordsList;
+	
 
 	public TodoListModel(int id) {
 		this(id, null);
@@ -67,6 +70,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 			activity.modelDidFinishedLoad(this);
 			return;
 		}
+		
 
 		// 检查是否有需要提交的数据,进行提交
 		if (isSubmiting()) {
@@ -99,8 +103,8 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 				jsonSubmitRecord.put(TodoList.ACTION_TYPE, sr.getActionType());
 				jsonSubmitRecord.put(TodoList.COMMENTS, sr.getComments());
 				jsonSubmitRecord.put(TodoList.SOURCE_SYSTEM_NAME, sr.getSourceSystemName());
-				String signature_result = sr.getSignature();
-				jsonSubmitRecord.put("ca_verification_necessity", signature_result == null ? "0" : "1");
+				String signature_result = sr.getSignature() != null ? sr.getSignature() : "null";
+				jsonSubmitRecord.put("ca_verification_necessity", signature_result == "null" ? "0" : "1");
 				jsonSubmitRecord.put("signature", signature_result);
 				jsonSubmitRecord.put("p_record_id", HrmsApplication.getApplication().getPRecordId());
 								
@@ -166,7 +170,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 								// 成功
 								// 删除数据库数据
 								dao.deleteRecord(submitRecord.getId());
-							} else if("F".equals(responseStatus)) {
+							} else {
 								// 失败
 								submitRecord.setServerMessage(responseMessage);
 								submitRecord.setStatus(Constrants.APPROVE_RECORD_STATUS_ERROR);
@@ -245,6 +249,7 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 
 		RequestParams params = new RequestParams();
 		params.put("localIds", submitJsonArray.toString());
+//		params.put("page_num", String.valueOf(page_num));
 		NetworkUtil.post(service, params, new UMJsonHttpResponseHandler() {
 
 			@Override
@@ -267,7 +272,9 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 						JSONArray newJsonRecords = responseCategory.getJSONArray("new");
 
 						List<TodoListDomain> serverTodoNewRecords = new ArrayList<TodoListDomain>();
-						for (int i = 0; i < newJsonRecords.length(); i++) {
+						int len = newJsonRecords.length() > 500 ? 500 : newJsonRecords.length();
+						Log.d("LEN", String.valueOf(len));
+						for (int i = 0; i < len; i++) {
 							serverTodoNewRecords.add(new TodoListDomain(newJsonRecords.getJSONObject(i)));
 						}
 

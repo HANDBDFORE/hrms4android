@@ -63,5 +63,10 @@
     <string name="download">下载管理</string>
 	<string name="workflow">工作流</string>
 	<string name="systemsetting">系统设置</string>
-
+	<string name="confirm_blurtooth">有错误发生，请检查BlueTooth是否打开</string>
+	<string name="confirm_dn">请确认数字证书。</string>
+	
+	<string name="action_parsing_error">action解析错误</string>
+	<string name="action_obtain_error">获取action出错</string>
+	<string name="missing_url">无法找到url</string>
 </resources>

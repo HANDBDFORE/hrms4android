@@ -130,6 +130,9 @@ public class LoginActivity extends ActionBarActivity {
 
 		String storedUsername = mPreferences.getString(Constrants.SYS_PREFRENCES_USERNAME, "");
 		usernameEditText.setText(storedUsername);
+		
+		String storedPassword = mPreferences.getString(Constrants.SYS_PREFRENCES_PASSWORD, "");
+		passwordEditText.setText(storedPassword);		
 
 		shake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
 	}
@@ -259,6 +262,7 @@ public class LoginActivity extends ActionBarActivity {
 		// 
 		Editor editor = mPreferences.edit();
 		editor.putString(Constrants.SYS_PREFRENCES_USERNAME, username);
+		editor.putString(Constrants.SYS_PREFRENCES_PASSWORD, password);
 		//初始化token
 		editor.putString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, JPushInterface.getRegistrationID(this.getApplicationContext()));
 		editor.commit();
@@ -334,6 +338,7 @@ public class LoginActivity extends ActionBarActivity {
 		// 设备系统类型
 		params.put("device_type", Constrants.SYS_ATTS_DEVICE_TYPE);
 
+		params.put("isNewVersion", "true");
 		// 消息推送token
 		String token = mPreferences.getString(Constrants.SYS_PREFRENCES_PUSH_TOKEN, "");
 		if (token.length() != 0) {
@@ -387,6 +392,8 @@ public class LoginActivity extends ActionBarActivity {
 					loginParams.put("ca_verification_necessity", "1"); 
 					loginParams.put("Signature", data.getStringExtra(SigActivity.SIGNATURE_RESULT));
 				}
+				
+
 				String pinCode = data.getStringExtra(SigActivity.SIGNATURE_PINCODE);
 				HrmsApplication.getApplication().setPinCode(pinCode);
 				model.load(Model.LoadType.Network, loginParams);
@@ -401,7 +408,7 @@ public class LoginActivity extends ActionBarActivity {
 	}
 	
 	private void showErrorMsg(){
-		Toast.makeText(LoginActivity.this, "有错误发生，请检查BlueTooth是否打开", Toast.LENGTH_SHORT).show();
+		Toast.makeText(LoginActivity.this, getResources().getString(R.string.confirm_blurtooth), Toast.LENGTH_SHORT).show();
 		resetButton();
 	}
 	private void resetButton(){

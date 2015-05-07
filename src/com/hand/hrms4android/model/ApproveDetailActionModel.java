@@ -7,8 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.widget.Toast;
+
+import com.hand.hrms4android.activity.ApproveDetailActivity;
 import com.hand.hrms4android.activity.ModelActivity;
+import com.hand.hrms4android.application.HrmsApplication;
 import com.hand.hrms4android.dao.ActionsDao;
+import com.hand.hrms4android.ems.R;
 import com.hand.hrms4android.exception.ParseExpressionException;
 import com.hand.hrms4android.listable.doman.TodoListDomain;
 import com.hand.hrms4android.network.NetworkUtil;
@@ -53,6 +58,10 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 				RequestParams p = new RequestParams();
 				p.put("localId", record.getLocalId());
 				p.put("sourceSystemName", record.getSourceSystemName());
+				if(record.getVerificationId() == -1){
+					Toast.makeText(HrmsApplication.getApplication(), HrmsApplication.getApplication().getResources().getString(R.string.confirm_dn), Toast.LENGTH_LONG).show();
+					return;
+				}
 				String ca_verification_necessity = record.getVerificationId() == 0 ? "0" : "1";
 				p.put("ca_verification_necessity", ca_verification_necessity);
 				
@@ -77,18 +86,18 @@ public class ApproveDetailActionModel extends AbstractBaseModel<List<ApproveActi
 							activity.modelDidFinishedLoad(ApproveDetailActionModel.this);
 						} catch (JSONException e) {
 							e.printStackTrace();
-							activity.modelFailedLoad(new Exception("action解析出错"), ApproveDetailActionModel.this);
+							activity.modelFailedLoad(new Exception(HrmsApplication.getApplication().getResources().getString(R.string.action_parsing_error)), ApproveDetailActionModel.this);
 						}
 					}
 
 					@Override
 					public void onFailure(Throwable error, String content) {
-						activity.modelFailedLoad(new Exception("获取action出错"), ApproveDetailActionModel.this);
+						activity.modelFailedLoad(new Exception(HrmsApplication.getApplication().getResources().getString(R.string.action_obtain_error)), ApproveDetailActionModel.this);
 					}
 				});
 			} catch (ParseExpressionException e1) {
 				e1.printStackTrace();
-				activity.modelFailedLoad(new Exception("无法找到url"), ApproveDetailActionModel.this);
+				activity.modelFailedLoad(new Exception(HrmsApplication.getApplication().getResources().getString(R.string.missing_url)), ApproveDetailActionModel.this);
 			}
 
 		}

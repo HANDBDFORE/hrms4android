@@ -281,7 +281,7 @@ public class FunctionListActivity extends SherlockFragmentActivity implements Mo
 			mMenuDrawer.openMenu();
 			return;
 		}
-
+		StorageUtil.deleteDB();
 		super.onBackPressed();
 	}
 

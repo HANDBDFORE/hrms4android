@@ -357,6 +357,6 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 	}
 	
 	private void showErrorMsg(){
-		Toast.makeText(ApproveDetailActivity.this, "有错误发生，请检查BlueTooth是否打开", Toast.LENGTH_SHORT).show();
+		Toast.makeText(ApproveDetailActivity.this, getResources().getString(R.string.confirm_blurtooth), Toast.LENGTH_SHORT).show();
 	}	
 }

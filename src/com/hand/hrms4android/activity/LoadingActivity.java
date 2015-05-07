@@ -103,6 +103,7 @@ public class LoadingActivity extends ActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		JPushInterface.onResume(LoadingActivity.this);
 		System.out.println("i am on resume");
 		setViewAsNew();
 
@@ -110,6 +111,15 @@ public class LoadingActivity extends ActionBarActivity {
 		if (checkBaseUrl(baseUrl)) {
 			doReload();
 		}
+	}
+	
+	
+
+	@Override
+	protected void onPause() {
+		// TODO 自动生成的方法存根
+		super.onPause();
+		JPushInterface.onPause(LoadingActivity.this);
 	}
 
 	@Override
@@ -143,7 +153,10 @@ public class LoadingActivity extends ActionBarActivity {
 				startLoginActivity();
 				finish();
 			}else if(p_res.equals("0")){
-				doReload();
+
+				//				doReload();
+				startLoginActivity();
+				finish();
 			}
 		}
 		

@@ -64,4 +64,11 @@
     <string name="download">download</string>
 	<string name="workflow">Workflow</string>
 	<string name="systemsetting">Preferences</string>	
+	
+	<string name="confirm_blurtooth">An error has occurred, please confirm that BlueTooth has open.</string>
+	<string name="confirm_dn">Please confirm the digital certificate.</string>
+	
+	<string name="action_parsing_error">Actions parsing error</string>
+	<string name="action_obtain_error">Actions obtain error</string>
+	<string name="missing_url">missing url</string>
 </resources>
