@@ -272,7 +272,8 @@ public class TodoListModel extends AbstractPageableQueryModel<TodoListDomain> {
 						JSONArray newJsonRecords = responseCategory.getJSONArray("new");
 
 						List<TodoListDomain> serverTodoNewRecords = new ArrayList<TodoListDomain>();
-						int len = newJsonRecords.length() > 500 ? 500 : newJsonRecords.length();
+//						int len = newJsonRecords.length() > 1000 ? 1000 : newJsonRecords.length();
+						int len = newJsonRecords.length();
 						Log.d("LEN", String.valueOf(len));
 						for (int i = 0; i < len; i++) {
 							serverTodoNewRecords.add(new TodoListDomain(newJsonRecords.getJSONObject(i)));
