@@ -44,11 +44,13 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock.Light" >
+        android:theme="@style/Theme.Sherlock.Light"
+         >
         
         <activity
             android:name="com.hand.hrms4android.activity.LoadingActivity"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop" 
+            android:screenOrientation="portrait" >
              <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,49 +59,59 @@
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.LoginActivity"
-            android:theme="@style/Theme.Sherlock.Light" >
+            android:theme="@style/Theme.Sherlock.Light"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.ApproveDetailActivity"
             android:label="明细"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.ApproveOpinionActivity"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.Sherlock" >
+            android:theme="@style/Theme.Sherlock"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.DeliverActivity"
             android:label="@string/title_activity_deliver"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.FunctionListActivity"
             android:launchMode="singleTask"
-            android:label="@string/title_activity_function_list" >
+            android:label="@string/title_activity_function_list"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.HTMLActivity"
-            android:label="@string/title_activity_html" >
+            android:label="@string/title_activity_html"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.BaseReceiptActivity"
             android:label="@string/title_activity_receipt_base"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.DoneReceiptActivity"
             android:label="@string/title_activity_done_receipt"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.hand.hrms4android.activity.TestActivity"
-            android:label="@string/title_activity_test" >
+            android:label="@string/title_activity_test"
+            android:screenOrientation="portrait" >
 
             <!--
             <intent-filter>
@@ -111,7 +123,8 @@
         </activity>
 		<activity
 		    android:name="com.hand.hrms4android.activity.EmployeeListActivity"
-		    android:label="@string/activity_diliver_employee_title">
+		    android:label="@string/activity_diliver_employee_title"
+		    android:screenOrientation="portrait" >
 		</activity>
         <!-- Required -->
        <service
@@ -149,7 +162,8 @@
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

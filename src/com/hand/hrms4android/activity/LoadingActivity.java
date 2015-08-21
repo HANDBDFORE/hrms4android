@@ -103,6 +103,14 @@ public class LoadingActivity extends ActionBarActivity {
 		if (checkBaseUrl(baseUrl)) {
 			doReload();
 		}
+		JPushInterface.onResume(LoadingActivity.this);
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO 自动生成的方法存根
+		super.onPause();
+		JPushInterface.onPause(LoadingActivity.this);
 	}
 
 	@Override
