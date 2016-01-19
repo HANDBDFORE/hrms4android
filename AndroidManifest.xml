@@ -187,7 +187,8 @@
         <!-- 目前这个渠道统计功能的报表还未开放。-->
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
         <!-- Required. AppKey copied from Portal -->
-        <meta-data android:name="JPUSH_APPKEY" android:value="860559ff7ac00cf01c33f106"/> 
+       <!-- <meta-data android:name="JPUSH_APPKEY" android:value="860559ff7ac00cf01c33f106"/> -->
+        <meta-data android:name="JPUSH_APPKEY" android:value="92bc990cf971073eb3ba1e02"/> 
         <!-- ========================= igetui 使用 ，结束====================== -->
         <!-- 接收消息广播 -->
         <!-- User defined.  For test only  用户自定义的广播接收器-->
