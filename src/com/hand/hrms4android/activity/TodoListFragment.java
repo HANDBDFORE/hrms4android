@@ -6,6 +6,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,7 +57,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 	private TodoListModel listModel;
 
 	private boolean multiChoiceMode;
-
+    private String peritem;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -197,6 +198,9 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 		}
 		// 非多选状态
 		else {
+             if(listModel.currentItem().getId().equals(peritem) ){
+				Log.e("993", "same wait !");
+			}else{
 			// 启动明细页面
 			Intent intent = new Intent(getSherlockActivity(), ApproveDetailActivity.class);
 			listModel.setRecordAsSelected(new IndexPath(0, getCorrectRowPosition(position)));
@@ -205,6 +209,8 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 			// TODO 考虑重构，放入application?
 			TempTransfer.container.put(TempTransfer.KEY_TODO_LIST_MODEL, listModel);
 			startActivityForResult(intent, REQUEST_ACTIVITY_DETAIL);
+			}
+			
 		}
 	}
 
@@ -226,6 +232,7 @@ public class TodoListFragment extends BaseSherlockFragment implements OnItemClic
 
 				if (requestCode == REQUEST_ACTIVITY_DETAIL) {
 					listModel.addRecordToSubmitQueue(options, data.getStringExtra(TodoList.ID));
+					peritem = data.getStringExtra(TodoList.ID);
 				} else if (requestCode == REQUEST_ACTIVITY_OPINION) {
 					listModel.addRecordToSubmitQueue(options, listAdapter.getSelectedItemIDs());
 					mActionMode.finish();
