@@ -97,6 +97,15 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 			startActivityForResult(i, REQUEST_ACTIVITY_DELIVER);
 			return true;
 		}
+		
+		case R.id.approve_detail_action_assign: {
+			Intent i = item.getIntent();
+			i.putExtra("sourceSystemName", listModel.currentItem().getSourceSystemName());
+			i.putExtra(TodoList.ID, listModel.currentItem().getLocalId());
+			i.setClass(this, AssginActivity.class);
+			startActivityForResult(i, REQUEST_ACTIVITY_DELIVER);
+			return true;
+		}
 
 		default:
 			break;
@@ -173,6 +182,8 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 			return new RejectActionMenuItem(action);
 		} else if (action.actionType.equalsIgnoreCase(ApproveAction.ACTION_TYPE_DELIVER)) {
 			return new DeliverActionMenuItem(action);
+		} else if (action.actionType.equalsIgnoreCase(ApproveAction.ACTION_TYPE_ASSIGN)) {
+			return new AssignActionMenuItem(action);
 		} else
 			return new OtherActionMenuItem(action);
 	}
@@ -256,6 +267,24 @@ public class ApproveDetailActivity extends BaseReceiptActivity<TodoListDomain> {
 			return item;
 		}
 	}
+	
+	class AssignActionMenuItem extends ActionMenuItem {
+		public AssignActionMenuItem(ApproveAction action) {
+			super(action);
+		}
+
+		@Override
+		MenuItem generateMenuItem(int index, Menu menu) {
+			MenuItem item = null;
+			item = menu.add(GROUP_ACTION, R.id.approve_detail_action_assign, index, action.actionTitle);
+			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			item.setIcon(R.drawable.ic_menu_cc);
+			Intent intent = prepareIntent(action);
+			item.setIntent(intent);
+			return item;
+		}
+	}
+
 
 	class OtherActionMenuItem extends ActionMenuItem {
 		public OtherActionMenuItem(ApproveAction action) {

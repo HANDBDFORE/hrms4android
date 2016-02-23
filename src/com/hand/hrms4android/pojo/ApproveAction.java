@@ -4,6 +4,7 @@ public class ApproveAction {
 	public static final String ACTION_TYPE_APPROVE = "approve";
 	public static final String ACTION_TYPE_REJECT = "reject";
 	public static final String ACTION_TYPE_DELIVER = "deliver";
+	public static final String ACTION_TYPE_ASSIGN = "assign";
 
 	public int id;
 	public String todolistId;// 客户端表的id

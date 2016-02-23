@@ -85,6 +85,12 @@
             android:uiOptions="splitActionBarWhenNarrow"
             android:screenOrientation="portrait" >
         </activity>
+         <activity
+            android:name="com.hand.hrms4android.activity.AssginActivity"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:screenOrientation="portrait" >
+        </activity>
+        
         <activity
             android:name="com.hand.hrms4android.activity.FunctionListActivity"
             android:launchMode="singleTask"
@@ -124,6 +130,10 @@
 		<activity
 		    android:name="com.hand.hrms4android.activity.EmployeeListActivity"
 		    android:label="@string/activity_diliver_employee_title"
+		    android:screenOrientation="portrait" >
+		</activity>
+		<activity
+		    android:name="com.hand.hrms4android.activity.AssEmployeeListActivity"
 		    android:screenOrientation="portrait" >
 		</activity>
         <!-- Required -->

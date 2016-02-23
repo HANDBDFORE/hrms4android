@@ -27,5 +27,6 @@
     <item name="approve_detail_tool_next" type="id"/>
     <item name="approve_detail_action" type="id"/>
     <item name="approve_detail_action_deliver" type="id"/>
+    <item name="approve_detail_action_assign" type="id"/>
 
 </resources>
